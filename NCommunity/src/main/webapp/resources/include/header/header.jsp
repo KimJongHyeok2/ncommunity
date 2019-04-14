@@ -36,9 +36,6 @@ function pageMove(type) {
 	float: right;
 	line-height: 55px;
 }
-.header .info .dropdown button {
-	width: 160px;
-}
 .header .info .dropdown .dropdown-menu {
 	width: 100%;
 }
@@ -73,7 +70,7 @@ function pageMove(type) {
 			</form>
 			<div class="dropdown">
 			  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-			    <s:authentication property="name"/>님
+			    ${sessionScope.nickname}(<s:authentication property="name"/>)님
 			  </button>
 			  <div class="dropdown-menu">
 			    <a class="dropdown-item" onclick="pageMove('logout');">로그아웃</a>

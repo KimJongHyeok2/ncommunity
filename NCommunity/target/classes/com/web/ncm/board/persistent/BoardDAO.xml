@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+	<insert id="insertFreeBoard" parameterType="com.web.ncm.board.domain.BoardDTO">
+		INSERT INTO freeboard(free_num, mem_num, free_subject, free_content) VALUES(freeB_seq.nextval, #{num}, #{subject}, #{content})
+	</insert>
+</mapper>

@@ -133,12 +133,5 @@ public class MemberDTO {
 	public void setMem_regdate(Timestamp mem_regdate) {
 		this.mem_regdate = mem_regdate;
 	}
-
-	@Override
-	public String toString() {
-		return "MemberDTO [mem_num=" + mem_num + ", mem_id=" + mem_id + ", mem_pw=" + mem_pw + ", mem_profile="
-				+ mem_profile + ", mem_nickname=" + mem_nickname + ", mem_birth=" + mem_birth + ", mem_email="
-				+ mem_email + ", mem_auth=" + mem_auth + ", enabled=" + enabled + ", mem_regdate=" + mem_regdate + "]";
-	}
 	
 }
