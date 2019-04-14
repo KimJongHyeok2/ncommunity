@@ -5,6 +5,11 @@
 $(document).ready(function() {
 	
 });
+$(document).ajaxSend(function(xhr) {
+	var header = $("#header").val();
+	var token = $("#token").val();
+	xhr.setRequestHeader(header, token);
+});
 function testT() {
 	alert(myEditor.getData());
 }
@@ -17,14 +22,19 @@ function testT() {
 	height: 500px;
 }
 </style>
-<div class="form-group margin subject">
-	<input type="text" class="form-control" id="subject" placeholder="Enter Subject" name="subject"/>
-</div>
-<textarea id="content"></textarea>
-<div class="form-group margin function">
-	<button id="submit" type="button" class="btn btn-outline-primary" onclick="testT();">작성하기</button>
-	<button type="button" class="btn btn-outline-secondary">이전으로</button>
-</div>
+<form>
+	<div class="form-group margin subject">
+		<input type="text" class="form-control" id="subject" placeholder="Enter Subject" name="subject"/>
+	</div>
+	<textarea id="content"></textarea>
+	<div class="form-group margin function">
+		<button id="submit" type="button" class="btn btn-outline-primary" onclick="testT();">작성하기</button>
+		<button type="button" class="btn btn-outline-secondary">이전으로</button>
+	</div>
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+	<input type="hidden" id="header" value="${_csrf.headerName}"/>
+	<input type="hidden" id="token" value="${_csrf.token}"/>
+</form>
 <script>
 ClassicEditor
 	.create( document.querySelector('#content'), {

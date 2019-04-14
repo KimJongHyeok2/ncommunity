@@ -15,6 +15,7 @@
 		password-parameter="mem_pw"/>
 		<security:logout logout-url="/logoutAuth" logout-success-url="/login"/>
 		<security:csrf/>
+		
 	</security:http>
 	
 	<security:authentication-manager>
