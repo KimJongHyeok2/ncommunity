@@ -4,4 +4,25 @@
 	<insert id="insertFreeBoard" parameterType="com.web.ncm.board.domain.BoardDTO">
 		INSERT INTO freeboard(free_num, mem_num, free_subject, free_content) VALUES(freeB_seq.nextval, #{num}, #{subject}, #{content})
 	</insert>
+	<select id="selectFreeBoard" resultType="com.web.ncm.board.domain.BoardDTO">
+		<![CDATA[
+			SELECT * FROM
+				(SELECT rownum rnum, f.* FROM
+				(SELECT
+					free_num num, mem_num,
+					(SELECT mem_nickname FROM members WHERE mem_num = mem_num) nickname,
+					free_subject subject,
+					free_content content,
+					free_like "like",
+					free_hate hate,
+					free_status status,
+					free_viewcnt viewcnt,
+					free_regdate regdate
+				FROM freeboard WHERE free_status = 1 ORDER BY free_num DESC) f )
+			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
+		]]>
+	</select>
+	<select id="selectFreeBoardCount" resultType="Integer">
+		SELECT count(*) FROM freeboard WHERE free_status = 1
+	</select>
 </mapper>

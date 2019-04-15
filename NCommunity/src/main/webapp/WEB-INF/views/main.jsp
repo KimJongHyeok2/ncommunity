@@ -31,6 +31,29 @@ function pageMove(type) {
 		$("#logoutForm").submit();
 	}
 }
+function dropdown(type) {
+	if(type == "free") {
+		var x = document.getElementById("free-drop");
+		if (x.className.indexOf("w3-show") == -1) {
+			x.className += " w3-show";
+			x.previousElementSibling.className += " w3-green";
+		} else {
+		   	x.className = x.className.replace(" w3-show", "");
+		    x.previousElementSibling.className = 
+		    x.previousElementSibling.className.replace(" w3-green", "");
+		}	
+	} else if(type == "video") {
+		var x = document.getElementById("video-drop");
+		if (x.className.indexOf("w3-show") == -1) {
+			x.className += " w3-show";
+			x.previousElementSibling.className += " w3-green";
+		} else { 
+			x.className = x.className.replace(" w3-show", "");
+			x.previousElementSibling.className = 
+			x.previousElementSibling.className.replace(" w3-green", "");
+		}
+	}
+}
 </script>
 <style type="text/css">
 .content {
@@ -38,7 +61,7 @@ function pageMove(type) {
 }
 .content .leftMenu {
 	width: 250px;
-	border-right: 1px solid #D5D5D5;
+	margin-top: 1px;
 }
 .content .rightContent {
 	flex-grow: 1;
@@ -62,11 +85,35 @@ function pageMove(type) {
 <jsp:include page="/resources/include/header/header.jsp"/>
 <div class="content">
 	<div id="navtest" class="leftMenu">
-	레프트
+		<div class="w3-sidebar w3-bar-block w3-card" style="width: 250px;">
+		<div class="w3-bar-item w3-button w3-border-bottom w3-hover-blue" onclick="dropdown('free')">
+		자유게시판 <i class="fa fa-caret-down"></i></div>
+		<div id="free-drop" class="w3-hide w3-white w3-card-4">
+			<a href="${pageContext.request.contextPath}/board?type=freeBoard" class="w3-bar-item w3-button w3-border-bottom w3-hover-blue">최신글</a>
+			<a href="#" class="w3-bar-item w3-button w3-border-bottom w3-hover-blue">오늘의 인기글</a>
+			<a href="#" class="w3-bar-item w3-button w3-border-bottom w3-hover-blue">주간 인기글</a>
+		</div>
+		<div class="w3-dropdown-click">
+			<div class="w3-bar-item w3-button w3-border-bottom w3-hover-blue" onclick="dropdown('video')">
+			동영상 게시판 <i class="fa fa-caret-down"></i>
+			</div>
+			<div id="video-drop" class="w3-dropdown-content w3-white w3-card-4">
+				<a href="#" class="w3-bar-item w3-button w3-border-bottom w3-hover-blue">오늘의 인기글</a>
+				<a href="#" class="w3-bar-item w3-button w3-border-bottom w3-hover-blue">주간 인기글</a>
+			</div>
+		</div>
+		</div>
 	</div>
 	<div class="rightContent">
 		<div class="container-fluid">
-			<jsp:include page="board/free/write.jsp"/>
+			<c:choose>				
+				<c:when test="${param.type == 'freeBoard'}">
+					<jsp:include page="board/list.jsp"/>
+				</c:when>
+				<c:when test="${param.type == 'freeWrite'}">
+					<jsp:include page="board/write.jsp"/>
+				</c:when>
+			</c:choose>
 		</div>
 		<div class="footer">
 			푸터

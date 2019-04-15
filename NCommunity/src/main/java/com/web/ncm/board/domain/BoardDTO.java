@@ -16,11 +16,13 @@ public class BoardDTO {
 	
 	// 글 타입
 	private String type;
+	// 작성자 닉네임
+	private String nickname;
 	
 	public BoardDTO() { }
 
 	public BoardDTO(int num, int mem_num, String subject, String content, int like, int hate, int status, int viewcnt,
-			Timestamp regdate, String type) {
+			Timestamp regdate, String type, String nickname) {
 		this.num = num;
 		this.mem_num = mem_num;
 		this.subject = subject;
@@ -31,6 +33,7 @@ public class BoardDTO {
 		this.viewcnt = viewcnt;
 		this.regdate = regdate;
 		this.type = type;
+		this.nickname = nickname;
 	}
 
 	public int getNum() {
@@ -112,5 +115,13 @@ public class BoardDTO {
 	public void setType(String type) {
 		this.type = type;
 	}
-	 
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	
 }

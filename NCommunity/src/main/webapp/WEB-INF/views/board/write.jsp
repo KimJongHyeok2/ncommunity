@@ -2,12 +2,6 @@
     pageEncoding="UTF-8"%>
 <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
 <script>
-$(document).ready(function() {
-	$(function() {
-		var header = $("#header").val();
-		var token = $("#token").val();
-	});
-});
 function writeSubmit(form) {
 	var subject = form["subject"].value;
 	var content = myEditor.getData();
@@ -42,7 +36,7 @@ function writeSubmit(form) {
 		<button type="button" class="btn btn-outline-secondary">이전으로</button>
 	</div>
 	<input type="hidden" id="num" name="num" value="${sessionScope.num}"/>
-	<input type="hidden" id="type" name="type" value="free"/>
+	<input type="hidden" id="type" name="type" value="${param.type}"/>
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </form>
 <input type="hidden" id="header" value="${_csrf.headerName}"/>

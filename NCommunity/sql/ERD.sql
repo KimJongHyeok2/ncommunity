@@ -205,3 +205,36 @@ DELETE FROM members;
 SELECT * FROM FREEBOARD;
 
 SELECT * FROM members WHERE mem_id = 'kjh13585' AND mem_pw = '593bd643c686519ee7a71f78068a624e363a9cd0055b028c247ce15c1a717637';
+
+SELECT f.free_num num, f.mem_num, (SELECT mem_nickname FROM members WHERE mem_num = f.mem_num) nickname, f.free_subject subject, f.free_content content, f.free_like 'like', f.free_hate hate, f.free_status status, f.free_viewcnt viewcnt, f.free_regdate regdate FROM freeboard f WHERE f.free_status = 1
+
+SELECT free_num num, mem_num, (SELECT mem_nickname FROM members WHERE mem_num = mem_num) nickname, free_subject subject, free_content content, free_like "like", free_hate hate, free_status status, free_viewcnt viewcnt, free_regdate regdate FROM freeboard WHERE free_status = 1;
+
+
+		SELECT 
+			free_num num,
+			free_num num,
+			(SELECT mem_nickname FROM members WHERE mem_num = mem_num) nickname,
+			free_subject subject,
+			free_content content,
+			free_like "like",
+			free_hate hate,
+			free_status status,
+			free_viewcnt viewcnt,
+			free_regdate regdate
+		FROM freeboard WHERE free_status = 1
+
+SELECT * FROM
+	(SELECT rownum rnum, f.* FROM
+	(SELECT
+		free_num num, mem_num,
+		(SELECT mem_nickname FROM members WHERE mem_num = mem_num) nickname,
+		free_subject subject,
+		free_content content,
+		free_like "like",
+		free_hate hate,
+		free_status status,
+		free_viewcnt viewcnt,
+		free_regdate regdate
+	FROM freeboard WHERE free_status = 1 ORDER BY free_num DESC) f )
+WHERE rnum >= 1 AND rnum < 11;
