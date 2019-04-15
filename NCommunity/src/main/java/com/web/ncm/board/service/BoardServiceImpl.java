@@ -30,5 +30,10 @@ public class BoardServiceImpl implements BoardService {
 	public int selectFreeBoardCount() throws Exception {
 		return dao.selectFreeBoardCount();
 	}
+
+	@Override
+	public BoardDTO selectWriteView(int num) throws Exception {
+		return dao.selectWriteView(num);
+	}
 	
 }

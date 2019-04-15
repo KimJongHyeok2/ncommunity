@@ -31,4 +31,9 @@ public class BoardDAOImpl implements BoardDAO {
 		return sqlSession.selectOne("board.selectFreeBoardCount");
 	}
 
+	@Override
+	public BoardDTO selectWriteView(int num) throws Exception {
+		return sqlSession.selectOne("board.selectWriteView", num);
+	}
+
 }

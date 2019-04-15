@@ -10,6 +10,15 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	resizeAll();
+    document.querySelectorAll( 'oembed[url]' ).forEach( element => {
+        // to discover the media.
+        const anchor = document.createElement( 'a' );
+
+        anchor.setAttribute( 'href', element.getAttribute( 'url' ) );
+        anchor.className = 'embedly-card';
+
+        element.appendChild( anchor );
+    } );
 });
 $(window).resize(resizeAll);
 function resizeAll() {
@@ -80,26 +89,27 @@ function dropdown(type) {
 	}
 }
 </style>
+<script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
 </head>
 <body>
 <jsp:include page="/resources/include/header/header.jsp"/>
 <div class="content">
 	<div id="navtest" class="leftMenu">
-		<div class="w3-sidebar w3-bar-block w3-card" style="width: 250px;">
-		<div class="w3-bar-item w3-button w3-border-bottom w3-hover-blue" onclick="dropdown('free')">
+		<div class="w3-sidebar w3-bar-block" style="width: 250px; border-right: 1px solid #D5D5D5;">
+		<div class="w3-bar-item w3-button w3-hover-blue ${param.type == 'freeBoard' || param.type == 'freeWrite' || param.type == 'freeView'? 'w3-green':''}" onclick="dropdown('free')">
 		자유게시판 <i class="fa fa-caret-down"></i></div>
-		<div id="free-drop" class="w3-hide w3-white w3-card-4">
-			<a href="${pageContext.request.contextPath}/board?type=freeBoard" class="w3-bar-item w3-button w3-border-bottom w3-hover-blue">최신글</a>
-			<a href="#" class="w3-bar-item w3-button w3-border-bottom w3-hover-blue">오늘의 인기글</a>
-			<a href="#" class="w3-bar-item w3-button w3-border-bottom w3-hover-blue">주간 인기글</a>
+		<div id="free-drop" class="w3-hide w3-white w3-card-4 ${param.type == 'freeBoard' || param.type == 'freeWrite' || param.type == 'freeView'? 'w3-show':''}">
+			<a href="${pageContext.request.contextPath}/board?type=freeBoard" class="w3-bar-item w3-button w3-hover-blue">최신글</a>
+			<a href="#" class="w3-bar-item w3-button w3-hover-blue">오늘의 인기글</a>
+			<a href="#" class="w3-bar-item w3-button w3-hover-blue">주간 인기글</a>
 		</div>
 		<div class="w3-dropdown-click">
-			<div class="w3-bar-item w3-button w3-border-bottom w3-hover-blue" onclick="dropdown('video')">
+			<div class="w3-bar-item w3-buttonw3-hover-blue" onclick="dropdown('video')">
 			동영상 게시판 <i class="fa fa-caret-down"></i>
 			</div>
 			<div id="video-drop" class="w3-dropdown-content w3-white w3-card-4">
-				<a href="#" class="w3-bar-item w3-button w3-border-bottom w3-hover-blue">오늘의 인기글</a>
-				<a href="#" class="w3-bar-item w3-button w3-border-bottom w3-hover-blue">주간 인기글</a>
+				<a href="#" class="w3-bar-item w3-button w3-hover-blue">오늘의 인기글</a>
+				<a href="#" class="w3-bar-item w3-button w3-hover-blue">주간 인기글</a>
 			</div>
 		</div>
 		</div>
@@ -112,6 +122,9 @@ function dropdown(type) {
 				</c:when>
 				<c:when test="${param.type == 'freeWrite'}">
 					<jsp:include page="board/write.jsp"/>
+				</c:when>
+				<c:when test="${param.type == 'freeView' || param.type == 'videoView'}">
+					<jsp:include page="board/view.jsp"/>
 				</c:when>
 			</c:choose>
 		</div>

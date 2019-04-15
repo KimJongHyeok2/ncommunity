@@ -94,11 +94,34 @@ public class BoardController {
 
 		if(dto.getType().equals("freeWrite")) {
 			try {
-				boardService.insertFreeBoard(dto);
+				int count = boardService.insertFreeBoard(dto);
+				
+				if(count == 1) {
+					return "redirect:/board/view?type=view&num=" + dto.getNum();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		
+		return "main";
+	}
+	
+	@GetMapping("/view")
+	public String view(String type, @RequestParam(value = "num", defaultValue = "0") int num, Model model) {
+		if(type == null || type.length() == 0 || num == 0) {
+			return "redirect:/";
+		}
+		
+		BoardDTO dto = null;
+		
+		try {
+			  dto = boardService.selectWriteView(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("dto", dto);
 		
 		return "main";
 	}

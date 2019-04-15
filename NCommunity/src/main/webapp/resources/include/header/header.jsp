@@ -16,6 +16,7 @@ function pageMove(type) {
 <style>
 .header {
 	padding: 5px;
+	border-bottom: 1px solid #D5D5D5;
 }
 .header:after {
 	content: "";
@@ -56,7 +57,7 @@ function pageMove(type) {
 	}
 }
 </style>
-<div class="header w3-card">
+<div class="header">
 	<div class="logo">
 		<img class="img-fluid" src="${pageContext.request.contextPath}/resources/img/main/mainLogo2.png"/>
 	</div>

@@ -26,9 +26,18 @@ $(document).ready(function() {
 			var minute = regdate.getMinutes();
 			minute = (minute + "").length==1? ("0" + minute):minute;			
 			$("#regdate" + (i+1)).html(hour + ":" + minute);
+		} else {
+			$("#regdate" + (i+1)).html(rMonth + "-" + rDate);
 		}
 	}
 });
+function view(num) {
+	if(${param.type == 'freeBoard'}) {		
+		location.href = "${pageContext.request.contextPath}/board/view?type=freeView&num=" + num;
+	} else if(${param.type == 'videoBoard'}) {
+		location.href = "${pageContext.request.contextPath}/board/view?type=videoView&num=" + num;		
+	}
+}
 </script>
 <style>
 .table {
@@ -38,15 +47,21 @@ $(document).ready(function() {
 	border: 1px solid #D5D5D5;
 	border-radius: 5px;
 }
+.table thead .bg-primary {
+	color: white;
+}
 .table thead td {
 	text-align: center;
 	border-top: none;
 }
-.table tbody td:not(.test) {
+.table tbody td:not(.subject) {
 	text-align: center;
 }
 .table .subject {
 	max-width: 150px;
+}
+.table tbody .subject {
+	cursor: pointer;
 }
 .btn-write:after {
 	content: "";
@@ -63,7 +78,7 @@ $(document).ready(function() {
 </style>
 <table class="table table-hover">
 	<thead>
-		<tr class="table-primary">
+		<tr class="bg-primary">
 			<td>구분</td><td class="subject">제목</td><td>작성자</td><td>조회수</td><td>일시</td>
 		</tr>
 	</thead>
@@ -72,7 +87,7 @@ $(document).ready(function() {
 			<c:when test="${fn:length(dto) != 0 && not empty dto}">
 				<c:forEach var="i" varStatus="index" items="${dto}">			
 					<tr>
-						<td>${i.num}</td><td id="subject${index.count}" class="subject">${i.subject}</td><td>${i.nickname}</td><td>${i.viewcnt}</td>
+						<td>${i.num}</td><td id="subject${index.count}" class="subject" onclick="view(${i.num});">${i.subject}</td><td>${i.nickname}</td><td>${i.viewcnt}</td>
 						<td id="regdate${index.count}">${i.regdate}</td>
 					</tr>
 				</c:forEach>

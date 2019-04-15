@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="board">
-	<insert id="insertFreeBoard" parameterType="com.web.ncm.board.domain.BoardDTO">
+	<insert id="insertFreeBoard" parameterType="com.web.ncm.board.domain.BoardDTO" useGeneratedKeys="true" keyColumn="free_num" keyProperty="num">
 		INSERT INTO freeboard(free_num, mem_num, free_subject, free_content) VALUES(freeB_seq.nextval, #{num}, #{subject}, #{content})
 	</insert>
 	<select id="selectFreeBoard" resultType="com.web.ncm.board.domain.BoardDTO">
@@ -24,5 +24,21 @@
 	</select>
 	<select id="selectFreeBoardCount" resultType="Integer">
 		SELECT count(*) FROM freeboard WHERE free_status = 1
+	</select>
+	<select id="selectWriteView" resultType="com.web.ncm.board.domain.BoardDTO">
+		SELECT
+			free_num num,
+			mem_num,
+			free_subject subject,
+			free_content content,
+			free_like "like",
+			free_hate hate,
+			free_status status,
+			free_viewcnt viewcnt,
+			free_regdate regdate,
+			(SELECT mem_id FROM members WHERE mem_num = mem_num) id,
+			(SELECT mem_nickname FROM members WHERE mem_num = mem_num) nickname
+		FROM freeboard
+		WHERE free_num = #{param1} AND free_status = 1
 	</select>
 </mapper>

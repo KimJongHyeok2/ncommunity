@@ -9,4 +9,5 @@ public interface BoardService {
 	public int insertFreeBoard(BoardDTO dto) throws Exception;
 	public List<BoardDTO> selectFreeBoard(Map<String, Integer> page) throws Exception;
 	public int selectFreeBoardCount() throws Exception;
+	public BoardDTO selectWriteView(int num) throws Exception;
 }

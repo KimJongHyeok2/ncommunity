@@ -210,31 +210,4 @@ SELECT f.free_num num, f.mem_num, (SELECT mem_nickname FROM members WHERE mem_nu
 
 SELECT free_num num, mem_num, (SELECT mem_nickname FROM members WHERE mem_num = mem_num) nickname, free_subject subject, free_content content, free_like "like", free_hate hate, free_status status, free_viewcnt viewcnt, free_regdate regdate FROM freeboard WHERE free_status = 1;
 
-
-		SELECT 
-			free_num num,
-			free_num num,
-			(SELECT mem_nickname FROM members WHERE mem_num = mem_num) nickname,
-			free_subject subject,
-			free_content content,
-			free_like "like",
-			free_hate hate,
-			free_status status,
-			free_viewcnt viewcnt,
-			free_regdate regdate
-		FROM freeboard WHERE free_status = 1
-
-SELECT * FROM
-	(SELECT rownum rnum, f.* FROM
-	(SELECT
-		free_num num, mem_num,
-		(SELECT mem_nickname FROM members WHERE mem_num = mem_num) nickname,
-		free_subject subject,
-		free_content content,
-		free_like "like",
-		free_hate hate,
-		free_status status,
-		free_viewcnt viewcnt,
-		free_regdate regdate
-	FROM freeboard WHERE free_status = 1 ORDER BY free_num DESC) f )
-WHERE rnum >= 1 AND rnum < 11;
+SELECT * FROM 

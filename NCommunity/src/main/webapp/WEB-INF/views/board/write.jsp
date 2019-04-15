@@ -32,7 +32,7 @@ function writeSubmit(form) {
 	</div>
 	<textarea id="content" name="content" placeholder="내용을 입력해주세요."></textarea>
 	<div class="form-group margin function">
-		<button id="submit" type="submit" class="btn btn-outline-primary">작성하기</button>
+		<button type="submit" class="btn btn-outline-primary">작성하기</button>
 		<button type="button" class="btn btn-outline-secondary">이전으로</button>
 	</div>
 	<input type="hidden" id="num" name="num" value="${sessionScope.num}"/>
@@ -71,5 +71,5 @@ ClassicEditor
 	})
 	.catch( error => {
 		console.error( error );
-});
+	});
 </script>
