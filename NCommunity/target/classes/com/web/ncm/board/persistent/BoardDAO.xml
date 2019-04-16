@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="board">
 	<insert id="insertFreeBoard" parameterType="com.web.ncm.board.domain.BoardDTO" useGeneratedKeys="true" keyColumn="free_num" keyProperty="num">
-		INSERT INTO freeboard(free_num, mem_num, free_subject, free_content) VALUES(freeB_seq.nextval, #{num}, #{subject}, #{content})
+		INSERT INTO freeboard(free_num, mem_num, free_subject, free_content) VALUES(freeB_seq.nextval, #{mem_num}, #{subject}, #{content})
 	</insert>
 	<select id="selectFreeBoard" resultType="com.web.ncm.board.domain.BoardDTO">
 		<![CDATA[
@@ -41,4 +41,29 @@
 		FROM freeboard
 		WHERE free_num = #{param1} AND free_status = 1
 	</select>
+	<update id="updateViewcnt">
+		UPDATE freeboard SET free_viewcnt = free_viewcnt + 1 WHERE free_num = #{param1}
+	</update>
+	<update id="updateFreeBoard">
+		UPDATE freeboard SET free_subject = #{subject}, free_content = #{content} WHERE free_num = #{num}
+	</update>
+	<update id="deleteFreeBoard">
+		UPDATE freeboard SET free_status = 2 WHERE free_num = #{param1}
+	</update>
+	<select id="selectHasRecommendHistory" resultType="String">
+		SELECT rh_type FROM recommendHistory WHERE mem_num = #{mem_num} AND rh_boardnum = #{num}
+	</select>
+	<insert id="insertRecommendHistory">
+		INSERT INTO recommendHistory(rh_num, mem_num, rh_boardnum, rh_type) VALUES(rh_seq.nextval, #{mem_num}, #{num}, #{type})
+	</insert>
+	<update id="updateBoardRecommend">
+		UPDATE freeBoard SET
+			<if test="type == 1">
+				free_like = free_like + 1
+			</if>
+			<if test="type ==2">
+				free_hate = free_hate + 1
+			</if>
+			WHERE free_num = #{num}
+	</update>
 </mapper>

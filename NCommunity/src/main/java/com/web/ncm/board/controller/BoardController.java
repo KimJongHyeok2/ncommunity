@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -97,7 +99,7 @@ public class BoardController {
 				int count = boardService.insertFreeBoard(dto);
 				
 				if(count == 1) {
-					return "redirect:/board/view?type=view&num=" + dto.getNum();
+					return "redirect:/board/view?type=freeView&num=" + dto.getNum();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -108,7 +110,8 @@ public class BoardController {
 	}
 	
 	@GetMapping("/view")
-	public String view(String type, @RequestParam(value = "num", defaultValue = "0") int num, Model model) {
+	public String view(String type, @RequestParam(value = "num", defaultValue = "0") int num,
+						HttpServletRequest request, HttpServletResponse response, Model model) {
 		if(type == null || type.length() == 0 || num == 0) {
 			return "redirect:/";
 		}
@@ -116,12 +119,99 @@ public class BoardController {
 		BoardDTO dto = null;
 		
 		try {
+			  Cookie[] cookie = request.getCookies();
+			  
+			  if(cookie != null) {			  
+				  boolean viewCookieFlag = false;
+				  
+				  for(int i=0; i<cookie.length; i++) {
+					  if(cookie[i].getName().equals("view" + num)) {
+						  viewCookieFlag = true;
+					  }
+				  }
+				  
+				  if(!viewCookieFlag) {	  
+					  Cookie viewCookie = new Cookie("view" + num, String.valueOf(num));
+					  viewCookie.setMaxAge(21600);
+					  response.addCookie(viewCookie);
+					  boardService.updateViewcnt(num);
+				  }
+			  }
+			  
 			  dto = boardService.selectWriteView(num);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		model.addAttribute("dto", dto);
+		
+		return "main";
+	}
+	
+	@GetMapping("/update")
+	public String update(String type, @RequestParam(value = "num", defaultValue = "0") int num, Model model) {
+		if(type == null || type.length() == 0 || num == 0) {
+			return "redirect:/";
+		}
+		
+		BoardDTO dto = null;
+		
+		try {
+			dto = boardService.selectWriteView(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("dto", dto);
+		
+		return "main";
+	}
+	
+	@PostMapping("/updateOk")
+	public String updateOk(BoardDTO dto, BindingResult result) {
+		BoardValidation validation = new BoardValidation();
+		validation.validate(dto, result);		
+		
+		if(result.hasErrors()) {
+			return "redirect:/";
+		}
+		
+		if(dto.getType().equals("freeUpdate")) {
+			try {
+				int count = boardService.updateFreeBoard(dto);
+				
+				if(count == 1) {
+					return "redirect:/board/view?type=freeView&num=" + dto.getNum();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return "main";
+	}
+	
+	@PostMapping("/deleteOk")
+	public String deleteOk(String type, @RequestParam(value = "num", defaultValue = "0") int num) {
+		
+		System.out.println(type);
+		
+		if(type == null || type.length() == 0 || num == 0) {
+			System.out.println("여기옴");
+			return "redirect:/";
+		} else {
+			if(type.equals("freeDelete")) {
+				try {
+					int count = boardService.deleteFreeBoard(num);
+					
+					if(count == 1) {
+						return "redirect:/board?type=freeBoard";
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		
 		return "main";
 	}

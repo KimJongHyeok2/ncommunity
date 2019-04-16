@@ -1,6 +1,7 @@
 package com.web.ncm.member.util;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -23,7 +24,8 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		MemberDTO dto = new MemberDTO();
-		
+		boolean urlFlag = false;
+
 		if(request.getParameter("mem_id") != null && request.getParameter("mem_pw") != null) {
 			dto.setMem_id(request.getParameter("mem_id"));
 			dto.setMem_pw(request.getParameter("mem_pw"));
@@ -37,10 +39,21 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
 			request.getSession().setAttribute("id", dto.getMem_id());
 			request.getSession().setAttribute("nickname", dto.getMem_nickname());
 			
+			if(request.getSession().getAttribute("urlTemp") != null) {
+				urlFlag = true;
+				response.setContentType("text/html; charset=utf-8");
+				PrintWriter output = response.getWriter();
+				output.println("<script>location.href='" + ((String)request.getSession().getAttribute("urlTemp")) + "'</script>");
+				request.getSession().removeAttribute("urlTemp");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		response.sendRedirect(request.getContextPath());
+		
+		if(!urlFlag) {
+			response.sendRedirect(request.getContextPath());
+		}
+		
 	}
 	
 }

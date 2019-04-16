@@ -36,4 +36,34 @@ public class BoardDAOImpl implements BoardDAO {
 		return sqlSession.selectOne("board.selectWriteView", num);
 	}
 
+	@Override
+	public int updateViewcnt(int num) throws Exception {
+		return sqlSession.update("board.updateViewcnt", num);
+	}
+
+	@Override
+	public int updateFreeBoard(BoardDTO dto) throws Exception {
+		return sqlSession.update("board.updateFreeBoard", dto);
+	}
+
+	@Override
+	public int deleteFreeBoard(int num) throws Exception {
+		return sqlSession.delete("board.deleteFreeBoard", num);
+	}
+
+	@Override
+	public String selectHasRecommendHistory(Map<String, Integer> map) throws Exception {
+		return sqlSession.selectOne("board.selectHasRecommendHistory", map);
+	}
+
+	@Override
+	public int insertRecommendHistory(Map<String, Integer> map) throws Exception {
+		return sqlSession.insert("board.insertRecommendHistory", map);
+	}
+
+	@Override
+	public int updateBoardRecommend(Map<String, Integer> map) throws Exception {
+		return sqlSession.update("board.updateBoardRecommend", map);
+	}
+
 }

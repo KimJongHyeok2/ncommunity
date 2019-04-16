@@ -88,16 +88,17 @@ function writeSubmit(form) {
 	height: 500px;
 }
 </style>
-<form action="${pageContext.request.contextPath}/board/writeOk" id="writeForm" onsubmit="return writeSubmit(this);" method="post">
+<form action="${pageContext.request.contextPath}/board/updateOk" id="writeForm" onsubmit="return writeSubmit(this);" method="post">
 	<div class="form-group margin subject">
-		<input type="text" class="form-control" id="subject" placeholder="제목은 10자 이상 100자 이하로 입력해주세요." name="subject"/>
+		<input type="text" class="form-control" id="subject" placeholder="제목은 10자 이상 100자 이하로 입력해주세요." name="subject" value="${dto.subject}"/>
 	</div>
-	<textarea id="content" name="content" placeholder="내용을 입력해주세요."></textarea>
+	<textarea id="content" name="content" placeholder="내용을 입력해주세요.">${dto.content}</textarea>
 	<div class="form-group margin function">
 		<button type="submit" class="btn btn-outline-primary">작성하기</button>
-		<button type="button" class="btn btn-outline-secondary" onclick="history.back();">이전으로</button>
+		<button type="button" class="btn btn-outline-secondary">이전으로</button>
 	</div>
 	<input type="hidden" id="mem_num" name="mem_num" value="${sessionScope.num}"/>
+	<input type="hidden" id="num" name="num" value="${dto.num}"/>
 	<input type="hidden" id="type" name="type" value="${param.type}"/>
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </form>
@@ -126,9 +127,7 @@ ClassicEditor
 	.create( document.querySelector('#content'), {
 		ckfinder: {
 	        uploadUrl: '${pageContext.request.contextPath}/upload/img?${_csrf.parameterName}=${_csrf.token}'
-	    },
-		removePlugins: ['MediaEmbed']
-	/* MediaEmbed */
+	    }
 	})
 	.then( editor => {
 	    myEditor = editor;

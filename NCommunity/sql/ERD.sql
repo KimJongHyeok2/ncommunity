@@ -1,3 +1,4 @@
+
 /* Drop Tables */
 
 DROP TABLE board_file CASCADE CONSTRAINTS;
@@ -9,6 +10,8 @@ DROP TABLE recommendHistory CASCADE CONSTRAINTS;
 DROP TABLE videoboard_comments CASCADE CONSTRAINTS;
 DROP TABLE videoboard CASCADE CONSTRAINTS;
 DROP TABLE members CASCADE CONSTRAINTS;
+
+
 
 
 /* Create Tables */
@@ -90,6 +93,7 @@ CREATE TABLE recommendHistory
 (
 	rh_num number NOT NULL,
 	mem_num number NOT NULL,
+	rh_boardnum number NOT NULL,
 	rh_type number NOT NULL,
 	rh_regdate timestamp DEFAULT SYSDATE,
 	PRIMARY KEY (rh_num)
@@ -181,33 +185,5 @@ ALTER TABLE videoboard_comments
 	REFERENCES videoboard (video_num)
 ;
 
-/* Create Sequence */
 
-CREATE SEQUENCE mem_seq;
-CREATE SEQUENCE freeB_seq;
-CREATE SEQUENCE videoB_seq;
-CREATE SEQUENCE fcomment_seq;
-CREATE SEQUENCE vcomment_seq;
-CREATE SEQUENCE rh_seq; 
-CREATE SEQUENCE ekey_seq; 
 
-/* Drop Sequence */
-
-DROP SEQUENCE mem_seq;
-DROP SEQUENCE freeB_seq;
-DROP SEQUENCE videoB_seq;
-DROP SEQUENCE fcomment_seq;
-DROP SEQUENCE vcomment_seq;
-DROP SEQUENCE rh_seq;
-
-DELETE FROM members;
-
-SELECT * FROM FREEBOARD;
-
-SELECT * FROM members WHERE mem_id = 'kjh13585' AND mem_pw = '593bd643c686519ee7a71f78068a624e363a9cd0055b028c247ce15c1a717637';
-
-SELECT f.free_num num, f.mem_num, (SELECT mem_nickname FROM members WHERE mem_num = f.mem_num) nickname, f.free_subject subject, f.free_content content, f.free_like 'like', f.free_hate hate, f.free_status status, f.free_viewcnt viewcnt, f.free_regdate regdate FROM freeboard f WHERE f.free_status = 1
-
-SELECT free_num num, mem_num, (SELECT mem_nickname FROM members WHERE mem_num = mem_num) nickname, free_subject subject, free_content content, free_like "like", free_hate hate, free_status status, free_viewcnt viewcnt, free_regdate regdate FROM freeboard WHERE free_status = 1;
-
-SELECT * FROM 

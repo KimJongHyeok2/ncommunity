@@ -35,5 +35,35 @@ public class BoardServiceImpl implements BoardService {
 	public BoardDTO selectWriteView(int num) throws Exception {
 		return dao.selectWriteView(num);
 	}
+
+	@Override
+	public int updateViewcnt(int num) throws Exception {
+		return dao.updateViewcnt(num);
+	}
+
+	@Override
+	public int updateFreeBoard(BoardDTO dto) throws Exception {
+		return dao.updateFreeBoard(dto);
+	}
+
+	@Override
+	public int deleteFreeBoard(int num) throws Exception {
+		return dao.deleteFreeBoard(num);
+	}
+
+	@Override
+	public String selectHasRecommendHistory(Map<String, Integer> map) throws Exception {
+		return dao.selectHasRecommendHistory(map);
+	}
+
+	@Override
+	public int insertRecommendHistory(Map<String, Integer> map) throws Exception {
+		return dao.insertRecommendHistory(map);
+	}
+
+	@Override
+	public int updaetBoardRecommend(Map<String, Integer> map) throws Exception {
+		return dao.updateBoardRecommend(map);
+	}
 	
 }

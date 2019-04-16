@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <script>
 $(document).ready(function() {
@@ -28,12 +29,84 @@ $(document).ready(function() {
 	}
 	$(".v-content img").addClass("img-fluid");
 	
-	if(${empty dto}) {
+	if(${empty dto || dto.status != 1}) {
 		$("#myModal .modal-body").html("삭제되었거나 존재하지 않는 글입니다.");
 		$("#myModal .modal-footer").attr("onclick", "history.back();")
 		$("#myModal").modal();
 	}
+
+	$("oembed[url]").each(function() {
+ 		 const anchor = document.createElement("a");
+ 		 anchor.setAttribute('href', $(this).attr("url"));
+ 		 anchor.className = 'embedly-card';
+ 		 $(this).append(anchor);
+	});
+	/* 	document.querySelectorAll( 'oembed[url]' ).forEach( element => {
+
+	    const anchor = document.createElement( 'a' );
+	    anchor.setAttribute( 'href', element.getAttribute( 'url' ) );
+	    anchor.className = 'embedly-card';
+	    element.appendChild( anchor );
+	    
+	});	 */
 });
+function deleteConfirm() {
+	$("#myModal2 .modal-body").html("정말로 글을 삭제하시겠습니까?");
+	$("#delete-btn").attr("onclick", "$('#delete-form').submit();");
+	$("#myModal2").modal();
+}
+function list(type) {
+	type = type.substr(-type.length, 4) + "Board";
+	
+	location.href = "${pageContext.request.contextPath}/board?type=" + type;
+}
+function recommend(num, mem_num, type) {
+	var header = $("#header").val();
+	var token = $("#token").val();
+	
+	if(${not empty sessionScope.num}) {
+		$.ajax({
+			url: "${pageContext.request.contextPath}/rBoard/recommend",
+			type: "POST",
+			cache: false,
+			data: {
+				"num" : num,
+				"mem_num" : mem_num,
+				"type" : type
+			},
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(data, status) {
+				if(status == "success") {
+					if(data == "1") {
+						$("#like-count").html((parseInt($("#like-count").html()) + 1));
+						$("#myModal .modal-body").html("좋아요를 눌렀습니다.");
+						$("#myModal .modal-footer").removeAttr("onclick");
+						$("#myModal").modal();
+					} else if(data == "2") {
+						$("#hate-count").html((parseInt($("#hate-count").html()) + 1));
+						$("#myModal .modal-body").html("싫어요를 눌렀습니다.");
+						$("#myModal .modal-footer").removeAttr("onclick");
+						$("#myModal").modal();						
+					} else if(data == "Already-Like") {
+						$("#myModal .modal-body").html("이미 좋아요를 누른 글입니다.");
+						$("#myModal .modal-footer").removeAttr("onclick");
+						$("#myModal").modal();
+					} else if(data == "Already-Hate") {
+						$("#myModal .modal-body").html("이미 싫어요를 누른 글입니다.");
+						$("#myModal .modal-footer").removeAttr("onclick");
+						$("#myModal").modal();		
+					}
+				}
+			}
+		});
+	} else {
+		$("#myModal .modal-body").html("로그인이 필요합니다.");
+		$("#myModal .modal-footer").attr("onclick", "location.href='${pageContext.request.contextPath}/'")
+		$("#myModal").modal();	
+	}
+}
 </script>
 <style>
 .container-view {
@@ -204,20 +277,24 @@ $(document).ready(function() {
 			${dto.content}
 		</div>
 		<div class="recommend">
-			<button type="button" class="btn btn-primary">
-				좋아요 <span class="badge badge-light">${dto.like}</span>
+			<button type="button" class="btn btn-primary" onclick="recommend(${dto.num}, ${sessionScope.num}, 1);">
+				좋아요 <span id="like-count" class="badge badge-light">${dto.like}</span>
 			</button>
-			<button type="button" class="btn btn-danger">
-				싫어요 <span class="badge badge-light">${dto.hate}</span>
+			<button type="button" class="btn btn-danger" onclick="recommend(${dto.num}, ${sessionScope.num}, 2);">
+				싫어요 <span id="hate-count" class="badge badge-light">${dto.hate}</span>
 			</button>
 		</div>
 	</div>
 </div>
 <div class="container-function">
 	<div class="view-function">
-		<button type="button" class="btn btn-outline-primary">수정하기</button>
-		<button type="button" class="btn btn-outline-danger">삭제하기</button>
-		<button type="button" class="btn btn-outline-secondary">목록으로</button>
+		<c:choose>
+			<c:when test="${sessionScope.num == dto.mem_num}">
+				<button type="button" class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/board/update?type=freeUpdate&num=${dto.num}'">수정하기</button>
+				<button type="button" class="btn btn-outline-danger" onclick="deleteConfirm();">삭제하기</button>
+			</c:when>
+		</c:choose>
+		<button type="button" class="btn btn-outline-secondary" onclick="list('${param.type}');">목록으로</button>
 	</div>
 </div>
 <div class="container-comment-input">
@@ -308,3 +385,29 @@ $(document).ready(function() {
 		</div>
 	</div>
 </div>
+<div class="modal fade" id="myModal2">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+		<!-- Modal Header -->
+		<div class="modal-header">
+		<h4 class="modal-title">안내</h4>
+			<button type="button" class="close" data-dismiss="modal">×</button>
+		</div>
+		<!-- Modal body -->
+		<div class="modal-body">
+		</div>
+		<!-- Modal footer -->
+		<div class="modal-footer">
+			<form action="${pageContext.request.contextPath}/board/deleteOk" id="delete-form" method="post">
+				<input type="hidden" name="type" value="freeDelete"/>
+				<input type="hidden" name="num" value="${dto.num}"/>
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+			</form>
+			<button type="button" id="delete-btn" class="btn btn-danger">확인</button>
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+		</div>
+		</div>
+	</div>
+</div>
+<input type="hidden" id="header" value="${_csrf.headerName}"/>
+<input type="hidden" id="token" value="${_csrf.token}"/>
