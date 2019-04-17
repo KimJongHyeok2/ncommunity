@@ -2,44 +2,39 @@ package com.web.ncm.board.domain;
 
 import java.sql.Timestamp;
 
-public class BoardDTO {
+public class CommentDTO {
 	
 	private int num;
+	private int board_num;
 	private int mem_num;
-	private String subject;
 	private String content;
 	private int like;
 	private int hate;
 	private int status;
-	private int viewcnt;
 	private Timestamp regdate;
 	
-	// 글 타입
-	private String type;
 	// 작성자 아이디
 	private String id;
 	// 작성자 닉네임
 	private String nickname;
-	// 게시물 총 댓글 수
-	private int commentsCount;
+	// 댓글 타입
+	private String type;
 	
-	public BoardDTO() { }
-	
-	public BoardDTO(int num, int mem_num, String subject, String content, int like, int hate, int status, int viewcnt,
-			Timestamp regdate, String type, String id, String nickname, int commentsCount) {
+	public CommentDTO() { }
+
+	public CommentDTO(int num, int board_num, int mem_num, String content, int like, int hate, int status,
+			Timestamp regdate, String id, String nickname, String type) {
 		this.num = num;
+		this.board_num = board_num;
 		this.mem_num = mem_num;
-		this.subject = subject;
 		this.content = content;
 		this.like = like;
 		this.hate = hate;
 		this.status = status;
-		this.viewcnt = viewcnt;
 		this.regdate = regdate;
-		this.type = type;
 		this.id = id;
 		this.nickname = nickname;
-		this.commentsCount = commentsCount;
+		this.type = type;
 	}
 
 	public int getNum() {
@@ -50,20 +45,20 @@ public class BoardDTO {
 		this.num = num;
 	}
 
+	public int getBoard_num() {
+		return board_num;
+	}
+
+	public void setBoard_num(int board_num) {
+		this.board_num = board_num;
+	}
+
 	public int getMem_num() {
 		return mem_num;
 	}
 
 	public void setMem_num(int mem_num) {
 		this.mem_num = mem_num;
-	}
-
-	public String getSubject() {
-		return subject;
-	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
 	}
 
 	public String getContent() {
@@ -98,28 +93,12 @@ public class BoardDTO {
 		this.status = status;
 	}
 
-	public int getViewcnt() {
-		return viewcnt;
-	}
-
-	public void setViewcnt(int viewcnt) {
-		this.viewcnt = viewcnt;
-	}
-
 	public Timestamp getRegdate() {
 		return regdate;
 	}
 
 	public void setRegdate(Timestamp regdate) {
 		this.regdate = regdate;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public String getId() {
@@ -138,12 +117,12 @@ public class BoardDTO {
 		this.nickname = nickname;
 	}
 
-	public int getCommentsCount() {
-		return commentsCount;
+	public String getType() {
+		return type;
 	}
 
-	public void setCommentsCount(int commentsCount) {
-		this.commentsCount = commentsCount;
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }

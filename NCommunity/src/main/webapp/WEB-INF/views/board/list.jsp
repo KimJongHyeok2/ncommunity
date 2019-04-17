@@ -57,6 +57,9 @@ function view(num) {
 .table tbody td:not(.subject) {
 	text-align: center;
 }
+.table tbody .empty-list {
+	padding: 30px;
+}
 .table .subject {
 	max-width: 150px;
 }
@@ -87,14 +90,14 @@ function view(num) {
 			<c:when test="${fn:length(dto) != 0 && not empty dto}">
 				<c:forEach var="i" varStatus="index" items="${dto}">			
 					<tr>
-						<td>${i.num}</td><td id="subject${index.count}" class="subject" onclick="view(${i.num});">${i.subject}</td><td>${i.nickname}</td><td>${i.viewcnt}</td>
+						<td>${i.num}</td><td id="subject${index.count}" class="subject" onclick="view(${i.num});">${i.subject}<span class="text-primary">(${i.commentsCount})</span></td><td>${i.nickname}</td><td>${i.viewcnt}</td>
 						<td id="regdate${index.count}">${i.regdate}</td>
 					</tr>
 				</c:forEach>
 			</c:when>
 			<c:otherwise>
 				<tr>
-					<td colspan="5">작성된 글이 존재하지 않습니다.</td>
+					<td colspan="5" class="empty-list">작성된 글이 존재하지 않습니다.</td>
 				</tr>
 			</c:otherwise>
 		</c:choose>

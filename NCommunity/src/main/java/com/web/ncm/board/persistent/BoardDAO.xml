@@ -9,16 +9,18 @@
 			SELECT * FROM
 				(SELECT rownum rnum, f.* FROM
 				(SELECT
-					free_num num, mem_num,
-					(SELECT mem_nickname FROM members WHERE mem_num = mem_num) nickname,
-					free_subject subject,
-					free_content content,
-					free_like "like",
-					free_hate hate,
-					free_status status,
-					free_viewcnt viewcnt,
-					free_regdate regdate
-				FROM freeboard WHERE free_status = 1 ORDER BY free_num DESC) f )
+					b.free_num num,
+					b.mem_num,
+					(SELECT mem_nickname FROM members WHERE mem_num = b.mem_num) nickname,
+					b.free_subject subject,
+					b.free_content content,
+					b.free_like "like",
+					b.free_hate hate,
+					b.free_status status,
+					b.free_viewcnt viewcnt,
+					b.free_regdate regdate,
+					((SELECT count(*) FROM freeboard_comments WHERE free_num = b.free_num) + (SELECT count(*) FROM freeboard_recomments WHERE free_num = b.free_num)) commentsCount
+				FROM freeboard b WHERE b.free_status = 1 ORDER BY free_num DESC) f )
 			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
 		]]>
 	</select>
@@ -27,19 +29,19 @@
 	</select>
 	<select id="selectWriteView" resultType="com.web.ncm.board.domain.BoardDTO">
 		SELECT
-			free_num num,
-			mem_num,
-			free_subject subject,
-			free_content content,
-			free_like "like",
-			free_hate hate,
-			free_status status,
-			free_viewcnt viewcnt,
-			free_regdate regdate,
-			(SELECT mem_id FROM members WHERE mem_num = mem_num) id,
-			(SELECT mem_nickname FROM members WHERE mem_num = mem_num) nickname
-		FROM freeboard
-		WHERE free_num = #{param1} AND free_status = 1
+			f.free_num num,
+			f.mem_num,
+			f.free_subject subject,
+			f.free_content content,
+			f.free_like "like",
+			f.free_hate hate,
+			f.free_status status,
+			f.free_viewcnt viewcnt,
+			f.free_regdate regdate,
+			(SELECT mem_id FROM members WHERE mem_num = f.mem_num) id,
+			(SELECT mem_nickname FROM members WHERE mem_num = f.mem_num) nickname
+		FROM freeboard f
+		WHERE f.free_num = #{param1} AND free_status = 1
 	</select>
 	<update id="updateViewcnt">
 		UPDATE freeboard SET free_viewcnt = free_viewcnt + 1 WHERE free_num = #{param1}
@@ -66,4 +68,42 @@
 			</if>
 			WHERE free_num = #{num}
 	</update>
+	<insert id="insertFreeBoardComment" parameterType="com.web.ncm.board.domain.BoardDTO">
+		INSERT INTO freeboard_comments(fcomment_num, free_num, mem_num, fcomment_content) VALUES(fcomment_seq.nextval, #{board_num}, #{mem_num}, #{content})
+	</insert>
+	<select id="selectFreeBoardComments" resultType="com.web.ncm.board.domain.CommentDTO">
+		SELECT
+			f.fcomment_num num,
+			f.free_num board_num,
+			f.mem_num,
+			(SELECT mem_id FROM members WHERE mem_num = f.mem_num) id,
+			(SELECT mem_nickname FROM members WHERE mem_num = f.mem_num) nickname,			
+			f.fcomment_content content,
+			f.fcomment_like "like",
+			f.fcomment_hate hate,
+			f.fcomment_status status,
+			f.fcomment_regdate regdate
+		FROM freeboard_comments f WHERE f.free_num = #{param1}
+		ORDER BY f.fcomment_num DESC
+	</select>
+	<insert id="insertFreeBoardReComment" parameterType="com.web.ncm.board.domain.ReCommentDTO">
+		INSERT INTO freeboard_recomments(f_recomment_num, fcomment_num, free_num, mem_num, f_recomment_content) VALUES(f_recomment_seq.nextval, #{comment_num}, #{board_num}, #{mem_num}, #{content})
+	</insert>
+	<select id="selectFreeBoardReComments" resultType="com.web.ncm.board.domain.ReCommentDTO">
+		SELECT
+			f.f_recomment_num num,
+			f.fcomment_num comment_num,
+			f.free_num board_num,
+			f.mem_num,
+			(SELECT mem_id FROM members WHERE mem_num = f.mem_num) id,
+			(SELECT mem_nickname FROM members WHERE mem_num = f.mem_num) nickname,
+			f.f_recomment_content content,
+			f.f_recomment_status status,
+			f.f_recomment_regdate regdate
+		FROM freeboard_recomments f WHERE f.free_num = #{param1}
+		ORDER BY f.f_recomment_num ASC
+	</select>
+	<select id="selectFreeBoardCommentsCount" resultType="com.web.ncm.board.domain.CommentDTO">
+		SELECT fcomment_num num FROM freeboard_comments WHERE free_num = #{param1}
+	</select>
 </mapper>

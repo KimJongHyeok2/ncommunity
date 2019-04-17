@@ -149,6 +149,7 @@ function dropdown(type) {
 }
 </style>
 <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/animate.css"/>
 </head>
 <body>
 <jsp:include page="/resources/include/header/header.jsp"/>

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.web.ncm.board.domain.BoardDTO;
+import com.web.ncm.board.domain.CommentDTO;
+import com.web.ncm.board.domain.ReCommentDTO;
 
 public interface BoardDAO {
 	public int insertFreeBoard(BoardDTO dto) throws Exception;
@@ -16,4 +18,9 @@ public interface BoardDAO {
 	public String selectHasRecommendHistory(Map<String, Integer> map) throws Exception;
 	public int insertRecommendHistory(Map<String, Integer> map) throws Exception;
 	public int updateBoardRecommend(Map<String, Integer> map) throws Exception;
+	public int insertFreeBoardComment(CommentDTO dto) throws Exception;
+	public List<CommentDTO> selectFreeBoardComments(int num) throws Exception;
+	public int insertFreeBoardReComment(ReCommentDTO dto) throws Exception;
+	public List<ReCommentDTO> selectFreeBoardReComments(int num) throws Exception;
+	public List<CommentDTO> selectFreeBoardCommentsCount(int num) throws Exception;
 }

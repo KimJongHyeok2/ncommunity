@@ -193,11 +193,8 @@ public class BoardController {
 	
 	@PostMapping("/deleteOk")
 	public String deleteOk(String type, @RequestParam(value = "num", defaultValue = "0") int num) {
-		
-		System.out.println(type);
-		
+
 		if(type == null || type.length() == 0 || num == 0) {
-			System.out.println("여기옴");
 			return "redirect:/";
 		} else {
 			if(type.equals("freeDelete")) {

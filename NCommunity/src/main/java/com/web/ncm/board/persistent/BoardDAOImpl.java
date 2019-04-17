@@ -9,6 +9,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.web.ncm.board.domain.BoardDTO;
+import com.web.ncm.board.domain.CommentDTO;
+import com.web.ncm.board.domain.ReCommentDTO;
 
 @Repository("BoardDAO")
 public class BoardDAOImpl implements BoardDAO {
@@ -64,6 +66,31 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public int updateBoardRecommend(Map<String, Integer> map) throws Exception {
 		return sqlSession.update("board.updateBoardRecommend", map);
+	}
+
+	@Override
+	public int insertFreeBoardComment(CommentDTO dto) throws Exception {
+		return sqlSession.insert("board.insertFreeBoardComment", dto);
+	}
+
+	@Override
+	public List<CommentDTO> selectFreeBoardComments(int num) throws Exception {
+		return sqlSession.selectList("board.selectFreeBoardComments", num);
+	}
+
+	@Override
+	public int insertFreeBoardReComment(ReCommentDTO dto) throws Exception {
+		return sqlSession.insert("board.insertFreeBoardReComment", dto);
+	}
+
+	@Override
+	public List<ReCommentDTO> selectFreeBoardReComments(int num) throws Exception {
+		return sqlSession.selectList("board.selectFreeBoardReComments", num);
+	}
+
+	@Override
+	public List<CommentDTO> selectFreeBoardCommentsCount(int num) throws Exception {
+		return sqlSession.selectList("board.selectFreeBoardCommentsCount", num);
 	}
 
 }

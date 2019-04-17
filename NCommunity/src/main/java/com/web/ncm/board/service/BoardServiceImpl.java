@@ -8,6 +8,8 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import com.web.ncm.board.domain.BoardDTO;
+import com.web.ncm.board.domain.CommentDTO;
+import com.web.ncm.board.domain.ReCommentDTO;
 import com.web.ncm.board.persistent.BoardDAO;
 
 @Service("BoardService")
@@ -64,6 +66,31 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int updaetBoardRecommend(Map<String, Integer> map) throws Exception {
 		return dao.updateBoardRecommend(map);
+	}
+
+	@Override
+	public int insertFreeBoardComment(CommentDTO dto) throws Exception {
+		return dao.insertFreeBoardComment(dto);
+	}
+
+	@Override
+	public List<CommentDTO> selectFreeBoardComments(int num) throws Exception {
+		return dao.selectFreeBoardComments(num);
+	}
+
+	@Override
+	public int insertFreeBoardReComment(ReCommentDTO dto) throws Exception {
+		return dao.insertFreeBoardReComment(dto);
+	}
+
+	@Override
+	public List<ReCommentDTO> selectFreeBoardReComments(int num) throws Exception {
+		return dao.selectFreeBoardReComments(num);
+	}
+
+	@Override
+	public List<CommentDTO> selectFreeBoardCommentsCount(int num) throws Exception {
+		return dao.selectFreeBoardCommentsCount(num);
 	}
 	
 }

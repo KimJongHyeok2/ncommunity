@@ -49,6 +49,7 @@ $(document).ready(function() {
 	    element.appendChild( anchor );
 	    
 	});	 */
+	commentList();
 });
 function deleteConfirm() {
 	$("#myModal2 .modal-body").html("정말로 글을 삭제하시겠습니까?");
@@ -96,15 +97,320 @@ function recommend(num, mem_num, type) {
 					} else if(data == "Already-Hate") {
 						$("#myModal .modal-body").html("이미 싫어요를 누른 글입니다.");
 						$("#myModal .modal-footer").removeAttr("onclick");
-						$("#myModal").modal();		
+						$("#myModal").modal();
+					} else {
+						$("#myModal .modal-body").html("알 수 없는 오류입니다.");
+						$("#myModal .modal-footer").removeAttr("onclick");
+						$("#myModal").modal();
 					}
 				}
 			}
 		});
 	} else {
 		$("#myModal .modal-body").html("로그인이 필요합니다.");
-		$("#myModal .modal-footer").attr("onclick", "location.href='${pageContext.request.contextPath}/'")
+		$("#myModal .modal-footer").attr("onclick", "location.href='${pageContext.request.contextPath}/'");
 		$("#myModal").modal();	
+	}
+}
+function limitComment(comment) {
+	var commentVal = comment.value;
+	$("#comment-write").attr("onclick", "commentWrite();");
+	$(".alert-info.comment").removeClass("animated bounce");
+	
+	if(commentVal.length > 300) {
+		$(comment).val(commentVal.substr(0, 300));
+		$(".alert-info.comment").css("display", "block").animate({"opacity":"1"}, 1000);
+	} else if(commentVal.length < 10) {
+		$(".alert-info.comment").css("display", "block").animate({"opacity":"1"}, 1000);
+	}
+	
+	$("#comment-limit").html(commentVal.length);
+}
+function limitReComment(recomment, num) {
+	var recommentVal = recomment.value;
+
+	$("#recomment-write-" + num).attr("onclick", "recommentWrite(" + num + ");");
+	
+	if(recommentVal.length > 300) {
+		$(recomment).val(recommentVal.substr(0, 300));
+	}
+	
+	$("#recomment-limit-" + num).html(recommentVal.length);
+}
+function commentWrite() {
+	var comment = $("#comment").val();
+	var type = '${param.type}';
+	type = type.substr(-type.length, 4) + "Comment";
+	
+	if(comment.length < 10) {
+		$(".alert-info.comment").addClass("animated bounce");
+	} else if(comment.length > 300) {
+		$(".alert-info.comment").addClass("animated bounce");
+	} else {
+		if(comment.length < 10 || comment.length > 300) {
+			$(".alert-info.comment").addClass("animated bounce");
+			return false;
+		}
+
+		var header = $("#header").val();
+		var token = $("#token").val();
+		
+		$.ajax({
+			url: "${pageContext.request.contextPath}/rBoard/insertComment",
+			type: "POST",
+			cache: false,
+			data: {
+				"board_num" : ${dto.num},
+				"mem_num" : ${sessionScope.num},
+				"content" : comment,
+				"type" : type
+			},
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(data, status) {
+				if(status == "success") {
+					if(data == "Ok") {
+						$("#comment").val("");
+						$("#comment-limit").html("0");
+						commentList();
+						$(".alert-info.comment").animate({"opacity":"0"}, 1000).css("display", "none");
+					}
+				}
+			}
+		});
+	}
+}
+function recommentWrite(num) {
+	var recomment = $("#recomment-" + num).val();
+	var type = '${param.type}';
+	type = type.substr(-type.length, 4) + "ReComment";
+	
+	if(recomment.length < 10) {
+		$("#myModal .modal-body").html("답글은 10자 이상 300자 이하로 입력해주세요.");
+		$("#myModal .modal-footer").removeAttr("onclick");
+		$("#myModal").modal();
+	} else if(recomment.length > 300) {
+		$("#myModal .modal-body").html("답글은 10자 이상 300자 이하로 입력해주세요.");
+		$("#myModal .modal-footer").removeAttr("onclick");
+		$("#myModal").modal();
+	} else {
+		if(recomment.length < 10 || recomment.length > 300) {
+			$("#myModal .modal-body").html("답글은 10자 이상 300자 이하로 입력해주세요.");
+			$("#myModal .modal-footer").removeAttr("onclick");
+			$("#myModal").modal();
+			return false;
+		}
+		
+		var header = $("#header").val();
+		var token = $("#token").val();
+		
+		$.ajax({
+			url: "${pageContext.request.contextPath}/rBoard/insertReComment",
+			type: "POST",
+			cache: false,
+			data: {
+				"comment_num" : num,
+				"board_num" : ${dto.num},
+				"mem_num" : ${sessionScope.num},
+				"content" : recomment,
+				"type" : type
+			},
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(data, status) {
+				if(status == "success") {
+					if(data == "Ok") {
+						$("#recomment").val("");
+						$("#recomment-limit").html("0");
+						commentList(num);
+						$(".recomment-list").css("display", "block");
+					} else {
+						$("#myModal .modal-body").html("알 수 없는 오류입니다.");
+						$("#myModal .modal-footer").removeAttr("onclick");
+						$("#myModal").modal();
+					}
+				}
+			}
+		});
+	}
+}
+function commentList(displayNumber) {
+	var header = $("#header").val();
+	var token = $("#token").val();
+	var type = "${param.type}";
+	type = type.substr(-type.length, 4) + "Comments";
+	var type_re = "${param.type}";
+	type_re = type_re.substr(-type_re.length, 4) + "ReComments";
+	var commentCount = 0;
+	var commentList = new Array();
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/rBoard/selectComments",
+		type: "POST",
+		cache: false,
+		data: {
+			"type" : type,
+			"num" : ${dto.num}
+		},
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(header, token);
+		},
+		success: function(data, status) {
+			if(status == "success") {
+				if(data.status == "Ok") {
+					var commentHTML = "";
+					commentCount = data.count;
+					for(var i=0; i<data.count; i++) {
+						commentList.push(data.list[i].num);
+						commentHTML += "<div class='container-comment-list'>";
+							commentHTML += "<ul class='comment-list'>";
+								commentHTML += "<li>";
+									commentHTML += "<div class='comment-subject'>";
+										commentHTML += "<div class='subject'>";
+											commentHTML += data.list[i].nickname + "(<span>" + data.list[i].id + "</span>)";
+										commentHTML += "</div>";
+										commentHTML += "<div class='regdate'>";
+											commentHTML += formatRegDate(data.list[i].regdate);
+										commentHTML += "</div>";
+									commentHTML += "</div>";
+									commentHTML += "<div class='comment-content'>";
+										commentHTML += "<div class='c_content'>";
+											commentHTML += data.list[i].content.replace(/\n/g, "<br>");
+										commentHTML += "</div>";
+									commentHTML += "</div>";
+									commentHTML += "<div class='recommend'>";
+										commentHTML += "<div class='btn-group'>";
+											commentHTML += "<button type='button' class='btn btn-info' onclick='recommentToggle(" + data.list[i].num + ");'>답글(<span id='recomment-count-" + data.list[i].num + "'>0</span>)</button>";
+											commentHTML += "<button type='button' class='btn btn-info dropdown-toggle dropdown-toggle-split' onclick='recommentToggle(" + data.list[i].num + ");'>";
+												commentHTML += "<span class='caret'></span>";
+											commentHTML += "</button>"
+										commentHTML += "</div>";
+										commentHTML += "<button type='button' class='btn btn-primary comment-like'>";
+											commentHTML += "<span><img class='recommend-img' src='${pageContext.request.contextPath}/resources/img/board/like.png'/></span> <span class='badge badge-light'>" + data.list[i].like + "</span>";
+										commentHTML += "</button>";
+										commentHTML += "<button type='button' class='btn btn-danger comment-dislike'>";
+											commentHTML += "<span><img class='recommend-img' src='${pageContext.request.contextPath}/resources/img/board/dislike.png'/></span> <span class='badge badge-light'>" + data.list[i].hate + "</span>";
+										commentHTML += "</button>";
+										commentHTML += "<div class='btn-group float-right'>";
+											commentHTML += "<button type='button' class='btn btn-outline-primary " + mine(data.list[i].mem_num) + "'>수정</button>";
+											commentHTML += "<button type='button' class='btn btn-outline-danger " + mine(data.list[i].mem_num) + "'>삭제</button>";
+										commentHTML += "</div>";
+									commentHTML += "</div>";
+								commentHTML += "</li>";
+							commentHTML += "</ul>";
+							commentHTML += "<ul id='recomment-list-" + data.list[i].num + "' class='recomment-list " + (displayNumber != null && displayNumber == data.list[i].num? 'onRecomment':'') + "'>";
+							commentHTML += "</ul>";
+						commentHTML += "</div>";
+					}
+					if(data.count != 0) {
+						$("#container-comment").html(commentHTML);
+						$("#comment-count").html(data.count);
+					} else {
+						$("#container-comment").html("<div class='empty-comment'>등록된 댓글이 없습니다.</div>");
+					}
+				} else {
+					$("#container-comment").html("<div class='empty-comment'>등록된 댓글이 없습니다.</div>");
+				}
+			}
+		}
+	});
+	$.ajax({
+		url: "${pageContext.request.contextPath}/rBoard/selectReComments",
+		type: "POST",
+		cache: false,
+		data: {
+			"type" : type_re,
+			"num" : ${dto.num}
+		},
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(header, token);
+		},
+		success: function(data, status) {
+			if(status == "success") {
+				if(data.status == "Ok") {
+					for(var i=0; i<data.commentCount.commentsCount; i++) {
+						var recommentHTML = "";
+							recommentHTML += "<li>";
+							recommentHTML += "<div class='container-comment-input recomment'>";
+								recommentHTML += "<textarea class='form-control' rows='3' id='recomment-" + data.commentCount.list[i].num + "' onkeyup='limitReComment(this, " + data.commentCount.list[i].num + ");' placeholder='내용을 입력해주세요.'></textarea>";
+								recommentHTML += "(<span id='recomment-limit-" + data.commentCount.list[i].num + "' class='margin'>0</span>/300)";
+								recommentHTML += "<button type='button' id='recomment-write-" + data.commentCount.list[i].num + "' class='btn btn-outline-primary float-right margin'>작성하기</button>";
+							recommentHTML += "</div>";
+							recommentHTML += "</li>";
+							for(var j=0; j<data.count; j++) {
+								if(data.commentCount.list[i].num == data.list[j].comment_num) {
+									$("#recomment-count-" + data.commentCount.list[i].num).html((parseInt($("#recomment-count-" + data.commentCount.list[i].num).html()) + 1));
+									recommentHTML += "<li>";
+										recommentHTML += "<div class='recomment-content'>";
+											recommentHTML += "<div class='arrow'><img src='${pageContext.request.contextPath}/resources/img/board/arrow.png'/></div>";
+											recommentHTML += "<div class='rc-content'>";
+												recommentHTML += "<div class='rc-subject'>";
+													recommentHTML += "<div class='subject'>";
+														recommentHTML += data.list[j].nickname + "(<span>" + data.list[j].id + "</span>)";
+													recommentHTML += "</div>";
+													recommentHTML += "<div class='regdate'>";
+														recommentHTML += formatRegDate(data.list[j].regdate);
+													recommentHTML += "</div>";
+												recommentHTML += "</div>";
+												recommentHTML += "<div class='rc-content-inner'>";
+													recommentHTML += "<div class='rc-content-inner-content'>";
+														recommentHTML += data.list[j].content.replace(/\n/g, "<br>");
+													recommentHTML += "</div>";
+													recommentHTML += "<div class='btn-group " +  mine(data.list[j].mem_num) + "'>";
+														recommentHTML += "<button type='button' class='btn btn-outline-primary " + mine(data.list[j].mem_num) + "'>수정</button>";
+														recommentHTML += "<button type='button' class='btn btn-outline-danger " + mine(data.list[j].mem_num) + "'>삭제</button>";
+													recommentHTML += "</div>";
+												recommentHTML += "</div>";
+											recommentHTML += "</div>";
+										recommentHTML += "</div>";
+									recommentHTML += "</li>";
+								}
+							}
+						$("#recomment-list-" + data.commentCount.list[i].num).html(recommentHTML);
+					}
+					$("#comment-count").html((parseInt($("#comment-count").html())+data.count));
+				}
+			}
+		}
+	});
+}
+function formatRegDate(regdate) {
+	var today = new Date();
+	var tYear = today.getFullYear();
+	var tMonth = today.getMonth()+1;
+	tMonth = (tMonth + "").length==1? ("0" + tMonth):tMonth;
+	var tDate = today.getDate();
+	tDate = (tDate.length + "")==1? ("0" + tDate):tDate;
+		
+	var regdate = new Date(regdate);
+	var rYear = regdate.getFullYear();
+	var rMonth = regdate.getMonth()+1;
+	rMonth = (rMonth + "").length==1? ("0" + rMonth):rMonth;
+	var rDate = regdate.getDate();
+	rDate = (rDate.length + "")==1? ("0" + rDate):rDate;
+	
+	var returnValue = "";
+	
+	if((tYear + "-" + tMonth + "-" + tDate) == (rYear + "-" + rMonth + "-" + rDate)) {
+		var hour = regdate.getHours();
+		hour = (hour + "").length==1? ("0" + hour):hour;
+		var minute = regdate.getMinutes();
+		minute = (minute + "").length==1? ("0" + minute):minute;
+		returnValue = (hour + ":" + minute);
+	} else {
+		returnValue = (rMonth + "-" + rDate);
+	}
+	
+	return returnValue;
+}
+function recommentToggle(num) {
+	$("#recomment-list-" + num).toggle();
+}
+function mine(mem_num) {
+	if(mem_num != '${sessionScope.num}') {
+		return "off";
 	}
 }
 </script>
@@ -152,8 +458,25 @@ function recommend(num, mem_num, type) {
 	display: block;
 	clear: both;
 }
+.alert.alert-info.comment {
+	display: none;
+	opacity: 0;
+}
 .container-function .view-function {
 	float: right;
+}
+#container-comment .empty-comment {
+	padding: 30px;
+	margin-bottom: 15px;
+	text-align: center;
+	border: 1px solid #D5D5D5;
+	border-radius: 5px;
+}
+#container-comment .on {
+	display: block;
+}
+#container-comment .off {
+	display: none;
 }
 .container-comment-input {
 	margin-top: 15px;
@@ -161,6 +484,13 @@ function recommend(num, mem_num, type) {
 	padding: 10px;
 	border: 1px solid #D5D5D5;
 	border-radius: 5px;
+}
+.container-comment-input.recomment {
+	margin-bottom: 0;
+	border-left: none;
+	border-right: none;
+	border-bottom: none;
+	border-radius: 0;
 }
 .container-comment-input .margin {
 	margin-top: 5px;
@@ -192,6 +522,9 @@ function recommend(num, mem_num, type) {
 .container-comment-list .comment-list .comment-subject .subject {
 	flex-grow: 1;
 }
+.container-comment-list .comment-list .comment-subject .subject span {
+	color: gray;
+}
 .container-comment-list .comment-list .comment-subject .regdate {
 	width: 70px;
 	text-align: center;
@@ -202,15 +535,25 @@ function recommend(num, mem_num, type) {
 .container-comment-list .comment-list .comment-content .c-content {
 	margin-bottom: 5px;
 }
-.container-comment-list .comment-list .comment-content .recommend button img {
+.container-comment-list .comment-list .recommend {
+	margin: 10px;
+}
+.container-comment-list .comment-list .recommend .comment-like {
+	margin: 0 5px;
+}
+.recommend-img {
 	width: 16px;
 	height: 16px;
 }
 .container-comment-list .recomment-list {
+	display: none;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
+}
+.container-comment-list .recomment-list.onRecomment {
+	display: block;
 }
 .container-comment-list .recomment-list .recomment-content {
 	display: flex;
@@ -238,6 +581,9 @@ function recommend(num, mem_num, type) {
 }
 .container-comment-list .recomment-list .recomment-content .rc-content .rc-subject .subject {
 	flex-grow: 1;
+}
+.container-comment-list .recomment-list .recomment-content .rc-content .rc-subject .subject span {
+	color: gray;
 }
 .container-comment-list .recomment-list .recomment-content .rc-content .rc-subject .regdate {
 	width: 70px;
@@ -298,74 +644,80 @@ function recommend(num, mem_num, type) {
 	</div>
 </div>
 <div class="container-comment-input">
-  <textarea class="form-control" rows="5" id="comment"  placeholder="내용을 입력해주세요."></textarea>
-  (<span id="comment-limit" class="margin">0</span>/300)<button type="button" class="btn btn-outline-primary float-right margin">작성하기</button>
+  <textarea class="form-control" rows="5" id="comment" onkeyup="limitComment(this);" placeholder="내용을 입력해주세요."></textarea>
+  (<span id="comment-limit" class="margin">0</span>/300)
+  <button type="button" id="comment-write" class="btn btn-outline-primary float-right margin">작성하기</button>
 </div>
+  <div class="alert alert-info comment">
+    <strong>안내</strong> 댓글은 10자 이상 300자 이하로 입력해주세요.
+  </div>
 <div class="container-comment-title">
-	댓글 <span class="badge badge-pill badge-primary">0</span>
+	댓글 <span id="comment-count" class="badge badge-pill badge-primary">0</span>
 </div>
-<div class="container-comment-list">
-	<ul class="comment-list">
-		<li>
-			<div class="comment-subject">
-				<div class="subject">
-					작성자
-				</div>
-				<div class="regdate">
-					01:55
-				</div>
-			</div>
-			<div class="comment-content">
-				<div class="c-content">
-					내용
-				</div>
-			<div class="recommend">
-				  <div class="btn-group">
-				    <button type="button" class="btn btn-info">답글(0)</button>
-				    <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
-				      <span class="caret"></span>
-				    </button>
-				  </div>
-				<button type="button" class="btn btn-primary">
-					<span><img src="${pageContext.request.contextPath}/resources/img/board/like.png"/></span> <span class="badge badge-light">7</span>
-				</button>
-				<button type="button" class="btn btn-danger">
-					<span><img src="${pageContext.request.contextPath}/resources/img/board/dislike.png"/></span> <span class="badge badge-light">7</span>
-				</button>
-				<div class="btn-group float-right">
-					<button type="button" class="btn btn-outline-primary">수정</button>
-					<button type="button" class="btn btn-outline-danger">삭제</button>
-				</div>
-			</div>
-			</div>
-		</li>
-	</ul>
-	<ul class="recomment-list">
-		<li>
-			<div class="recomment-content">
-				<div class="arrow"><img src="${pageContext.request.contextPath}/resources/img/board/arrow.png"/></div>
-				<div class="rc-content">
-					<div class="rc-subject">
-						<div class="subject">
-							제목
-						</div>
-						<div class="regdate">
-							02:00
-						</div>
+<div id="container-comment">
+<%-- 	<div class="container-comment-list">
+		<ul class="comment-list">
+			<li>
+				<div class="comment-subject">
+					<div class="subject">
+						작성자
 					</div>
-					<div class="rc-content-inner">
-						<div class="rc-content-inner-content">
-							내용
-						</div>
-						<div class="btn-group">
-							<button type="button" class="btn btn-outline-primary">수정</button>
-							<button type="button" class="btn btn-outline-danger">삭제</button>
-						</div>
+					<div class="regdate">
+						01:55
 					</div>
 				</div>
-			</div>
-		</li>
-	</ul>
+				<div class="comment-content">
+					<div class="c-content">
+						내용
+					</div>
+				<div class="recommend">
+					  <div class="btn-group">
+					    <button type="button" class="btn btn-info">답글(0)</button>
+					    <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+					      <span class="caret"></span>
+					    </button>
+					  </div>
+					<button type="button" class="btn btn-primary">
+						<span><img src="${pageContext.request.contextPath}/resources/img/board/like.png"/></span> <span class="badge badge-light">7</span>
+					</button>
+					<button type="button" class="btn btn-danger">
+						<span><img src="${pageContext.request.contextPath}/resources/img/board/dislike.png"/></span> <span class="badge badge-light">7</span>
+					</button>
+					<div class="btn-group float-right">
+						<button type="button" class="btn btn-outline-primary">수정</button>
+						<button type="button" class="btn btn-outline-danger">삭제</button>
+					</div>
+				</div>
+				</div>
+			</li>
+		</ul>
+		<ul class="recomment-list">
+			<li>
+				<div class="recomment-content">
+					<div class="arrow"><img src="${pageContext.request.contextPath}/resources/img/board/arrow.png"/></div>
+					<div class="rc-content">
+						<div class="rc-subject">
+							<div class="subject">
+								제목
+							</div>
+							<div class="regdate">
+								02:00
+							</div>
+						</div>
+						<div class="rc-content-inner">
+							<div class="rc-content-inner-content">
+								내용
+							</div>
+							<div class="btn-group">
+								<button type="button" class="btn btn-outline-primary">수정</button>
+								<button type="button" class="btn btn-outline-danger">삭제</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div> --%>
 </div>
 <div class="modal fade" id="myModal">
 	<div class="modal-dialog modal-dialog-centered">

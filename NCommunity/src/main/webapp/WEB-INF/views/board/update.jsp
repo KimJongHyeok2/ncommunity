@@ -127,7 +127,8 @@ ClassicEditor
 	.create( document.querySelector('#content'), {
 		ckfinder: {
 	        uploadUrl: '${pageContext.request.contextPath}/upload/img?${_csrf.parameterName}=${_csrf.token}'
-	    }
+	    },
+		removePlugins: ['MediaEmbed']
 	})
 	.then( editor => {
 	    myEditor = editor;
