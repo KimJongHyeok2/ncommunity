@@ -77,6 +77,9 @@ function view(num) {
 	display: block;
 	clear: both;
 }
+.index {
+ z-index: 1;
+}
 @media (max-width:500px) {
 	.table td {
 		text-overflow: ellipsis;
@@ -112,7 +115,7 @@ function view(num) {
 <div class="btn-write">
 	<button type="button" class="btn btn-outline-primary float-right" onclick="location.href='board/write?type=freeWrite'">작성하기</button>
 </div>
-<ul class="pagination justify-content-center">
+<ul class="pagination justify-content-center index">
 	<c:choose>
 		<c:when test="${not empty pad}">
 			<c:if test="${pad.startPage > pad.pageBlock}">
