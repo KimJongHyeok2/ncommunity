@@ -61,7 +61,7 @@ function pageMove(type) {
 		width: auto;
 		margin: auto;
 	}
-	.header .info button {
+	.header .info #left-open {
 		margin-right: 5px;
 	}
 	.header .info #left-open-div {
@@ -94,9 +94,10 @@ function pageMove(type) {
 			</div>
 		</s:authorize>
 		<s:authorize access="!hasRole('ROLE_USER')">
-			<button type="button" class="btn btn-outline-primary" onclick="pageMove('login');">로그인</button>
-			<button type="button" class="btn btn-outline-info" onclick="pageMove('join');">회원가입</button>
+			<div class="dropdown">
+				<button type="button" class="btn btn-outline-primary" onclick="pageMove('login');">로그인</button>
+				<button type="button" class="btn btn-outline-info" onclick="pageMove('join');">회원가입</button>
+			</div>
 		</s:authorize>
 	</div>
-	<div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" id="myOverlay"></div>
 </div>

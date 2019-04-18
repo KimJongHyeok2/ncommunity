@@ -220,3 +220,4 @@ ALTER TABLE videoboard_comments
 
 
 
+SELECT TO_DATE('2019-01-01', 'yyyy-mm-dd') FROM dual;

@@ -68,8 +68,8 @@ public class RestJoinController {
 					+ "</div>";
 		
 		try {
-			mail.setSubject("[NCommunity] 가입을 위한 이메일 인증키입니다.");
 			mail.setText(html, "utf-8", "html");
+			mail.setSubject("[NCommunity] 가입을 위한 이메일 인증키입니다.");
 			mail.addRecipient(RecipientType.TO, new InternetAddress(email));
 			mailSender.send(mail);
 			joinService.insertEKey(accessDto);
