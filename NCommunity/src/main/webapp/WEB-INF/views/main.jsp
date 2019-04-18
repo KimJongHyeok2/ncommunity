@@ -129,7 +129,7 @@ function dropdown(type) {
 	min-width: 250px;
 }
 .content .leftMenu #sidebar {
-	z-index: 1;
+	z-index: 5;
 }
 .content .rightContent {
 	flex-grow: 1;
