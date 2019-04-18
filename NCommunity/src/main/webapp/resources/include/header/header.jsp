@@ -92,17 +92,10 @@ function pageMove(type) {
 			</div>
 		</s:authorize>
 		<s:authorize access="!hasRole('ROLE_USER')">
-<<<<<<< HEAD
-		<div class="dropdown">
-			<button type="button" class="btn btn-outline-primary" onclick="pageMove('login');">로그인</button>
-			<button type="button" class="btn btn-outline-info" onclick="pageMove('join');">회원가입</button>
-		</div>
-=======
 			<div class="dropdown">
 				<button type="button" class="btn btn-outline-primary" onclick="pageMove('login');">로그인</button>
 				<button type="button" class="btn btn-outline-info" onclick="pageMove('join');">회원가입</button>
 			</div>
->>>>>>> branch 'master' of https://github.com/KimJongHyeok2/ncommunity.git
 		</s:authorize>
 	</div>
 </div>

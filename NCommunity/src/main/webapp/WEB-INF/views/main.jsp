@@ -128,6 +128,9 @@ function dropdown(type) {
 	position: static;
 	min-width: 250px;
 }
+.content .leftMenu #sidebar {
+	z-index: 1;
+}
 .content .rightContent {
 	flex-grow: 1;
 	overflow: auto;
