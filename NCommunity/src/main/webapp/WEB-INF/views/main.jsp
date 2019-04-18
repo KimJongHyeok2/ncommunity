@@ -70,6 +70,13 @@ function getClientInfo() {
     return browser;
 }
 function resizeAll() {
+ 	var windowWidth = $("html").width();
+ 	if(windowWidth >= 700) {
+		$("#sidebar").css("display", "block");
+	} else {
+		$("#sidebar").css("display", "none");		
+	}
+	
 	allHeight = $("html").height();
 	headerHeight = $(".header").height();
 	footerHeight = $(".footer").height();
@@ -117,15 +124,25 @@ function dropdown(type) {
 	display: flex;
 }
 .content .leftMenu {
+	display: block;
+	position: static;
 	min-width: 250px;
+	z-index: 5;
 }
 .content .rightContent {
 	flex-grow: 1;
 	overflow: auto;
 }
 .footer {
-	height: 150px;
-	border: 1px solid;
+	font-size: 10pt;
+	color: gray;
+	text-align: center;
+	border-top: 1px solid #D5D5D5;
+	border-bottom: 1px solid #D5D5D5;
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.footer div span {
+	color: black;
 }
 .browser {
 	display: none;
@@ -145,6 +162,7 @@ function dropdown(type) {
 	}
 	.content .leftMenu {
 		display: none;
+		position: absolute;
 	}
 }
 </style>
@@ -154,8 +172,8 @@ function dropdown(type) {
 <body>
 <jsp:include page="/resources/include/header/header.jsp"/>
 <div class="content">
-	<div class="leftMenu">
-		<div class="w3-sidebar w3-bar-block" style="min-width: 250px; border-right: 1px solid #D5D5D5;">
+	<div id="sidebar" class="leftMenu">
+		<div class="w3-sidebar w3-bar-block w3-animate-left" style="min-width: 250px; border-right: 1px solid #D5D5D5;">
 			<div class="w3-bar-item w3-button w3-hover-blue ${param.type == 'freeBoard' || param.type == 'freeWrite' || param.type == 'freeView' || param.type == 'freeUpdate'? 'w3-green':''}" onclick="dropdown('free')">
 			자유게시판 <i class="fa fa-caret-down"></i></div>
 			<div id="free-drop" class="w3-hide w3-white w3-card-4 ${param.type == 'freeBoard' || param.type == 'freeWrite' || param.type == 'freeView' || param.type == 'freeUpdate'? 'w3-show':''}">
@@ -192,7 +210,7 @@ function dropdown(type) {
 			</c:choose>
 		</div>
 		<div class="footer">
-			푸터
+			<div>Copyright <span>KimJongHyeok.</span> All Rights Reserved.</div>
 		</div>
 	</div>
 </div>

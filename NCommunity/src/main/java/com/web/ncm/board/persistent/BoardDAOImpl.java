@@ -64,8 +64,8 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	@Override
-	public int updateBoardRecommend(Map<String, Integer> map) throws Exception {
-		return sqlSession.update("board.updateBoardRecommend", map);
+	public int updateFreeBoardRecommend(Map<String, Integer> map) throws Exception {
+		return sqlSession.update("board.updateFreeBoardRecommend", map);
 	}
 
 	@Override
@@ -91,6 +91,41 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public List<CommentDTO> selectFreeBoardCommentsCount(int num) throws Exception {
 		return sqlSession.selectList("board.selectFreeBoardCommentsCount", num);
+	}
+
+	@Override
+	public int updateFreeBoardComment(CommentDTO dto) throws Exception {
+		return sqlSession.update("board.updateFreeBoardComment", dto);
+	}
+
+	@Override
+	public int deleteFreeBoardComment(int num) throws Exception {
+		return sqlSession.delete("board.deleteFreeBoardComment", num);
+	}
+
+	@Override
+	public int updateFreeBoardReComment(ReCommentDTO dto) throws Exception {
+		return sqlSession.update("board.updateFreeBoardReComment", dto);
+	}
+
+	@Override
+	public int deleteFreeBoardReComment(int num) throws Exception {
+		return sqlSession.update("board.deleteFreeBoardReComment", num);
+	}
+
+	@Override
+	public String selectHasCommentRecommendHistory(Map<String, Integer> map) throws Exception {
+		return sqlSession.selectOne("board.selectHasCommentRecommendHistory", map);
+	}
+
+	@Override
+	public int insertCommentRecommendHistory(Map<String, Integer> map) throws Exception {
+		return sqlSession.insert("board.insertCommentRecommendHistory", map);
+	}
+
+	@Override
+	public int updateFreeBoardCommentRecommend(Map<String, Integer> map) throws Exception {
+		return sqlSession.update("board.updateFreeBoardCommentRecommend", map);
 	}
 
 }

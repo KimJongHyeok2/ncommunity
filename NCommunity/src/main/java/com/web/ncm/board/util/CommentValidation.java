@@ -17,10 +17,18 @@ public class CommentValidation implements Validator {
 	public void validate(Object target, Errors errors) {
 		CommentDTO dto = (CommentDTO)target;
 		
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "board_num", "emptyBoardNumber");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "mem_num", "emptyMemberNumber");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "content", "emptyCommentContent");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "type", "emptyCommentType");
+		
+		if(dto.getType().equals("freeComment")) {
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "num", "emptyCommentNumber");
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "content", "emptyCommentContent");
+		} else {
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "board_num", "emptyBoardNumber");
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "mem_num", "emptyMemberNumber");
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "content", "emptyCommentContent");
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "type", "emptyCommentType");			
+		}
+	
 	}
 
 }

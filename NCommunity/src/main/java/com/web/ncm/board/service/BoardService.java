@@ -17,10 +17,17 @@ public interface BoardService {
 	public int deleteFreeBoard(int num) throws Exception;
 	public String selectHasRecommendHistory(Map<String, Integer> map) throws Exception;
 	public int insertRecommendHistory(Map<String, Integer> map) throws Exception;
-	public int updaetBoardRecommend(Map<String, Integer> map) throws Exception;
+	public int updaetFreeBoardRecommend(Map<String, Integer> map) throws Exception;
 	public int insertFreeBoardComment(CommentDTO dto) throws Exception;
 	public List<CommentDTO> selectFreeBoardComments(int num) throws Exception;
 	public int insertFreeBoardReComment(ReCommentDTO dto) throws Exception;
 	public List<ReCommentDTO> selectFreeBoardReComments(int num) throws Exception;
 	public List<CommentDTO> selectFreeBoardCommentsCount(int num) throws Exception;
+	public int updateFreeBoardComment(CommentDTO dto) throws Exception;
+	public int deleteFreeBoardComment(int num) throws Exception;
+	public int updateFreeBoardReComment(ReCommentDTO dto) throws Exception;
+	public int deleteFreeBoardReComment(int num) throws Exception;
+	public String selectHasCommentRecommendHistory(Map<String, Integer> map) throws Exception;
+	public int insertCommentRecommendHistory(Map<String, Integer> map) throws Exception;
+	public int updateFreeBoardCommentRecommend(Map<String, Integer> map) throws Exception;
 }

@@ -19,7 +19,7 @@
 					b.free_status status,
 					b.free_viewcnt viewcnt,
 					b.free_regdate regdate,
-					((SELECT count(*) FROM freeboard_comments WHERE free_num = b.free_num) + (SELECT count(*) FROM freeboard_recomments WHERE free_num = b.free_num)) commentsCount
+					((SELECT count(*) FROM freeboard_comments WHERE free_num = b.free_num AND fcomment_status = 1) + (SELECT count(*) FROM freeboard_recomments WHERE free_num = b.free_num AND f_recomment_status = 1)) commentsCount
 				FROM freeboard b WHERE b.free_status = 1 ORDER BY free_num DESC) f )
 			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
 		]]>
@@ -58,12 +58,12 @@
 	<insert id="insertRecommendHistory">
 		INSERT INTO recommendHistory(rh_num, mem_num, rh_boardnum, rh_type) VALUES(rh_seq.nextval, #{mem_num}, #{num}, #{type})
 	</insert>
-	<update id="updateBoardRecommend">
+	<update id="updateFreeBoardRecommend">
 		UPDATE freeBoard SET
 			<if test="type == 1">
 				free_like = free_like + 1
 			</if>
-			<if test="type ==2">
+			<if test="type == 2">
 				free_hate = free_hate + 1
 			</if>
 			WHERE free_num = #{num}
@@ -106,4 +106,32 @@
 	<select id="selectFreeBoardCommentsCount" resultType="com.web.ncm.board.domain.CommentDTO">
 		SELECT fcomment_num num FROM freeboard_comments WHERE free_num = #{param1}
 	</select>
+	<update id="updateFreeBoardComment">
+		UPDATE freeboard_comments SET fcomment_content = #{content} WHERE fcomment_num = #{num}
+	</update>
+	<update id="deleteFreeBoardComment">
+		UPDATE freeboard_comments SET fcomment_status = 2 WHERE fcomment_num = #{param1}
+	</update>
+	<update id="updateFreeBoardReComment">
+		UPDATE freeboard_recomments SET f_recomment_content = #{content} WHERE f_recomment_num = #{num}
+	</update>
+	<update id="deleteFreeBoardReComment">
+		UPDATE freeboard_recomments SET f_recomment_status = 2 WHERE f_recomment_num = #{param1}
+	</update>
+	<select id="selectHasCommentRecommendHistory" resultType="String">
+		SELECT rh_type FROM recommendHistory WHERE mem_num = #{mem_num} AND rh_commentnum = #{num}
+	</select>
+	<insert id="insertCommentRecommendHistory">
+		INSERT INTO recommendHistory(rh_num, mem_num, rh_commentnum, rh_type) VALUES(rh_seq.nextval, #{mem_num}, #{num}, #{type})
+	</insert>
+	<update id="updateFreeBoardCommentRecommend">
+		UPDATE freeboard_comments SET
+			<if test="type == 3">
+				fcomment_like = fcomment_like + 1
+			</if>
+			<if test="type == 4">
+				fcomment_hate = fcomment_hate + 1
+			</if>
+			WHERE fcomment_num = #{num}
+	</update>
 </mapper>

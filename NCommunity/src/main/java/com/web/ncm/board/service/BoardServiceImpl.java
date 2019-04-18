@@ -64,8 +64,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public int updaetBoardRecommend(Map<String, Integer> map) throws Exception {
-		return dao.updateBoardRecommend(map);
+	public int updaetFreeBoardRecommend(Map<String, Integer> map) throws Exception {
+		return dao.updateFreeBoardRecommend(map);
 	}
 
 	@Override
@@ -91,6 +91,41 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<CommentDTO> selectFreeBoardCommentsCount(int num) throws Exception {
 		return dao.selectFreeBoardCommentsCount(num);
+	}
+
+	@Override
+	public int updateFreeBoardComment(CommentDTO dto) throws Exception {
+		return dao.updateFreeBoardComment(dto);
+	}
+
+	@Override
+	public int deleteFreeBoardComment(int num) throws Exception {
+		return dao.deleteFreeBoardComment(num);
+	}
+
+	@Override
+	public int updateFreeBoardReComment(ReCommentDTO dto) throws Exception {
+		return dao.updateFreeBoardReComment(dto);
+	}
+
+	@Override
+	public int deleteFreeBoardReComment(int num) throws Exception {
+		return dao.deleteFreeBoardReComment(num);
+	}
+
+	@Override
+	public String selectHasCommentRecommendHistory(Map<String, Integer> map) throws Exception {
+		return dao.selectHasCommentRecommendHistory(map);
+	}
+
+	@Override
+	public int insertCommentRecommendHistory(Map<String, Integer> map) throws Exception {
+		return dao.insertCommentRecommendHistory(map);
+	}
+
+	@Override
+	public int updateFreeBoardCommentRecommend(Map<String, Integer> map) throws Exception {
+		return dao.updateFreeBoardCommentRecommend(map);
 	}
 	
 }

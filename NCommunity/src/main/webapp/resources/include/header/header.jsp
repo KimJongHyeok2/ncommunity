@@ -3,6 +3,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 <script>
+$(document).ready(function() {
+	$("#left-open").click(function() {
+		$("#sidebar").toggle();
+	});
+});
 function pageMove(type) {
 	if(type == "join") {
 		location.href = "${pageContext.request.contextPath}/join";
@@ -33,8 +38,12 @@ function pageMove(type) {
 	height: 100%;
 }
 .header .info {
+	display: flex;
 	float: right;
 	line-height: 55px;
+}
+.header .info #left-open-div {
+	display: none;
 }
 .header .info .dropdown .dropdown-menu {
 	width: 100%;
@@ -55,6 +64,9 @@ function pageMove(type) {
 	.header .info button {
 		margin-right: 5px;
 	}
+	.header .info #left-open-div {
+		display: block;
+	}
 }
 </style>
 <div class="header">
@@ -62,14 +74,16 @@ function pageMove(type) {
 		<img class="img-fluid" src="${pageContext.request.contextPath}/resources/img/main/mainLogo2.png"/>
 	</div>
 	<div class="info">
+		<div id="left-open-div" class="dropdown">
+			<button id="left-open" type="button" class="btn btn-outline-secondary">&#9776;</button>
+		</div>
 		<s:authorize access="hasRole('ROLE_USER')">
 			<c:url value="/logoutAuth" var="logout"/>
-			<!-- <button type="button" class="btn btn-outline-danger" onclick="pageMove('logout');">로그아웃</button> -->
 			<form id="logoutForm" action="${logout}" method="post">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			</form>
 			<div class="dropdown">
-			  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+			  <button type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown">
 			    ${sessionScope.nickname}(<s:authentication property="name"/>)님
 			  </button>
 			  <div class="dropdown-menu">
@@ -84,4 +98,5 @@ function pageMove(type) {
 			<button type="button" class="btn btn-outline-info" onclick="pageMove('join');">회원가입</button>
 		</s:authorize>
 	</div>
+	<div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" id="myOverlay"></div>
 </div>

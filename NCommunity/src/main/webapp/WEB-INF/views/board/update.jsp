@@ -95,7 +95,7 @@ function writeSubmit(form) {
 	<textarea id="content" name="content" placeholder="내용을 입력해주세요.">${dto.content}</textarea>
 	<div class="form-group margin function">
 		<button type="submit" class="btn btn-outline-primary">작성하기</button>
-		<button type="button" class="btn btn-outline-secondary">이전으로</button>
+		<button type="button" class="btn btn-outline-secondary" onclick="history.back();">이전으로</button>
 	</div>
 	<input type="hidden" id="mem_num" name="mem_num" value="${sessionScope.num}"/>
 	<input type="hidden" id="num" name="num" value="${dto.num}"/>

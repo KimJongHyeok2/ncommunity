@@ -64,6 +64,8 @@ function list(type) {
 function recommend(num, mem_num, type) {
 	var header = $("#header").val();
 	var token = $("#token").val();
+	var board_type = '${param.type}';
+	board_type = board_type.substr(-board_type.length, 4) + "Board";
 	
 	if(${not empty sessionScope.num}) {
 		$.ajax({
@@ -73,7 +75,8 @@ function recommend(num, mem_num, type) {
 			data: {
 				"num" : num,
 				"mem_num" : mem_num,
-				"type" : type
+				"type" : type,
+				"board_type" : board_type
 			},
 			beforeSend: function(xhr) {
 				xhr.setRequestHeader(header, token);
@@ -96,6 +99,60 @@ function recommend(num, mem_num, type) {
 						$("#myModal").modal();
 					} else if(data == "Already-Hate") {
 						$("#myModal .modal-body").html("이미 싫어요를 누른 글입니다.");
+						$("#myModal .modal-footer").removeAttr("onclick");
+						$("#myModal").modal();
+					} else {
+						$("#myModal .modal-body").html("알 수 없는 오류입니다.");
+						$("#myModal .modal-footer").removeAttr("onclick");
+						$("#myModal").modal();
+					}
+				}
+			}
+		});
+	} else {
+		$("#myModal .modal-body").html("로그인이 필요합니다.");
+		$("#myModal .modal-footer").attr("onclick", "location.href='${pageContext.request.contextPath}/'");
+		$("#myModal").modal();	
+	}
+}
+function commentRecommend(num, mem_num, type) {
+	var header = $("#header").val();
+	var token = $("#token").val();
+	var comment_type = '${param.type}';
+	comment_type = comment_type.substr(-comment_type.length, 4) + "Comment";
+	
+	if(${not empty sessionScope.num}) {
+		$.ajax({
+			url: "${pageContext.request.contextPath}/rBoard/commentRecommend",
+			type: "POST",
+			cache: false,
+			data: {
+				"num" : num,
+				"mem_num" : mem_num,
+				"type" : type,
+				"comment_type" : comment_type
+			},
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(data, status) {
+				if(status == "success") {
+					if(data == "3") {
+						$("#comment-like-count-" + num).html((parseInt($("#comment-like-count-" + num).html()) + 1));
+						$("#myModal .modal-body").html("좋아요를 눌렀습니다.");
+						$("#myModal .modal-footer").removeAttr("onclick");
+						$("#myModal").modal();
+					} else if(data == "4") {
+						$("#comment-hate-count-" + num).html((parseInt($("#comment-hate-count-" + num).html()) + 1));
+						$("#myModal .modal-body").html("싫어요를 눌렀습니다.");
+						$("#myModal .modal-footer").removeAttr("onclick");
+						$("#myModal").modal();						
+					} else if(data == "Already-Like") {
+						$("#myModal .modal-body").html("이미 좋아요를 누른 댓글입니다.");
+						$("#myModal .modal-footer").removeAttr("onclick");
+						$("#myModal").modal();
+					} else if(data == "Already-Hate") {
+						$("#myModal .modal-body").html("이미 싫어요를 누른 댓글입니다.");
 						$("#myModal .modal-footer").removeAttr("onclick");
 						$("#myModal").modal();
 					} else {
@@ -243,8 +300,6 @@ function commentList(displayNumber) {
 	type = type.substr(-type.length, 4) + "Comments";
 	var type_re = "${param.type}";
 	type_re = type_re.substr(-type_re.length, 4) + "ReComments";
-	var commentCount = 0;
-	var commentList = new Array();
 	
 	$.ajax({
 		url: "${pageContext.request.contextPath}/rBoard/selectComments",
@@ -261,12 +316,13 @@ function commentList(displayNumber) {
 			if(status == "success") {
 				if(data.status == "Ok") {
 					var commentHTML = "";
-					commentCount = data.count;
+					var commentCount = 0;
 					for(var i=0; i<data.count; i++) {
-						commentList.push(data.list[i].num);
 						commentHTML += "<div class='container-comment-list'>";
 							commentHTML += "<ul class='comment-list'>";
-								commentHTML += "<li>";
+								if(data.list[i].status == 1) {
+									commentCount += 1;
+									commentHTML += "<li>";
 									commentHTML += "<div class='comment-subject'>";
 										commentHTML += "<div class='subject'>";
 											commentHTML += data.list[i].nickname + "(<span>" + data.list[i].id + "</span>)";
@@ -276,7 +332,7 @@ function commentList(displayNumber) {
 										commentHTML += "</div>";
 									commentHTML += "</div>";
 									commentHTML += "<div class='comment-content'>";
-										commentHTML += "<div class='c_content'>";
+										commentHTML += "<div id='c-content-" + data.list[i].num + "' class='c-content'>";
 											commentHTML += data.list[i].content.replace(/\n/g, "<br>");
 										commentHTML += "</div>";
 									commentHTML += "</div>";
@@ -287,18 +343,23 @@ function commentList(displayNumber) {
 												commentHTML += "<span class='caret'></span>";
 											commentHTML += "</button>"
 										commentHTML += "</div>";
-										commentHTML += "<button type='button' class='btn btn-primary comment-like'>";
-											commentHTML += "<span><img class='recommend-img' src='${pageContext.request.contextPath}/resources/img/board/like.png'/></span> <span class='badge badge-light'>" + data.list[i].like + "</span>";
+										commentHTML += "<button type='button' class='btn btn-primary comment-like' onclick='commentRecommend(" + data.list[i].num + ", ${sessionScope.num}, 3);'>";
+											commentHTML += "<span><img class='recommend-img' src='${pageContext.request.contextPath}/resources/img/board/like.png'/></span> <span id='comment-like-count-" + data.list[i].num + "' class='badge badge-light'>" + data.list[i].like + "</span>";
 										commentHTML += "</button>";
-										commentHTML += "<button type='button' class='btn btn-danger comment-dislike'>";
-											commentHTML += "<span><img class='recommend-img' src='${pageContext.request.contextPath}/resources/img/board/dislike.png'/></span> <span class='badge badge-light'>" + data.list[i].hate + "</span>";
+										commentHTML += "<button type='button' class='btn btn-danger comment-dislike' onclick='commentRecommend(" + data.list[i].num + ", ${sessionScope.num}, 4);'>";
+											commentHTML += "<span><img class='recommend-img' src='${pageContext.request.contextPath}/resources/img/board/dislike.png'/></span> <span id='comment-hate-count-" + data.list[i].num + "' class='badge badge-light'>" + data.list[i].hate + "</span>";
 										commentHTML += "</button>";
 										commentHTML += "<div class='btn-group float-right'>";
-											commentHTML += "<button type='button' class='btn btn-outline-primary " + mine(data.list[i].mem_num) + "'>수정</button>";
-											commentHTML += "<button type='button' class='btn btn-outline-danger " + mine(data.list[i].mem_num) + "'>삭제</button>";
+											commentHTML += "<button type='button' id='comment-update-btn-" + data.list[i].num + "' class='btn btn-outline-primary " + mine(data.list[i].mem_num) + "' onclick='updateComment(" + data.list[i].num + ")'>수정</button>";
+											commentHTML += "<button type='button' id='comment-delete-btn-" + data.list[i].num + "' class='btn btn-outline-danger " + mine(data.list[i].mem_num) + "' onclick='deleteComment(" + data.list[i].num + ")'>삭제</button>";
 										commentHTML += "</div>";
 									commentHTML += "</div>";
-								commentHTML += "</li>";
+									commentHTML += "</li>";
+								} else {
+									commentHTML += "<li>";
+									commentHTML += "<div class='deleteComment'>사용자에 의해 삭제된 댓글입니다.</div>";
+									commentHTML += "</li>";
+								}
 							commentHTML += "</ul>";
 							commentHTML += "<ul id='recomment-list-" + data.list[i].num + "' class='recomment-list " + (displayNumber != null && displayNumber == data.list[i].num? 'onRecomment':'') + "'>";
 							commentHTML += "</ul>";
@@ -306,7 +367,7 @@ function commentList(displayNumber) {
 					}
 					if(data.count != 0) {
 						$("#container-comment").html(commentHTML);
-						$("#comment-count").html(data.count);
+						$("#comment-count").html(commentCount);
 					} else {
 						$("#container-comment").html("<div class='empty-comment'>등록된 댓글이 없습니다.</div>");
 					}
@@ -330,47 +391,243 @@ function commentList(displayNumber) {
 		success: function(data, status) {
 			if(status == "success") {
 				if(data.status == "Ok") {
+					var recommentCount = 0;
 					for(var i=0; i<data.commentCount.commentsCount; i++) {
 						var recommentHTML = "";
 							recommentHTML += "<li>";
-							recommentHTML += "<div class='container-comment-input recomment'>";
-								recommentHTML += "<textarea class='form-control' rows='3' id='recomment-" + data.commentCount.list[i].num + "' onkeyup='limitReComment(this, " + data.commentCount.list[i].num + ");' placeholder='내용을 입력해주세요.'></textarea>";
-								recommentHTML += "(<span id='recomment-limit-" + data.commentCount.list[i].num + "' class='margin'>0</span>/300)";
-								recommentHTML += "<button type='button' id='recomment-write-" + data.commentCount.list[i].num + "' class='btn btn-outline-primary float-right margin'>작성하기</button>";
-							recommentHTML += "</div>";
+								recommentHTML += "<div class='container-comment-input recomment'>";
+									recommentHTML += "<textarea class='form-control' rows='3' id='recomment-" + data.commentCount.list[i].num + "' onkeyup='limitReComment(this, " + data.commentCount.list[i].num + ");' placeholder='내용을 입력해주세요.'></textarea>";
+									recommentHTML += "(<span id='recomment-limit-" + data.commentCount.list[i].num + "' class='margin'>0</span>/300)";
+									recommentHTML += "<button type='button' id='recomment-write-" + data.commentCount.list[i].num + "' class='btn btn-outline-primary float-right margin'>작성하기</button>";
+								recommentHTML += "</div>";
 							recommentHTML += "</li>";
 							for(var j=0; j<data.count; j++) {
 								if(data.commentCount.list[i].num == data.list[j].comment_num) {
-									$("#recomment-count-" + data.commentCount.list[i].num).html((parseInt($("#recomment-count-" + data.commentCount.list[i].num).html()) + 1));
 									recommentHTML += "<li>";
 										recommentHTML += "<div class='recomment-content'>";
 											recommentHTML += "<div class='arrow'><img src='${pageContext.request.contextPath}/resources/img/board/arrow.png'/></div>";
-											recommentHTML += "<div class='rc-content'>";
-												recommentHTML += "<div class='rc-subject'>";
-													recommentHTML += "<div class='subject'>";
-														recommentHTML += data.list[j].nickname + "(<span>" + data.list[j].id + "</span>)";
+											if(data.list[j].status == 1) {
+												$("#recomment-count-" + data.commentCount.list[i].num).html((parseInt($("#recomment-count-" + data.commentCount.list[i].num).html()) + 1));
+												recommentCount += 1;
+												recommentHTML += "<div class='rc-content'>";
+													recommentHTML += "<div class='rc-subject'>";
+														recommentHTML += "<div class='subject'>";
+															recommentHTML += data.list[j].nickname + "(<span>" + data.list[j].id + "</span>)";
+														recommentHTML += "</div>";
+														recommentHTML += "<div class='regdate'>";
+															recommentHTML += formatRegDate(data.list[j].regdate);
+														recommentHTML += "</div>";
 													recommentHTML += "</div>";
-													recommentHTML += "<div class='regdate'>";
-														recommentHTML += formatRegDate(data.list[j].regdate);
+													recommentHTML += "<div class='rc-content-inner'>";
+														recommentHTML += "<div id='rc-content-inner-content-" + data.list[j].num + "' class='rc-content-inner-content'>";
+															recommentHTML += data.list[j].content.replace(/\n/g, "<br>");
+														recommentHTML += "</div>";
+														recommentHTML += "<div class='btn-group " +  mine(data.list[j].mem_num) + " float-right'>";
+															recommentHTML += "<button type='button' id='recomment-update-btn-" + data.list[j].num + "' class='btn btn-outline-primary'" + mine(data.list[j].mem_num) + "' onclick='updateReComment(" + data.list[j].num + ")'>수정</button>";
+															recommentHTML += "<button type='button' id='recomment-delete-btn-" + data.list[j].num + "' class='btn btn-outline-danger'" + mine(data.list[j].mem_num) + "' onclick='deleteReComment(" + data.list[j].num + ")'>삭제</button>";
+														recommentHTML += "</div>";
 													recommentHTML += "</div>";
 												recommentHTML += "</div>";
-												recommentHTML += "<div class='rc-content-inner'>";
-													recommentHTML += "<div class='rc-content-inner-content'>";
-														recommentHTML += data.list[j].content.replace(/\n/g, "<br>");
-													recommentHTML += "</div>";
-													recommentHTML += "<div class='btn-group " +  mine(data.list[j].mem_num) + "'>";
-														recommentHTML += "<button type='button' class='btn btn-outline-primary " + mine(data.list[j].mem_num) + "'>수정</button>";
-														recommentHTML += "<button type='button' class='btn btn-outline-danger " + mine(data.list[j].mem_num) + "'>삭제</button>";
-													recommentHTML += "</div>";
+											} else {
+												recommentHTML += "<div class='deleteReComment'>";
+													recommentHTML += "<div>사용자에 의해 삭제된 답글입니다.</div>";
 												recommentHTML += "</div>";
-											recommentHTML += "</div>";
+											}
 										recommentHTML += "</div>";
 									recommentHTML += "</li>";
 								}
 							}
 						$("#recomment-list-" + data.commentCount.list[i].num).html(recommentHTML);
 					}
-					$("#comment-count").html((parseInt($("#comment-count").html())+data.count));
+					$("#comment-count").html((parseInt($("#comment-count").html()) + recommentCount));
+				}
+			}
+		}
+	});
+}
+function updateComment(num) {
+	var tempHTML = $("#c-content-" + num).html().replace(/<br>/g, "\n");
+	$("#c-content-" + num).html("<textarea id='comment-update-input-" + num + "' class='form-control' rows='2'>" + tempHTML + "</textarea>");
+	$("#comment-update-btn-" + num).html("확인");
+	$("#comment-delete-btn-" + num).html("취소");
+	$("#comment-update-btn-" + num).attr("onclick", "updateCommentOk(" + num + ")");
+	tempHTML = tempHTML.replace(/\n/g, "<br>");
+	$("#comment-delete-btn-" + num).attr("onclick", "updateCommentCancle(" + num + ", '" + tempHTML + "')");
+}
+function updateCommentOk(num) {
+	var comment = $("#comment-update-input-" + num).val();
+	var header = $("#header").val();
+	var token = $("#token").val();
+	var type = "${param.type}";
+	type = type.substr(-type.length, 4) + "Comment";
+	
+	if(comment.length < 10) {
+		$("#myModal .modal-body").html("댓글은 10자 이상 300자 이하로 입력해주세요.");
+		$("#myModal .modal-footer").removeAttr("onclick");
+		$("#myModal").modal();
+	} else if(comment.length > 300) {
+		$("#myModal .modal-body").html("댓글은 10자 이상 300자 이하로 입력해주세요.");
+		$("#myModal .modal-footer").removeAttr("onclick");
+		$("#myModal").modal();
+	} else {
+		$.ajax({
+			url: "${pageContext.request.contextPath}/rBoard/updateComment",
+			type: "POST",
+			cache: false,
+			data: {
+				"type" : type,
+				"num" : num,
+				"content" : comment
+			},
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(data, status) {
+				if(status == "success") {
+					if(data != "Fail") {
+						$("#c-content-" + num).html(data);
+						$("#comment-update-btn-" + num).html("수정");
+						$("#comment-delete-btn-" + num).html("삭제");
+						$("#comment-update-btn-" + num).attr("onclick", "updateComment(" + num + ")");	
+						$("#comment-delete-btn-" + num).attr("onclick", "deleteComment(" + num + ")");	
+					}
+				}
+			}
+		});
+	}
+}
+function deleteComment(num) {
+	$("#myModal2 .modal-body").html("정말로 댓글을 삭제하시겠습니까?");
+	$("#delete-btn").attr("onclick", "deleteCommentOk(" + num + ")");
+	$("#myModal2").modal();
+}
+function deleteCommentOk(num) {
+	$("#delete-btn-c").click();
+	var header = $("#header").val();
+	var token = $("#token").val();
+	var type = "${param.type}";
+	type = type.substr(-type.length, 4) + "Comment";
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/rBoard/deleteComment",
+		type: "POST",
+		cache: false,
+		data: {
+			"type" : type,
+			"num" : num
+		},
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(header, token);
+		},
+		success: function(data, status) {
+			if(status == "success") {
+				if(data == "Ok") {
+					commentList();
+				} else {
+					$("#myModal .modal-body").html("이미 삭제되었거나 존재하지 않는 댓글입니다.");
+					$("#myModal .modal-footer").removeAttr("onclick");
+					$("#myModal").modal();
+				}
+			}
+		}
+	});
+}
+function updateCommentCancle(num, tempHTML) {
+	$("#c-content-" + num).html(tempHTML);
+	$("#comment-update-btn-" + num).html("수정");
+	$("#comment-delete-btn-" + num).html("삭제");
+	$("#comment-update-btn-" + num).attr("onclick", "updateComment(" + num + ")");	
+	$("#comment-delete-btn-" + num).attr("onclick", "deleteComment(" + num + ")");	
+}
+function updateReComment(num) {
+	var tempHTML = $("#rc-content-inner-content-" + num).html().replace(/<br>/g, "\n");
+	$("#rc-content-inner-content-" + num).html("<textarea id='recomment-update-input-" + num + "' class='form-control' rows='2'>" + tempHTML + "</textarea>");
+	$("#recomment-update-btn-" + num).html("확인");
+	$("#recomment-delete-btn-" + num).html("취소");
+	$("#recomment-update-btn-" + num).attr("onclick", "updateReCommentOk(" + num + ")");
+	tempHTML = tempHTML.replace(/\n/g, "<br>");
+	$("#recomment-delete-btn-" + num).attr("onclick", "updateReCommentCancle(" + num + ", '" + tempHTML + "')");
+}
+function updateReCommentOk(num) {
+	var recomment = $("#recomment-update-input-" + num).val();
+	var header = $("#header").val();
+	var token = $("#token").val();
+	var type = "${param.type}";
+	type = type.substr(-type.length, 4) + "Comment";
+	
+	if(recomment.length < 10) {
+		$("#myModal .modal-body").html("답글은 10자 이상 300자 이하로 입력해주세요.");
+		$("#myModal .modal-footer").removeAttr("onclick");
+		$("#myModal").modal();
+	} else if(recomment.length > 300) {
+		$("#myModal .modal-body").html("답글은 10자 이상 300자 이하로 입력해주세요.");
+		$("#myModal .modal-footer").removeAttr("onclick");
+		$("#myModal").modal();
+	} else {
+		$.ajax({
+			url: "${pageContext.request.contextPath}/rBoard/updateReComment",
+			type: "POST",
+			cache: false,
+			data: {
+				"type" : type,
+				"num" : num,
+				"content" : recomment
+			},
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(data, status) {
+				if(status == "success") {
+					if(data != "Fail") {
+						$("#rc-content-inner-content-" + num).html(data);
+						$("#recomment-update-btn-" + num).html("수정");
+						$("#recomment-delete-btn-" + num).html("삭제");
+						$("#recomment-update-btn-" + num).attr("onclick", "updateReComment(" + num + ")");
+						$("#recomment-delete-btn-" + num).attr("onclick", "deleteReComment(" + num + ")");
+					}
+				}
+			}
+		});
+	}
+}
+function updateReCommentCancle(num, tempHTML) {
+	$("#rc-content-inner-content-" + num).html(tempHTML);
+	$("#recomment-update-btn-" + num).html("수정");
+	$("#recomment-delete-btn-" + num).html("삭제");
+	$("#recomment-update-btn-" + num).attr("onclick", "updateReComment(" + num + ")");	
+	$("#recomment-delete-btn-" + num).attr("onclick", "deleteReComment(" + num + ")");
+}
+function deleteReComment(num) {
+	$("#myModal2 .modal-body").html("정말로 답글을 삭제하시겠습니까?");
+	$("#delete-btn").attr("onclick", "deleteReCommentOk(" + num + ")");
+	$("#myModal2").modal();
+}
+function deleteReCommentOk(num) {
+	$("#delete-btn-c").click();
+	var header = $("#header").val();
+	var token = $("#token").val();
+	var type = "${param.type}";
+	type = type.substr(-type.length, 4) + "Comment";
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/rBoard/deleteReComment",
+		type: "POST",
+		cache: false,
+		data: {
+			"type" : type,
+			"num" : num
+		},
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(header, token);
+		},
+		success: function(data, status) {
+			if(status == "success") {
+				if(data == "Ok") {
+					commentList();
+				} else {
+					$("#myModal .modal-body").html("이미 삭제되었거나 존재하지 않는 답글입니다.");
+					$("#myModal .modal-footer").removeAttr("onclick");
+					$("#myModal").modal();
 				}
 			}
 		}
@@ -478,6 +735,9 @@ function mine(mem_num) {
 #container-comment .off {
 	display: none;
 }
+.rc-content-inner .btn-group.float-right {
+	margin-bottom: 10px;
+}
 .container-comment-input {
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -491,6 +751,7 @@ function mine(mem_num) {
 	border-right: none;
 	border-bottom: none;
 	border-radius: 0;
+	background-color: rgba(246, 246, 246, 0.4);
 }
 .container-comment-input .margin {
 	margin-top: 5px;
@@ -507,6 +768,17 @@ function mine(mem_num) {
 	margin-bottom: 15px;
 	border: 1px solid #D5D5D5;
 	border-radius: 5px;
+}
+.container-comment-list .deleteComment {
+	font-weight: bold;
+	padding: 10px;
+}
+.container-comment-list .deleteReComment {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	font-weight: bold;
+	border-left: 1px solid #D5D5D5;
 }
 .container-comment-list .comment-list {
 	list-style-type: none;
@@ -531,9 +803,9 @@ function mine(mem_num) {
 }
 .container-comment-list .comment-list .comment-content {
 	padding: 10px;
+	padding-bottom: 0;
 }
 .container-comment-list .comment-list .comment-content .c-content {
-	margin-bottom: 5px;
 }
 .container-comment-list .comment-list .recommend {
 	margin: 10px;
@@ -559,6 +831,7 @@ function mine(mem_num) {
 	display: flex;
 	box-sizing: border-box;
 	border-top: 1px solid #D5D5D5;
+	background-color: rgba(246, 246, 246, 0.4);
 }
 .container-comment-list .recomment-list .recomment-content .arrow {
 	width: 45px;
@@ -655,69 +928,6 @@ function mine(mem_num) {
 	댓글 <span id="comment-count" class="badge badge-pill badge-primary">0</span>
 </div>
 <div id="container-comment">
-<%-- 	<div class="container-comment-list">
-		<ul class="comment-list">
-			<li>
-				<div class="comment-subject">
-					<div class="subject">
-						작성자
-					</div>
-					<div class="regdate">
-						01:55
-					</div>
-				</div>
-				<div class="comment-content">
-					<div class="c-content">
-						내용
-					</div>
-				<div class="recommend">
-					  <div class="btn-group">
-					    <button type="button" class="btn btn-info">답글(0)</button>
-					    <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
-					      <span class="caret"></span>
-					    </button>
-					  </div>
-					<button type="button" class="btn btn-primary">
-						<span><img src="${pageContext.request.contextPath}/resources/img/board/like.png"/></span> <span class="badge badge-light">7</span>
-					</button>
-					<button type="button" class="btn btn-danger">
-						<span><img src="${pageContext.request.contextPath}/resources/img/board/dislike.png"/></span> <span class="badge badge-light">7</span>
-					</button>
-					<div class="btn-group float-right">
-						<button type="button" class="btn btn-outline-primary">수정</button>
-						<button type="button" class="btn btn-outline-danger">삭제</button>
-					</div>
-				</div>
-				</div>
-			</li>
-		</ul>
-		<ul class="recomment-list">
-			<li>
-				<div class="recomment-content">
-					<div class="arrow"><img src="${pageContext.request.contextPath}/resources/img/board/arrow.png"/></div>
-					<div class="rc-content">
-						<div class="rc-subject">
-							<div class="subject">
-								제목
-							</div>
-							<div class="regdate">
-								02:00
-							</div>
-						</div>
-						<div class="rc-content-inner">
-							<div class="rc-content-inner-content">
-								내용
-							</div>
-							<div class="btn-group">
-								<button type="button" class="btn btn-outline-primary">수정</button>
-								<button type="button" class="btn btn-outline-danger">삭제</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</li>
-		</ul>
-	</div> --%>
 </div>
 <div class="modal fade" id="myModal">
 	<div class="modal-dialog modal-dialog-centered">
@@ -756,7 +966,7 @@ function mine(mem_num) {
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			</form>
 			<button type="button" id="delete-btn" class="btn btn-danger">확인</button>
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+			<button type="button" id='delete-btn-c' class="btn btn-secondary" data-dismiss="modal">취소</button>
 		</div>
 		</div>
 	</div>

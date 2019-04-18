@@ -32,7 +32,7 @@ $(document).ready(function() {
 	}
 });
 function view(num) {
-	if(${param.type == 'freeBoard'}) {		
+	if(${param.type == 'freeBoard'}) {
 		location.href = "${pageContext.request.contextPath}/board/view?type=freeView&num=" + num;
 	} else if(${param.type == 'videoBoard'}) {
 		location.href = "${pageContext.request.contextPath}/board/view?type=videoView&num=" + num;		
@@ -59,6 +59,9 @@ function view(num) {
 }
 .table tbody .empty-list {
 	padding: 30px;
+}
+.table tbody .empty-list:hover {
+	background-color: white;
 }
 .table .subject {
 	max-width: 150px;
@@ -114,7 +117,7 @@ function view(num) {
 			</c:if>
 			<c:forEach var="i" varStatus="index" begin="${pad.startPage}" end="${pad.endPage}">
 				<c:choose>
-					<c:when test="${param.currPage == index.count}">
+					<c:when test="${param.currPage == index.count || empty param.currPage}">
 						<li class="page-item active"><a class="page-link">${index.count}</a></li>	
 					</c:when>
 					<c:otherwise>
