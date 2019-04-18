@@ -11,6 +11,6 @@
 		SELECT ekey_accesskey FROM emailAccessKeys WHERE ekey_num = #{param1}
 	</select>
 	<insert id="insertMember" parameterType="com.web.ncm.join.domain.JoinDTO">
-		INSERT INTO members(mem_num, mem_id, mem_pw, mem_birth, mem_email) VALUES(mem_seq.nextval, #{mem_id}, #{mem_pw}, #{mem_birth}, #{mem_email})
+		INSERT INTO members(mem_num, mem_id, mem_pw, mem_birth, mem_email) VALUES(mem_seq.nextval, #{mem_id}, #{mem_pw}, TO_DATE(#{mem_birth}, 'yyyy-mm-dd'), #{mem_email})
 	</insert>
 </mapper>

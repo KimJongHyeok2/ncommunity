@@ -218,6 +218,28 @@ ALTER TABLE videoboard_comments
 	REFERENCES videoboard (video_num)
 ;
 
+/* Create Sequence */
 
+CREATE SEQUENCE mem_seq;
+CREATE SEQUENCE freeB_seq;
+CREATE SEQUENCE videoB_seq;
+CREATE SEQUENCE fcomment_seq;
+CREATE SEQUENCE f_recomment_seq;
+CREATE SEQUENCE vcomment_seq;
+CREATE SEQUENCE rh_seq; 
+CREATE SEQUENCE ekey_seq; 
 
+<<<<<<< HEAD
+/* Drop Sequence */
+
+DROP SEQUENCE mem_seq;
+DROP SEQUENCE freeB_seq;
+DROP SEQUENCE videoB_seq;
+DROP SEQUENCE fcomment_seq;
+DROP SEQUENCE f_recomment_seq;
+DROP SEQUENCE vcomment_seq;
+DROP SEQUENCE rh_seq;
+DROP SEQUENCE ekey_seq;
+=======
 SELECT TO_DATE('2019-01-01', 'yyyy-mm-dd') FROM dual;
+>>>>>>> branch 'master' of https://github.com/KimJongHyeok2/ncommunity.git
