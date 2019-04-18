@@ -88,8 +88,6 @@ function pageMove(type) {
 			  </button>
 			  <div class="dropdown-menu">
 			    <a class="dropdown-item" onclick="pageMove('logout');">로그아웃</a>
-<!-- 			<div class="dropdown-divider"></div>
-			    <a class="dropdown-item" href="#">Another link</a> -->
 			  </div>
 			</div>
 		</s:authorize>
