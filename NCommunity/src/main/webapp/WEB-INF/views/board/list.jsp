@@ -63,6 +63,9 @@ function view(num) {
 .table tbody .empty-list:hover {
 	background-color: white;
 }
+.table td {
+	max-width: 150px;
+}
 .table .subject {
 	max-width: 150px;
 }
@@ -75,7 +78,7 @@ function view(num) {
 	clear: both;
 }
 @media (max-width:500px) {
-	.table tbody td {
+	.table td {
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;
