@@ -127,9 +127,10 @@ function dropdown(type) {
 	display: block;
 	position: static;
 	min-width: 250px;
+	z-index: 2;
 }
-.content .leftMenu #sidebar {
-	z-index: 5;
+.content .leftMenu div {
+	z-index: 2;
 }
 .content .rightContent {
 	flex-grow: 1;
