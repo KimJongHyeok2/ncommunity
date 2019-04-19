@@ -18,7 +18,13 @@ $(document).ready(function() {
 			$("#myModal").modal();
 		}
 	}
+	$(".content").on("keyup", function() {
+
+	});
 });
+function tests() {
+	alert("테스트");
+}
 function getClientInfo() {
     var userAgent = navigator.userAgent;
     var reg = null;
@@ -122,13 +128,15 @@ function writeSubmit(form) {
 	</div>
 </div>
 <script>
-ClassicEditor
+var type = '${param.type}'
+
+if(type == "freeWrite") {
+	ClassicEditor
 	.create( document.querySelector('#content'), {
 		ckfinder: {
 	        uploadUrl: '${pageContext.request.contextPath}/upload/img?${_csrf.parameterName}=${_csrf.token}'
 	    },
-		removePlugins: ['MediaEmbed']
-	/* MediaEmbed */
+		/* removePlugins: ['MediaEmbed'] */
 	})
 	.then( editor => {
 	    myEditor = editor;
@@ -136,4 +144,20 @@ ClassicEditor
 	.catch( error => {
 		console.error( error );
 	});
+} else if(type == "videoWrite") {
+	ClassicEditor
+	.create( document.querySelector('#content'), {
+		ckfinder: {
+	        uploadUrl: '${pageContext.request.contextPath}/upload/img?${_csrf.parameterName}=${_csrf.token}'
+	    },
+	    toolbar: [ 'MediaEmbed', 'heading', 'bold' ]
+	/* MediaEmbed */
+	})
+	.then( editor => {
+	    myEditor = editor;
+	})
+	.catch( error => {
+		console.error( error );
+	});	
+}
 </script>

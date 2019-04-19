@@ -23,10 +23,13 @@ public class BoardDTO {
 	// 게시물 총 댓글 수
 	private int commentsCount;
 	
-	public BoardDTO() { }
+	// 인기순위
+	private int rnum;
 	
+	public BoardDTO() { }
+
 	public BoardDTO(int num, int mem_num, String subject, String content, int like, int hate, int status, int viewcnt,
-			Timestamp regdate, String type, String id, String nickname, int commentsCount) {
+			Timestamp regdate, String type, String id, String nickname, int commentsCount, int rnum) {
 		this.num = num;
 		this.mem_num = mem_num;
 		this.subject = subject;
@@ -40,6 +43,7 @@ public class BoardDTO {
 		this.id = id;
 		this.nickname = nickname;
 		this.commentsCount = commentsCount;
+		this.rnum = rnum;
 	}
 
 	public int getNum() {
@@ -144,6 +148,14 @@ public class BoardDTO {
 
 	public void setCommentsCount(int commentsCount) {
 		this.commentsCount = commentsCount;
+	}
+
+	public int getRnum() {
+		return rnum;
+	}
+
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
 	}
 	
 }

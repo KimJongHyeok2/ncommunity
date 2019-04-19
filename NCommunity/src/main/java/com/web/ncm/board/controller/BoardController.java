@@ -1,5 +1,7 @@
 package com.web.ncm.board.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +53,7 @@ public class BoardController {
 		try {
 			if(type == null || type.length() == 0) {
 				return "redirect:/";
-			} else if(type.equals("freeBoard")) {
+			} else if(type.equals("freeBoard-New")) {
 				dto = boardService.selectFreeBoard(page);
 				pageCount = boardService.selectFreeBoardCount();
 				pageCount = pageCount/row + (pageCount%row==0? 0:1);
@@ -63,6 +65,27 @@ public class BoardController {
 				}
 				
 				pad = new PaginationDTO(pageBlock, pageCount, startPage, endPage);
+			} else if(type.equals("freeBoard-Today")) {
+				dto = boardService.selectFreeBoardToday();
+			} else if(type.equals("freeBoard-Week")) {
+				Map<String, String> map = new HashMap<String, String>();
+				
+				Calendar startday = Calendar.getInstance();
+				startday.add(Calendar.DATE, -startday.get(Calendar.DAY_OF_WEEK)+1);
+				
+				Calendar endday = Calendar.getInstance();
+				endday.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+				endday.add(Calendar.DATE, 7);
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				
+				String startday_sdf = sdf.format(startday.getTime());
+				String endday_sdf = sdf.format(endday.getTime());
+				
+				map.put("startday", startday_sdf);
+				map.put("endday", endday_sdf);
+				
+				dto = boardService.selectFreeBoardWeek(map);
 			} else if(type.equals("videoBoard")) {
 				System.out.println("동영상 게시판");
 			}

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -146,7 +147,7 @@ public class RestBoardController {
 	}
 	
 	@PostMapping("/selectComments")
-	public RCommentDTO selectComments(String type, @RequestParam(value = "num", defaultValue = "0") int num) {
+	public RCommentDTO selectComments(String type, String list_type, @RequestParam(value = "num", defaultValue = "0") int num) {
 		
 		RCommentDTO dto = new RCommentDTO();
 		
@@ -154,9 +155,17 @@ public class RestBoardController {
 			return null;
 		}
 		
+		if(list_type == null || list_type.length() == 0) {
+			list_type = "new";
+		}
+		
 		try {
-			if(type.equals("freeComments")) {				
-				dto.setList(boardService.selectFreeBoardComments(num));
+			if(type.equals("freeComments")) {		
+				if(list_type.equals("popular")) {
+					dto.setList(boardService.selectFreeBoardComments_popular(num));
+				} else {
+					dto.setList(boardService.selectFreeBoardComments(num));
+				}
 			} else {
 				return null;
 			}
@@ -268,7 +277,10 @@ public class RestBoardController {
 				if(type.equals("freeComment")) {					
 					int count = boardService.deleteFreeBoardComment(num);
 					if(count == 1) {
-						return "Ok";
+						int count2 = boardService.deleteFreeBoardReComment(num);
+						if(count2 == 1) {							
+							return "Ok";
+						}
 					}
 				}
 			} catch (Exception e) {
