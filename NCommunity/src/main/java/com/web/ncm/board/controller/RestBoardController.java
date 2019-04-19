@@ -28,6 +28,7 @@ public class RestBoardController {
 	@Inject
 	private BoardService boardService;
 
+	// 게시물 좋아요/싫어요
 	@PostMapping("/recommend")
 	@Transactional
 	public String recommend(@RequestParam(value = "num", defaultValue = "0") int num,
