@@ -86,6 +86,21 @@
 		FROM freeboard_comments f WHERE f.free_num = #{param1}
 		ORDER BY f.fcomment_num DESC
 	</select>
+	<select id="selectFreeBoardComments_popular" resultType="com.web.ncm.board.domain.CommentDTO">
+		SELECT
+			f.fcomment_num num,
+			f.free_num board_num,
+			f.mem_num,
+			(SELECT mem_id FROM members WHERE mem_num = f.mem_num) id,
+			(SELECT mem_nickname FROM members WHERE mem_num = f.mem_num) nickname,			
+			f.fcomment_content content,
+			f.fcomment_like "like",
+			f.fcomment_hate hate,
+			f.fcomment_status status,
+			f.fcomment_regdate regdate
+		FROM freeboard_comments f WHERE f.free_num = #{param1} AND ((f.fcomment_like - f.fcomment_hate) > 0)
+		ORDER BY (f.fcomment_like - f.fcomment_hate) DESC
+	</select>
 	<insert id="insertFreeBoardReComment" parameterType="com.web.ncm.board.domain.ReCommentDTO">
 		INSERT INTO freeboard_recomments(f_recomment_num, fcomment_num, free_num, mem_num, f_recomment_content) VALUES(f_recomment_seq.nextval, #{comment_num}, #{board_num}, #{mem_num}, #{content})
 	</insert>
@@ -134,4 +149,44 @@
 			</if>
 			WHERE fcomment_num = #{num}
 	</update>
+	<select id="selectFreeBoardWeek" resultType="com.web.ncm.board.domain.BoardDTO">
+		<![CDATA[
+			SELECT * FROM
+				(SELECT rownum rnum, f.* FROM
+				(SELECT
+					b.free_num num,
+					b.mem_num,
+					(SELECT mem_nickname FROM members WHERE mem_num = b.mem_num) nickname,
+					b.free_subject subject,
+					b.free_content content,
+					b.free_like "like",
+					b.free_hate hate,
+					b.free_status status,
+					b.free_viewcnt viewcnt,
+					b.free_regdate regdate,
+					((SELECT count(*) FROM freeboard_comments WHERE free_num = b.free_num AND fcomment_status = 1) + (SELECT count(*) FROM freeboard_recomments WHERE free_num = b.free_num AND f_recomment_status = 1)) commentsCount
+				FROM freeboard b WHERE b.free_status = 1 AND ((b.free_like - b.free_hate) > 0) AND b.free_regdate BETWEEN TO_DATE(#{startday}, 'yyyy-mm-dd') AND TO_DATE(#{endday}, 'yyyy-mm-dd') ORDER BY (b.free_like - b.free_hate) DESC) f )
+			WHERE rnum >= 1 AND rnum < 11
+		]]>
+	</select>
+	<select id="selectFreeBoardToday" resultType="com.web.ncm.board.domain.BoardDTO">
+		<![CDATA[
+			SELECT * FROM
+				(SELECT rownum rnum, f.* FROM
+				(SELECT
+					b.free_num num,
+					b.mem_num,
+					(SELECT mem_nickname FROM members WHERE mem_num = b.mem_num) nickname,
+					b.free_subject subject,
+					b.free_content content,
+					b.free_like "like",
+					b.free_hate hate,
+					b.free_status status,
+					b.free_viewcnt viewcnt,
+					b.free_regdate regdate,
+					((SELECT count(*) FROM freeboard_comments WHERE free_num = b.free_num AND fcomment_status = 1) + (SELECT count(*) FROM freeboard_recomments WHERE free_num = b.free_num AND f_recomment_status = 1)) commentsCount
+				FROM freeboard b WHERE b.free_status = 1 AND ((b.free_like - b.free_hate) > 0) AND (TO_CHAR(b.free_regdate, 'yyyy-mm-dd') = TO_CHAR(SYSDATE, 'yyyy-mm-dd'))  ORDER BY (b.free_like - b.free_hate) DESC) f )
+			WHERE rnum >= 1 AND rnum < 11
+		]]>
+	</select>
 </mapper>
