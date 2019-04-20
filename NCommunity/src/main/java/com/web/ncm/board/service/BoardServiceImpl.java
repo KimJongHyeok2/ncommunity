@@ -77,6 +77,11 @@ public class BoardServiceImpl implements BoardService {
 	public List<CommentDTO> selectFreeBoardComments(int num) throws Exception {
 		return dao.selectFreeBoardComments(num);
 	}
+	
+	@Override
+	public List<CommentDTO> selectFreeBoardComments_popular(int num) throws Exception {
+		return dao.selectFreeBoardComments_popular(num);
+	}
 
 	@Override
 	public int insertFreeBoardReComment(ReCommentDTO dto) throws Exception {
@@ -126,6 +131,16 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int updateFreeBoardCommentRecommend(Map<String, Integer> map) throws Exception {
 		return dao.updateFreeBoardCommentRecommend(map);
+	}
+
+	@Override
+	public List<BoardDTO> selectFreeBoardWeek(Map<String, String> map) throws Exception {
+		return dao.selectFreeBoardWeek(map);
+	}
+
+	@Override
+	public List<BoardDTO> selectFreeBoardToday() throws Exception {
+		return dao.selectFreeBoardToday();
 	}
 	
 }
