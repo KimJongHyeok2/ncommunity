@@ -20,6 +20,7 @@ public interface BoardService {
 	public int updaetFreeBoardRecommend(Map<String, Integer> map) throws Exception;
 	public int insertFreeBoardComment(CommentDTO dto) throws Exception;
 	public List<CommentDTO> selectFreeBoardComments(int num) throws Exception;
+	public List<CommentDTO> selectFreeBoardComments_popular(int num) throws Exception;
 	public int insertFreeBoardReComment(ReCommentDTO dto) throws Exception;
 	public List<ReCommentDTO> selectFreeBoardReComments(int num) throws Exception;
 	public List<CommentDTO> selectFreeBoardCommentsCount(int num) throws Exception;
@@ -30,4 +31,6 @@ public interface BoardService {
 	public String selectHasCommentRecommendHistory(Map<String, Integer> map) throws Exception;
 	public int insertCommentRecommendHistory(Map<String, Integer> map) throws Exception;
 	public int updateFreeBoardCommentRecommend(Map<String, Integer> map) throws Exception;
+	public List<BoardDTO> selectFreeBoardToday() throws Exception;
+	public List<BoardDTO> selectFreeBoardWeek(Map<String, String> map) throws Exception;
 }
