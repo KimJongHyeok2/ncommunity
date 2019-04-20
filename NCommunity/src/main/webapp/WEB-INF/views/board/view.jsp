@@ -11,13 +11,13 @@ $(document).ready(function() {
 	var tDate = today.getDate();
 	tDate = (tDate.length + "")==1? ("0" + tDate):tDate;
 		
-	var regdate = new Date($("#regdate").html().replace("-", "/").replace(".0", ""));
+	var regdate = new Date($("#regdate").html().replace(/-/g, "/").replace(".0", ""));
 	var rYear = regdate.getFullYear();
 	var rMonth = regdate.getMonth()+1;
 	rMonth = (rMonth + "").length==1? ("0" + rMonth):rMonth;
 	var rDate = regdate.getDate();
 	rDate = (rDate.length + "")==1? ("0" + rDate):rDate;
-		
+
 	if((tYear + "-" + tMonth + "-" + tDate) == (rYear + "-" + rMonth + "-" + rDate)) {
 		var hour = regdate.getHours();
 		hour = (hour + "").length==1? ("0" + hour):hour;
@@ -49,7 +49,13 @@ $(document).ready(function() {
 	    element.appendChild( anchor );
 	    
 	});	 */
-	commentList();
+	commentList(0, 'new');
+	$(".popular-list").click(function() {
+		commentList(0, 'popular');
+	});
+	$(".new-list").click(function() {
+		commentList(0, 'new');
+	});
 });
 function deleteConfirm() {
 	$("#myModal2 .modal-body").html("정말로 글을 삭제하시겠습니까?");
@@ -57,9 +63,11 @@ function deleteConfirm() {
 	$("#myModal2").modal();
 }
 function list(type) {
-	type = type.substr(-type.length, 4) + "Board";
+/* 	type = type.substr(-type.length, 4) + "Board";
+
 	
-	location.href = "${pageContext.request.contextPath}/board?type=" + type;
+	location.href = "${pageContext.request.contextPath}/board?type=" + type; */
+	history.back();
 }
 function recommend(num, mem_num, type) {
 	var header = $("#header").val();
@@ -230,7 +238,7 @@ function commentWrite() {
 					if(data == "Ok") {
 						$("#comment").val("");
 						$("#comment-limit").html("0");
-						commentList();
+						commentList(0, 'new');
 						$(".alert-info.comment").animate({"opacity":"0"}, 1000).css("display", "none");
 					}
 				}
@@ -281,7 +289,7 @@ function recommentWrite(num) {
 					if(data == "Ok") {
 						$("#recomment").val("");
 						$("#recomment-limit").html("0");
-						commentList(num);
+						commentList(num, 'new');
 						$(".recomment-list").css("display", "block");
 					} else {
 						$("#myModal .modal-body").html("알 수 없는 오류입니다.");
@@ -293,13 +301,11 @@ function recommentWrite(num) {
 		});
 	}
 }
-function commentList(displayNumber) {
+function commentList(displayNumber, list_type) {
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var type = "${param.type}";
 	type = type.substr(-type.length, 4) + "Comments";
-	var type_re = "${param.type}";
-	type_re = type_re.substr(-type_re.length, 4) + "ReComments";
 	
 	$.ajax({
 		url: "${pageContext.request.contextPath}/rBoard/selectComments",
@@ -307,6 +313,7 @@ function commentList(displayNumber) {
 		cache: false,
 		data: {
 			"type" : type,
+			"list_type" : list_type,
 			"num" : ${dto.num}
 		},
 		beforeSend: function(xhr) {
@@ -333,7 +340,11 @@ function commentList(displayNumber) {
 									commentHTML += "</div>";
 									commentHTML += "<div class='comment-content'>";
 										commentHTML += "<div id='c-content-" + data.list[i].num + "' class='c-content'>";
-											commentHTML += data.list[i].content.replace(/\n/g, "<br>");
+											if(list_type == "popular") {
+												commentHTML += "<span class='badge badge-danger'>BEST</span> " + data.list[i].content.replace(/\n/g, "<br>");
+											} else {
+												commentHTML += data.list[i].content.replace(/\n/g, "<br>");												
+											}
 										commentHTML += "</div>";
 									commentHTML += "</div>";
 									commentHTML += "<div class='recommend'>";
@@ -367,7 +378,9 @@ function commentList(displayNumber) {
 					}
 					if(data.count != 0) {
 						$("#container-comment").html(commentHTML);
-						$("#comment-count").html(commentCount);
+						if(list_type == "new") {					
+							$("#comment-count").html(commentCount);
+						}
 					} else {
 						$("#container-comment").html("<div class='empty-comment'>등록된 댓글이 없습니다.</div>");
 					}
@@ -377,6 +390,15 @@ function commentList(displayNumber) {
 			}
 		}
 	});
+	recommentList(list_type);
+}
+function recommentList(list_type) {
+	var header = $("#header").val();
+	var token = $("#token").val();
+	var type_re = "${param.type}";
+	type_re = type_re.substr(-type_re.length, 4) + "ReComments";
+	
+	
 	$.ajax({
 		url: "${pageContext.request.contextPath}/rBoard/selectReComments",
 		type: "POST",
@@ -439,7 +461,9 @@ function commentList(displayNumber) {
 							}
 						$("#recomment-list-" + data.commentCount.list[i].num).html(recommentHTML);
 					}
-					$("#comment-count").html((parseInt($("#comment-count").html()) + recommentCount));
+					if(list_type == "new") {						
+						$("#comment-count").html((parseInt($("#comment-count").html()) + recommentCount));
+					}
 				}
 			}
 		}
@@ -522,7 +546,7 @@ function deleteCommentOk(num) {
 		success: function(data, status) {
 			if(status == "success") {
 				if(data == "Ok") {
-					commentList();
+					commentList(0, 'new');
 				} else {
 					$("#myModal .modal-body").html("이미 삭제되었거나 존재하지 않는 댓글입니다.");
 					$("#myModal .modal-footer").removeAttr("onclick");
@@ -623,7 +647,7 @@ function deleteReCommentOk(num) {
 		success: function(data, status) {
 			if(status == "success") {
 				if(data == "Ok") {
-					commentList();
+					commentList(0, 'new');
 				} else {
 					$("#myModal .modal-body").html("이미 삭제되었거나 존재하지 않는 답글입니다.");
 					$("#myModal .modal-footer").removeAttr("onclick");
@@ -763,6 +787,9 @@ function mine(mem_num) {
 }
 .container-comment-title {
 	margin-bottom: 5px;
+}
+.container-comment-title .popular-list, .new-list {
+	cursor: pointer;
 }
 .container-comment-list {
 	margin-bottom: 15px;
@@ -925,7 +952,7 @@ function mine(mem_num) {
     <strong>안내</strong> 댓글은 10자 이상 300자 이하로 입력해주세요.
   </div>
 <div class="container-comment-title">
-	댓글 <span id="comment-count" class="badge badge-pill badge-primary">0</span>
+	댓글 <span id="comment-count" class="badge badge-pill badge-primary">0</span> <span class="badge badge-light popular-list">공감순</span> <span class="badge badge-light new-list">최신순</span>
 </div>
 <div id="container-comment">
 </div>
