@@ -12,7 +12,7 @@ $(document).ready(function() {
 		var tDate = today.getDate();
 		tDate = (tDate.length + "")==1? ("0" + tDate):tDate;
 		
-		var regdate = new Date($("#regdate" + (i+1)).html().replace("-", "/").replace(".0", ""));
+		var regdate = new Date($("#regdate" + (i+1)).html().replace(/-/g, "/").replace(".0", ""));
 		var rYear = regdate.getFullYear();
 		var rMonth = regdate.getMonth()+1;
 		rMonth = (rMonth + "").length==1? ("0" + rMonth):rMonth;
@@ -32,9 +32,9 @@ $(document).ready(function() {
 	}
 });
 function view(num) {
-	if(${param.type == 'freeBoard'}) {
+	if(${param.type == 'freeBoard-New' || param.type == 'freeBoard-Today' || param.type == 'freeBoard-Week'}) {
 		location.href = "${pageContext.request.contextPath}/board/view?type=freeView&num=" + num;
-	} else if(${param.type == 'videoBoard'}) {
+	} else if(${param.type == "videoBoard"}) {
 		location.href = "${pageContext.request.contextPath}/board/view?type=videoView&num=" + num;		
 	}
 }
@@ -85,6 +85,19 @@ function view(num) {
 	}
 }
 </style>
+<div class="jumbotron" style="margin-top: 15px; padding: 10px;">
+	<c:choose>
+		<c:when test="${param.type == 'freeBoard-New'}">
+			<h3>자유게시판 최신글</h3>
+		</c:when>
+		<c:when test="${param.type == 'freeBoard-Today'}">
+			<h3>자유게시판 오늘의 인기글</h3>
+		</c:when>
+		<c:when test="${param.type == 'freeBoard-Week'}">
+			<h3>자유게시판 주간 인기글</h3>
+		</c:when>
+	</c:choose>
+</div>
 <table class="table table-hover">
 	<thead>
 		<tr class="bg-primary">
@@ -96,7 +109,17 @@ function view(num) {
 			<c:when test="${fn:length(dto) != 0 && not empty dto}">
 				<c:forEach var="i" varStatus="index" items="${dto}">			
 					<tr>
-						<td>${i.num}</td><td id="subject${index.count}" class="subject" onclick="view(${i.num});">${i.subject}<span class="text-primary">(${i.commentsCount})</span></td><td>${i.nickname}</td><td>${i.viewcnt}</td>
+						<td>
+							<c:choose>
+								<c:when test="${param.type == 'freeBoard-Today' || param.type == 'freeBoard-Week'}">
+									<span class="badge badge-danger">${i.rnum}</span>
+								</c:when>
+								<c:otherwise>
+									${i.num}
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td id="subject${index.count}" class="subject" onclick="view(${i.num});">${i.subject}<span class="text-primary">(${i.commentsCount})</span></td><td>${i.nickname}</td><td>${i.viewcnt}</td>
 						<td id="regdate${index.count}">${i.regdate}</td>
 					</tr>
 				</c:forEach>
@@ -110,7 +133,9 @@ function view(num) {
 	</tbody>
 </table>
 <div class="btn-write">
-	<button type="button" class="btn btn-outline-primary float-right" onclick="location.href='board/write?type=freeWrite'">작성하기</button>
+	<c:if test="${param.type == 'freeBoard-New'}">
+		<button type="button" class="btn btn-outline-primary float-right" onclick="location.href='board/write?type=freeWrite'">작성하기</button>
+	</c:if>
 </div>
 <ul class="pagination justify-content-center">
 	<c:choose>
