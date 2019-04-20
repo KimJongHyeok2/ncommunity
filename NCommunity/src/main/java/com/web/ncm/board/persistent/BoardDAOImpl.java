@@ -77,6 +77,11 @@ public class BoardDAOImpl implements BoardDAO {
 	public List<CommentDTO> selectFreeBoardComments(int num) throws Exception {
 		return sqlSession.selectList("board.selectFreeBoardComments", num);
 	}
+	
+	@Override
+	public List<CommentDTO> selectFreeBoardComments_popular(int num) throws Exception {
+		return sqlSession.selectList("board.selectFreeBoardComments_popular", num);
+	}
 
 	@Override
 	public int insertFreeBoardReComment(ReCommentDTO dto) throws Exception {
@@ -126,6 +131,16 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public int updateFreeBoardCommentRecommend(Map<String, Integer> map) throws Exception {
 		return sqlSession.update("board.updateFreeBoardCommentRecommend", map);
+	}
+
+	@Override
+	public List<BoardDTO> selectFreeBoardWeek(Map<String, String> map) throws Exception {
+		return sqlSession.selectList("board.selectFreeBoardWeek", map);
+	}
+
+	@Override
+	public List<BoardDTO> selectFreeBoardToday() throws Exception {
+		return sqlSession.selectList("board.selectFreeBoardToday");
 	}
 
 }
