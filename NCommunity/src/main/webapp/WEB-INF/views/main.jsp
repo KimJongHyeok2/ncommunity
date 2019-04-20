@@ -181,7 +181,7 @@ function dropdown(type) {
 			<div class="w3-bar-item w3-button w3-hover-blue ${param.type == 'freeBoard-New' || param.type == 'freeBoard-Today' || param.type == 'freeBoard-Week' || param.type == 'freeWrite' || param.type == 'freeView' || param.type == 'freeUpdate'? 'w3-green':''}" onclick="dropdown('free')">
 			자유게시판 <i class="fa fa-caret-down"></i></div>
 			<div id="free-drop" class="w3-hide w3-white w3-card-4 ${param.type == 'freeBoard-New' || param.type == 'freeBoard-Today' || param.type == 'freeBoard-Week' || param.type == 'freeWrite' || param.type == 'freeView' || param.type == 'freeUpdate'? 'w3-show':''}">
-				<a href="${pageContext.request.contextPath}/board?type=freeBoard-New" class="w3-bar-item w3-button w3-hover-blue">최신글</a>
+				<a href="${pageContext.request.contextPath}/board?type=freeBoard-New&currPage=1" class="w3-bar-item w3-button w3-hover-blue">최신글</a>
 				<a href="${pageContext.request.contextPath}/board?type=freeBoard-Today" class="w3-bar-item w3-button w3-hover-blue">오늘의 인기글</a>
 				<a href="${pageContext.request.contextPath}/board?type=freeBoard-Week" class="w3-bar-item w3-button w3-hover-blue">주간 인기글</a>
 			</div>

@@ -141,20 +141,20 @@ function view(num) {
 	<c:choose>
 		<c:when test="${not empty pad}">
 			<c:if test="${pad.startPage > pad.pageBlock}">
-				<li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/board?type=freeBoard&currPage=${pad.startPage - 10}">이전</a></li>				
+				<li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/board?type=freeBoard-New&currPage=${pad.startPage - 10}">이전</a></li>				
 			</c:if>
 			<c:forEach var="i" varStatus="index" begin="${pad.startPage}" end="${pad.endPage}">
 				<c:choose>
-					<c:when test="${param.currPage == index.count || empty param.currPage}">
+					<c:when test="${param.currPage == index.count}">
 						<li class="page-item active"><a class="page-link">${index.count}</a></li>	
 					</c:when>
 					<c:otherwise>
-						<li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/board?type=freeBoard&currPage=${index.count}">${index.count}</a></li>						
+						<li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/board?type=freeBoard-New&currPage=${index.count}">${index.count}</a></li>						
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>
 			<c:if test="${pad.endPage < pad.pageCount}">
-				<li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/board?type=freeBoard&currPage=${pad.startPage + 10}">다음</a></li>
+				<li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/board?type=freeBoard-New&currPage=${pad.startPage + 10}">다음</a></li>
 			</c:if>
 		</c:when>
 	</c:choose>

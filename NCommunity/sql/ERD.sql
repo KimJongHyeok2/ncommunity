@@ -229,7 +229,6 @@ CREATE SEQUENCE vcomment_seq;
 CREATE SEQUENCE rh_seq; 
 CREATE SEQUENCE ekey_seq; 
 
-<<<<<<< HEAD
 /* Drop Sequence */
 
 DROP SEQUENCE mem_seq;
@@ -240,6 +239,47 @@ DROP SEQUENCE f_recomment_seq;
 DROP SEQUENCE vcomment_seq;
 DROP SEQUENCE rh_seq;
 DROP SEQUENCE ekey_seq;
-=======
-SELECT TO_DATE('2019-01-01', 'yyyy-mm-dd') FROM dual;
->>>>>>> branch 'master' of https://github.com/KimJongHyeok2/ncommunity.git
+
+SELECT * FROM freeboard_comments ORDER BY fcomment_like-fcomment_hate DESC;
+
+SELECT * FROM freeboard_comments f, freeboard_recomments fr WHERE f.free_num = fr.free_num AND f.fcomment_num = fr.fcomment_num AND f.fcomment_status = 1 AND fr.f_recomment_status = 1;
+
+SELECT * FROM (SELECT * FROM (SELECT * FROM freeboard))
+
+			SELECT * FROM
+				(SELECT rownum rnum, f.* FROM
+				(SELECT
+					b.free_num num,
+					b.mem_num,
+					(SELECT mem_nickname FROM members WHERE mem_num = b.mem_num) nickname,
+					b.free_subject subject,
+					b.free_content content,
+					b.free_like "like",
+					b.free_hate hate,
+					b.free_status status,
+					b.free_viewcnt viewcnt,
+					b.free_regdate regdate,
+					((SELECT count(*) FROM freeboard_comments WHERE free_num = b.free_num AND fcomment_status = 1) + (SELECT count(*) FROM freeboard_recomments WHERE free_num = b.free_num AND f_recomment_status = 1)) commentsCount
+				FROM freeboard b WHERE b.free_status = 1 AND ((b.free_like - b.free_hate) > 0) AND b.free_regdate BETWEEN TO_DATE('2019-04-14', 'yyyy-mm-dd') AND TO_DATE('2019-04-21', 'yyyy-mm-dd') ORDER BY (b.free_like - b.free_hate) DESC) f )
+			WHERE rnum >= 1 AND rnum < 11
+			
+SELECT TO_DATE(SYSDATE, 'yyyy-mm-dd') FROM dual;
+
+SELECT TO_CHAR(SYSDATE, 'yyyy-mm-dd') FROM freeboard;
+
+			SELECT * FROM
+				(SELECT rownum rnum, f.* FROM
+				(SELECT
+					b.free_num num,
+					b.mem_num,
+					(SELECT mem_nickname FROM members WHERE mem_num = b.mem_num) nickname,
+					b.free_subject subject,
+					b.free_content content,
+					b.free_like "like",
+					b.free_hate hate,
+					b.free_status status,
+					b.free_viewcnt viewcnt,
+					b.free_regdate regdate,
+					((SELECT count(*) FROM freeboard_comments WHERE free_num = b.free_num AND fcomment_status = 1) + (SELECT count(*) FROM freeboard_recomments WHERE free_num = b.free_num AND f_recomment_status = 1)) commentsCount
+				FROM freeboard b WHERE b.free_status = 1 AND ((b.free_like - b.free_hate) > 0) AND (TO_CHAR(b.free_regdate, 'yyyy-mm-dd') = TO_CHAR(SYSDATE, 'yyyy-mm-dd'))  ORDER BY (b.free_like - b.free_hate) DESC) f )
+			WHERE rnum >= 1 AND rnum < 11; d
