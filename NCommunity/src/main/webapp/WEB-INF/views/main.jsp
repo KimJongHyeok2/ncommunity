@@ -137,6 +137,7 @@ function dropdown(type) {
 	overflow: auto;
 }
 .footer {
+	padding: 10px 0;
 	font-size: 10pt;
 	color: gray;
 	text-align: center;
@@ -152,7 +153,7 @@ function dropdown(type) {
 	position: fixed;
 	bottom: 0;
 	left: 0;
-	z-index: 1;
+	z-index: 5;
 	margin-left: 15px;
 	margin-right: 15px;
 }
@@ -177,20 +178,21 @@ function dropdown(type) {
 <div class="content">
 	<div id="sidebar" class="leftMenu">
 		<div class="w3-sidebar w3-bar-block w3-animate-left" style="min-width: 250px; border-right: 1px solid #D5D5D5;">
-			<div class="w3-bar-item w3-button w3-hover-blue ${param.type == 'freeBoard' || param.type == 'freeWrite' || param.type == 'freeView' || param.type == 'freeUpdate'? 'w3-green':''}" onclick="dropdown('free')">
+			<div class="w3-bar-item w3-button w3-hover-blue ${param.type == 'freeBoard-New' || param.type == 'freeBoard-Today' || param.type == 'freeBoard-Week' || param.type == 'freeWrite' || param.type == 'freeView' || param.type == 'freeUpdate'? 'w3-green':''}" onclick="dropdown('free')">
 			자유게시판 <i class="fa fa-caret-down"></i></div>
-			<div id="free-drop" class="w3-hide w3-white w3-card-4 ${param.type == 'freeBoard' || param.type == 'freeWrite' || param.type == 'freeView' || param.type == 'freeUpdate'? 'w3-show':''}">
-				<a href="${pageContext.request.contextPath}/board?type=freeBoard" class="w3-bar-item w3-button w3-hover-blue">최신글</a>
-				<a href="#" class="w3-bar-item w3-button w3-hover-blue">오늘의 인기글</a>
-				<a href="#" class="w3-bar-item w3-button w3-hover-blue">주간 인기글</a>
+			<div id="free-drop" class="w3-hide w3-white w3-card-4 ${param.type == 'freeBoard-New' || param.type == 'freeBoard-Today' || param.type == 'freeBoard-Week' || param.type == 'freeWrite' || param.type == 'freeView' || param.type == 'freeUpdate'? 'w3-show':''}">
+				<a href="${pageContext.request.contextPath}/board?type=freeBoard-New" class="w3-bar-item w3-button w3-hover-blue">최신글</a>
+				<a href="${pageContext.request.contextPath}/board?type=freeBoard-Today" class="w3-bar-item w3-button w3-hover-blue">오늘의 인기글</a>
+				<a href="${pageContext.request.contextPath}/board?type=freeBoard-Week" class="w3-bar-item w3-button w3-hover-blue">주간 인기글</a>
 			</div>
 			<div class="w3-dropdown-click">
 				<div class="w3-bar-item w3-buttonw3-hover-blue" onclick="dropdown('video')">
-				동영상 게시판 <i class="fa fa-caret-down"></i>
+				핫클립 <i class="fa fa-caret-down"></i>
 				</div>
 				<div id="video-drop" class="w3-dropdown-content w3-white w3-card-4">
-					<a href="#" class="w3-bar-item w3-button w3-hover-blue">오늘의 인기글</a>
-					<a href="#" class="w3-bar-item w3-button w3-hover-blue">주간 인기글</a>
+					<a href="#" class="w3-bar-item w3-button w3-hover-blue">최신 핫클립</a>
+					<a href="#" class="w3-bar-item w3-button w3-hover-blue">오늘의 핫클립</a>
+					<a href="#" class="w3-bar-item w3-button w3-hover-blue">주간 핫클립</a>
 				</div>
 			</div>
 		</div>
@@ -198,7 +200,7 @@ function dropdown(type) {
 	<div class="rightContent">
 		<div class="container-fluid">
 			<c:choose>				
-				<c:when test="${param.type == 'freeBoard'}">
+				<c:when test="${param.type == 'freeBoard-New' || param.type == 'freeBoard-Today' || param.type == 'freeBoard-Week'}">
 					<jsp:include page="board/list.jsp"/>
 				</c:when>
 				<c:when test="${param.type == 'freeWrite'}">
