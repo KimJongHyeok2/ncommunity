@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ public class BoardController {
 	@Inject
 	private BoardService boardService;
 	
+	// 게시판 글 목록
 	@GetMapping("")
 	public String board(String type, @RequestParam(value = "currPage", defaultValue = "1") int currPage, Model model) {
 		List<BoardDTO> dto = null;
@@ -86,8 +88,18 @@ public class BoardController {
 				map.put("endday", endday_sdf);
 				
 				dto = boardService.selectFreeBoardWeek(map);
-			} else if(type.equals("videoBoard")) {
-				System.out.println("동영상 게시판");
+			} else if(type.equals("videoBoard-New")) {
+				dto = boardService.selectVideoBoard(page);
+				pageCount = boardService.selectVideoBoardCount();
+				pageCount = pageCount/row + (pageCount%row==0? 0:1);
+				startPage = ((currPage-1)/pageBlock)*pageBlock+1;
+				endPage = startPage + pageBlock - 1;
+				
+				if(endPage > pageCount) {
+					endPage = pageCount;
+				}
+				
+				pad = new PaginationDTO(pageBlock, pageCount, startPage, endPage);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -99,6 +111,7 @@ public class BoardController {
 		return "main";
 	}
 	
+	// 게시판 글쓰기 페이지 이동
 	@GetMapping("/write")
 	public String write(String type) {
 		if(type == null || type.length() == 0) {
@@ -108,6 +121,7 @@ public class BoardController {
 		return "main";
 	}
 	
+	// 게시판 글작성
 	@PostMapping("/writeOk")
 	public String writeOk(BoardDTO dto, BindingResult result) {
 		BoardValidation validation = new BoardValidation();
@@ -116,23 +130,30 @@ public class BoardController {
 		if(result.hasErrors()) {
 			return "redirect:/board/write";
 		}
-
-		if(dto.getType().equals("freeWrite")) {
-			try {
+		
+		try {	
+			if(dto.getType().equals("freeWrite")) {
 				int count = boardService.insertFreeBoard(dto);
 				
 				if(count == 1) {
 					return "redirect:/board/view?type=freeView&num=" + dto.getNum();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			} else if(dto.getType().equals("videoWrite")) {
+				int count = boardService.insertVideoBoard(dto);
+				if(count == 1) {
+					return "redirect:/board/view?type=videoView&num=" + dto.getNum();
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return "main";
 	}
 	
+	// 글 상세보기
 	@GetMapping("/view")
+	@Transactional
 	public String view(String type, @RequestParam(value = "num", defaultValue = "0") int num,
 						HttpServletRequest request, HttpServletResponse response, Model model) {
 		if(type == null || type.length() == 0 || num == 0) {
@@ -153,15 +174,24 @@ public class BoardController {
 					  }
 				  }
 				  
-				  if(!viewCookieFlag) {	  
+				  if(!viewCookieFlag) {
 					  Cookie viewCookie = new Cookie("view" + num, String.valueOf(num));
 					  viewCookie.setMaxAge(21600);
 					  response.addCookie(viewCookie);
-					  boardService.updateViewcnt(num);
+					  if(type.equals("freeView")) {
+						  boardService.updateFreeBoardViewcnt(num);
+					  } else if(type.equals("videoView")) {
+						  boardService.updateVideoBoardViewcnt(num);
+					  }
 				  }
 			  }
 			  
-			  dto = boardService.selectWriteView(num);
+			  if(type.equals("freeView")) {				  
+				  dto = boardService.selectWriteView(num);
+			  } else if(type.equals("videoView")) {
+				  dto = boardService.selectVideoView(num);
+			  }
+			  
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -171,6 +201,7 @@ public class BoardController {
 		return "main";
 	}
 	
+	// 게시판 글수정 페이지 이동
 	@GetMapping("/update")
 	public String update(String type, @RequestParam(value = "num", defaultValue = "0") int num, Model model) {
 		if(type == null || type.length() == 0 || num == 0) {
@@ -190,6 +221,7 @@ public class BoardController {
 		return "main";
 	}
 	
+	// 게시판 글수정
 	@PostMapping("/updateOk")
 	public String updateOk(BoardDTO dto, BindingResult result) {
 		BoardValidation validation = new BoardValidation();
@@ -214,6 +246,7 @@ public class BoardController {
 		return "main";
 	}
 	
+	// 게시판 글삭제
 	@PostMapping("/deleteOk")
 	public String deleteOk(String type, @RequestParam(value = "num", defaultValue = "0") int num) {
 
@@ -225,7 +258,7 @@ public class BoardController {
 					int count = boardService.deleteFreeBoard(num);
 					
 					if(count == 1) {
-						return "redirect:/board?type=freeBoard";
+						return "redirect:/board?type=freeBoard-New";
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

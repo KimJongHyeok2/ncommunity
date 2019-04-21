@@ -32,6 +32,7 @@ function pageMove(type) {
 	float: left;
 	width: 300px;
 	height: 57px;
+	cursor: pointer;
 }
 .header .logo img {
 	width: 100%;
@@ -70,7 +71,7 @@ function pageMove(type) {
 }
 </style>
 <div class="header">
-	<div class="logo">
+	<div class="logo" onclick="location.href='${pageContext.request.contextPath}'">
 		<img class="img-fluid" src="${pageContext.request.contextPath}/resources/img/main/mainLogo2.png"/>
 	</div>
 	<div class="info">

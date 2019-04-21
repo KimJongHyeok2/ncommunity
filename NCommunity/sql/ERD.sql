@@ -8,6 +8,7 @@ DROP TABLE freeboard_recomments CASCADE CONSTRAINTS;
 DROP TABLE freeboard_comments CASCADE CONSTRAINTS;
 DROP TABLE freeboard CASCADE CONSTRAINTS;
 DROP TABLE recommendHistory CASCADE CONSTRAINTS;
+DROP TABLE videoboard_recomments CASCADE CONSTRAINTS;
 DROP TABLE videoboard_comments CASCADE CONSTRAINTS;
 DROP TABLE videoboard CASCADE CONSTRAINTS;
 DROP TABLE members CASCADE CONSTRAINTS;
@@ -76,14 +77,14 @@ CREATE TABLE freeboard_comments
 
 CREATE TABLE freeboard_recomments
 (
-	f_recomment_num number NOT NULL,
+	v_recomment_num number NOT NULL,
 	fcomment_num number NOT NULL,
 	free_num number NOT NULL,
 	mem_num number NOT NULL,
-	f_recomment_content clob NOT NULL,
-	f_recomment_status number DEFAULT 1,
-	f_recomment_regdate timestamp DEFAULT SYSDATE,
-	PRIMARY KEY (f_recomment_num)
+	v_recomment_content clob NOT NULL,
+	v_recomment_status number DEFAULT 1,
+	v_recomment_regdate timestamp DEFAULT SYSDATE,
+	PRIMARY KEY (v_recomment_num)
 );
 
 
@@ -119,8 +120,10 @@ CREATE TABLE videoboard
 (
 	video_num number NOT NULL,
 	mem_num number NOT NULL,
+	video_thumb varchar2(300) NOT NULL,
 	video_subject varchar2(300) NOT NULL,
 	video_content clob NOT NULL,
+	video_description clob NOT NULL,
 	video_like number DEFAULT 0,
 	video_hate number DEFAULT 0,
 	video_status number DEFAULT 1,
@@ -141,6 +144,19 @@ CREATE TABLE videoboard_comments
 	vcomment_status number DEFAULT 1,
 	vcomment_regdate timestamp DEFAULT SYSDATE,
 	PRIMARY KEY (vcomment_num)
+);
+
+
+CREATE TABLE videoboard_recomments
+(
+	v_recomment_num number NOT NULL,
+	vcomment_num number NOT NULL,
+	video_num number NOT NULL,
+	mem_num number NOT NULL,
+	v_recomment_content clob NOT NULL,
+	v_recomment_status number DEFAULT 1,
+	v_recomment_regdate timestamp DEFAULT SYSDATE,
+	PRIMARY KEY (v_recomment_num)
 );
 
 
@@ -213,73 +229,29 @@ ALTER TABLE videoboard_comments
 ;
 
 
+ALTER TABLE videoboard_recomments
+	ADD FOREIGN KEY (mem_num)
+	REFERENCES members (mem_num)
+;
+
+
 ALTER TABLE videoboard_comments
 	ADD FOREIGN KEY (video_num)
 	REFERENCES videoboard (video_num)
 ;
 
-/* Create Sequence */
 
-CREATE SEQUENCE mem_seq;
-CREATE SEQUENCE freeB_seq;
-CREATE SEQUENCE videoB_seq;
-CREATE SEQUENCE fcomment_seq;
-CREATE SEQUENCE f_recomment_seq;
-CREATE SEQUENCE vcomment_seq;
-CREATE SEQUENCE rh_seq; 
-CREATE SEQUENCE ekey_seq; 
+ALTER TABLE videoboard_recomments
+	ADD FOREIGN KEY (video_num)
+	REFERENCES videoboard (video_num)
+;
 
-/* Drop Sequence */
 
-DROP SEQUENCE mem_seq;
-DROP SEQUENCE freeB_seq;
-DROP SEQUENCE videoB_seq;
-DROP SEQUENCE fcomment_seq;
-DROP SEQUENCE f_recomment_seq;
-DROP SEQUENCE vcomment_seq;
-DROP SEQUENCE rh_seq;
-DROP SEQUENCE ekey_seq;
+ALTER TABLE videoboard_recomments
+	ADD FOREIGN KEY (vcomment_num)
+	REFERENCES videoboard_comments (vcomment_num)
+;
 
-SELECT * FROM freeboard_comments ORDER BY fcomment_like-fcomment_hate DESC;
 
-SELECT * FROM freeboard_comments f, freeboard_recomments fr WHERE f.free_num = fr.free_num AND f.fcomment_num = fr.fcomment_num AND f.fcomment_status = 1 AND fr.f_recomment_status = 1;
 
-SELECT * FROM (SELECT * FROM (SELECT * FROM freeboard))
-
-			SELECT * FROM
-				(SELECT rownum rnum, f.* FROM
-				(SELECT
-					b.free_num num,
-					b.mem_num,
-					(SELECT mem_nickname FROM members WHERE mem_num = b.mem_num) nickname,
-					b.free_subject subject,
-					b.free_content content,
-					b.free_like "like",
-					b.free_hate hate,
-					b.free_status status,
-					b.free_viewcnt viewcnt,
-					b.free_regdate regdate,
-					((SELECT count(*) FROM freeboard_comments WHERE free_num = b.free_num AND fcomment_status = 1) + (SELECT count(*) FROM freeboard_recomments WHERE free_num = b.free_num AND f_recomment_status = 1)) commentsCount
-				FROM freeboard b WHERE b.free_status = 1 AND ((b.free_like - b.free_hate) > 0) AND b.free_regdate BETWEEN TO_DATE('2019-04-14', 'yyyy-mm-dd') AND TO_DATE('2019-04-21', 'yyyy-mm-dd') ORDER BY (b.free_like - b.free_hate) DESC) f )
-			WHERE rnum >= 1 AND rnum < 11
-			
-SELECT TO_DATE(SYSDATE, 'yyyy-mm-dd') FROM dual;
-
-SELECT TO_CHAR(SYSDATE, 'yyyy-mm-dd') FROM freeboard;
-
-			SELECT * FROM
-				(SELECT rownum rnum, f.* FROM
-				(SELECT
-					b.free_num num,
-					b.mem_num,
-					(SELECT mem_nickname FROM members WHERE mem_num = b.mem_num) nickname,
-					b.free_subject subject,
-					b.free_content content,
-					b.free_like "like",
-					b.free_hate hate,
-					b.free_status status,
-					b.free_viewcnt viewcnt,
-					b.free_regdate regdate,
-					((SELECT count(*) FROM freeboard_comments WHERE free_num = b.free_num AND fcomment_status = 1) + (SELECT count(*) FROM freeboard_recomments WHERE free_num = b.free_num AND f_recomment_status = 1)) commentsCount
-				FROM freeboard b WHERE b.free_status = 1 AND ((b.free_like - b.free_hate) > 0) AND (TO_CHAR(b.free_regdate, 'yyyy-mm-dd') = TO_CHAR(SYSDATE, 'yyyy-mm-dd'))  ORDER BY (b.free_like - b.free_hate) DESC) f )
-			WHERE rnum >= 1 AND rnum < 11; d
+DELETE FROM videoBoard WHERE video_num = 13;

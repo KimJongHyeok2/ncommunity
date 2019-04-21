@@ -186,13 +186,13 @@ function dropdown(type) {
 				<a href="${pageContext.request.contextPath}/board?type=freeBoard-Week" class="w3-bar-item w3-button w3-hover-blue">주간 인기글</a>
 			</div>
 			<div class="w3-dropdown-click">
-				<div class="w3-bar-item w3-buttonw3-hover-blue" onclick="dropdown('video')">
-				핫클립 <i class="fa fa-caret-down"></i>
+				<div class="w3-bar-item w3-buttonw3-hover-blue ${param.type == 'videoBoard-New' || param.type == 'videoWrite' || param.type == 'videoUpdate' || param.type == 'videoView'? 'w3-green':''}" onclick="dropdown('video')">
+				동영상 게시판 <i class="fa fa-caret-down"></i>
 				</div>
-				<div id="video-drop" class="w3-dropdown-content w3-white w3-card-4">
-					<a href="#" class="w3-bar-item w3-button w3-hover-blue">최신 핫클립</a>
-					<a href="#" class="w3-bar-item w3-button w3-hover-blue">오늘의 핫클립</a>
-					<a href="#" class="w3-bar-item w3-button w3-hover-blue">주간 핫클립</a>
+				<div id="video-drop" class="w3-dropdown-content w3-white w3-card-4 ${param.type == 'videoBoard-New' || param.type == 'videoWrite' || param.type == 'videoUpdate' || param.type == 'videoView'? 'w3-show':''}">
+					<a href="${pageContext.request.contextPath}/board?type=videoBoard-New" class="w3-bar-item w3-button w3-hover-blue">최신 동영상</a>
+					<a href="#" class="w3-bar-item w3-button w3-hover-blue">오늘의 인기 동영상</a>
+					<a href="#" class="w3-bar-item w3-button w3-hover-blue">주간 인기 동영상</a>
 				</div>
 			</div>
 		</div>
@@ -203,15 +203,24 @@ function dropdown(type) {
 				<c:when test="${param.type == 'freeBoard-New' || param.type == 'freeBoard-Today' || param.type == 'freeBoard-Week'}">
 					<jsp:include page="board/list.jsp"/>
 				</c:when>
-				<c:when test="${param.type == 'freeWrite'}">
+				<c:when test="${param.type == 'freeWrite' || param.type == 'videoWrite'}">
 					<jsp:include page="board/write.jsp"/>
 				</c:when>
-				<c:when test="${param.type == 'freeView' || param.type == 'videoView'}">
+				<c:when test="${param.type == 'freeView'}">
 					<jsp:include page="board/view.jsp"/>
 				</c:when>
-				<c:when test="${param.type == 'freeUpdate' || param.type == 'videoUpdate'}">
+				<c:when test="${param.type == 'freeUpdate'}">
 					<jsp:include page="board/update.jsp"/>
 				</c:when>
+				<c:when test="${param.type == 'videoBoard-New'}">
+					<jsp:include page="board/videoList.jsp"/>
+				</c:when>
+				<c:when test="${param.type == 'videoView'}">
+					<jsp:include page="board/videoView.jsp"/>
+				</c:when>
+				<c:otherwise>
+					메인화면 준비 중입니다.
+				</c:otherwise>
 			</c:choose>
 		</div>
 		<div class="footer">

@@ -21,6 +21,11 @@ public class BoardValidation implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "type", "emptyBoardType");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "subject", "emptySubject");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "content", "emptyContent");
+		
+		if(dto.getType().equals("videoWrite")) {
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "thumb", "emptyVideoThumbnail");
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "emptyDescription");
+		}
 	}
 
 }

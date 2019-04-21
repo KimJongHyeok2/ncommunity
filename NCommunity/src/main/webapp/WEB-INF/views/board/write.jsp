@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
 <script>
 $(document).ready(function() {
@@ -18,13 +19,19 @@ $(document).ready(function() {
 			$("#myModal").modal();
 		}
 	}
-	$(".content").on("keyup", function() {
-
-	});
+	if(${param.type == "videoWrite"}) {
+ 		$("#con .ck-editor__editable[role='textbox']").on("keyup", function() {
+			myEditor.setData("");
+		});
+	}
+/* 	$(".content").on("keyup", function() { */
+/* 		alert($("figure").html()); */
+/* 		alert($(".ck-media__wrapper").attr("data-oembed-url"));
+		var testV = $(".ck-media__wrapper").attr("data-oembed-url");
+		alert(testV.indexOf("www.youtube.com"));
+		alert(testV.indexOf("youtu.be")); */
+/* 	}); */
 });
-function tests() {
-	alert("테스트");
-}
 function getClientInfo() {
     var userAgent = navigator.userAgent;
     var reg = null;
@@ -73,24 +80,73 @@ function getClientInfo() {
 function writeSubmit(form) {
 	var subject = form["subject"].value;
 	var content = myEditor.getData();
+	var description = myEditor2.getData();
+	var subjectFlag = false;
+	var contentFlag = false;
+	var descriptionFlag = false;
 	
 	if(subject == null || subject == "" || subject.length < 10 || subject.length > 100) {
 		$("#myModal .modal-body").html("제목은 10자 이상 100자 이하로 입력해주세요.");
 		$("#myModal").modal();
+		subjectFlag = false;
 		return false;
+	} else {
+		subjectFlag = true;
 	}
-	if(content == null || content == "" || content.length == 0) {
-		$("#myModal .modal-body").html("내용을 입력해주세요.");
-		$("#myModal").modal();
-		return false;
+	
+	var writeType = "${param.type}";
+
+	if(writeType == "freeWrite") {
+		if(content == null || content == "" || content.length < 10) {
+			$("#myModal .modal-body").html("내용을 입력해주세요.");
+			$("#myModal").modal();
+			contentFlag = false;
+		} else {
+			contentFlag = true;
+		}
+	} else if(writeType == "videoWrite") {
+	 	if(content.indexOf("youtube.com") == -1 && content.indexOf("youtu.be") == -1) {
+			$("#myModal .modal-body").html("상단 툴바를 통해 Youtube 동영상을 업로드해주세요.");
+			$("#myModal").modal();
+			contentFlag = false;
+	 	} else {
+	 		contentFlag = true;
+	 	}
+		if(description == null || description == "" || description.length < 10) {
+			$("#myModal .modal-body").html("설명을 입력해주세요.");
+			$("#myModal").modal();
+			descriptionFlag = false;
+		} else {
+			descriptionFlag = true;
+		}
 	}
+	
+	if(writeType == "freeWrite") {
+		if(subjectFlag && contentFlag) {
+			return true;
+		}
+	} else if(writeType == "videoWrite") {
+		if(subjectFlag && contentFlag && descriptionFlag) {
+			var thumb_key = $(".ck-media__wrapper").attr("data-oembed-url").substr($(".ck-media__wrapper").attr("data-oembed-url").lastIndexOf("/")+1, $(".ck-media__wrapper").attr("data-oembed-url").length);
+			$("#writeForm").append("<input type='hidden' id='thumb' name='thumb' value='" + thumb_key + "'/>");
+			return true;
+		}		
+	}
+	
+	return false;
+}
+function tests2() {
+	alert("테스트");
 }
 </script>
 <style>
 .form-group.margin {
 	margin-top: 15px;
 }
-.ck-editor__editable[role="textbox"] {
+#con {
+	margin-bottom: 15px;
+}
+#con .ck-editor__editable[role='textbox'] {
 	height: 500px;
 }
 </style>
@@ -98,7 +154,14 @@ function writeSubmit(form) {
 	<div class="form-group margin subject">
 		<input type="text" class="form-control" id="subject" placeholder="제목은 10자 이상 100자 이하로 입력해주세요." name="subject"/>
 	</div>
-	<textarea id="content" name="content" placeholder="내용을 입력해주세요."></textarea>
+	<div id="con">
+		<textarea id="content" name="content"></textarea>
+	</div>
+	<div id="desc">
+		<c:if test="${param.type == 'videoWrite'}">
+			<textarea id="description" name="description"></textarea>
+		</c:if>
+	</div>
 	<div class="form-group margin function">
 		<button type="submit" class="btn btn-outline-primary">작성하기</button>
 		<button type="button" class="btn btn-outline-secondary" onclick="history.back();">이전으로</button>
@@ -133,31 +196,46 @@ var type = '${param.type}'
 if(type == "freeWrite") {
 	ClassicEditor
 	.create( document.querySelector('#content'), {
+		placeholder: '내용을 입력해주세요.',
 		ckfinder: {
 	        uploadUrl: '${pageContext.request.contextPath}/upload/img?${_csrf.parameterName}=${_csrf.token}'
 	    },
-		/* removePlugins: ['MediaEmbed'] */
+		removePlugins: ['MediaEmbed']
 	})
 	.then( editor => {
 	    myEditor = editor;
 	})
 	.catch( error => {
 		console.error( error );
-	});
+	})
 } else if(type == "videoWrite") {
 	ClassicEditor
 	.create( document.querySelector('#content'), {
+		placeholder: '현재 동영상은 상단 툴바를 통한 Youtube URL 업로드만 가능합니다.',
 		ckfinder: {
 	        uploadUrl: '${pageContext.request.contextPath}/upload/img?${_csrf.parameterName}=${_csrf.token}'
 	    },
-	    toolbar: [ 'MediaEmbed', 'heading', 'bold' ]
-	/* MediaEmbed */
+	    removePlugins: ['ImageUpload'],
+	    toolbar: ['MediaEmbed']
 	})
 	.then( editor => {
 	    myEditor = editor;
 	})
 	.catch( error => {
 		console.error( error );
-	});	
+	})
+	
+	ClassicEditor
+	.create( document.querySelector('#description'), {
+		placeholder: '설명을 입력해주세요.',
+		removePlugins: ['MediaEmbed', 'ImageUpload', 'Heading'],
+		toolbar: ['Bold']
+	})
+	.then( editor => {
+	    myEditor2 = editor;
+	})
+	.catch( error => {
+		console.error( error );
+	})
 }
 </script>

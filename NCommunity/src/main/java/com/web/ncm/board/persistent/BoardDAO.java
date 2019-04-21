@@ -12,7 +12,7 @@ public interface BoardDAO {
 	public List<BoardDTO> selectFreeBoard(Map<String, Integer> page) throws Exception;
 	public int selectFreeBoardCount() throws Exception;
 	public BoardDTO selectWriteView(int num) throws Exception;
-	public int updateViewcnt(int num) throws Exception;
+	public int updateFreeBoardViewcnt(int num) throws Exception;
 	public int updateFreeBoard(BoardDTO dto) throws Exception;
 	public int deleteFreeBoard(int num) throws Exception;
 	public String selectHasRecommendHistory(Map<String, Integer> map) throws Exception;
@@ -33,4 +33,9 @@ public interface BoardDAO {
 	public int updateFreeBoardCommentRecommend(Map<String, Integer> map) throws Exception;
 	public List<BoardDTO> selectFreeBoardToday() throws Exception;
 	public List<BoardDTO> selectFreeBoardWeek(Map<String, String> map) throws Exception;
+	public int insertVideoBoard(BoardDTO dto) throws Exception;
+	public BoardDTO selectVideoView(int num) throws Exception;
+	public int updateVideoBoardViewcnt(int num) throws Exception;
+	public List<BoardDTO> selectVideoBoard(Map<String, Integer> page) throws Exception;
+	public int selectVideoBoardCount() throws Exception;
 }

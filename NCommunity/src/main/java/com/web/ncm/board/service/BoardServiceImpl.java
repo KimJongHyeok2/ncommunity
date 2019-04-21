@@ -39,8 +39,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public int updateViewcnt(int num) throws Exception {
-		return dao.updateViewcnt(num);
+	public int updateFreeBoardViewcnt(int num) throws Exception {
+		return dao.updateFreeBoardViewcnt(num);
 	}
 
 	@Override
@@ -141,6 +141,31 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardDTO> selectFreeBoardToday() throws Exception {
 		return dao.selectFreeBoardToday();
+	}
+
+	@Override
+	public int insertVideoBoard(BoardDTO dto) throws Exception {
+		return dao.insertVideoBoard(dto);
+	}
+
+	@Override
+	public BoardDTO selectVideoView(int num) throws Exception {
+		return dao.selectVideoView(num);
+	}
+
+	@Override
+	public int updateVideoBoardViewcnt(int num) throws Exception {
+		return dao.updateVideoBoardViewcnt(num);
+	}
+
+	@Override
+	public List<BoardDTO> selectVideoBoard(Map<String, Integer> page) throws Exception {
+		return dao.selectVideoBoard(page);
+	}
+
+	@Override
+	public int selectVideoBoardCount() throws Exception {
+		return dao.selectVideoBoardCount();
 	}
 	
 }

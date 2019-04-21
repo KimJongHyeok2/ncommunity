@@ -104,24 +104,6 @@ function writeSubmit(form) {
 </form>
 <input type="hidden" id="header" value="${_csrf.headerName}"/>
 <input type="hidden" id="token" value="${_csrf.token}"/>
-<div class="modal fade" id="myModal">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-		<!-- Modal Header -->
-		<div class="modal-header">
-		<h4 class="modal-title">안내</h4>
-			<button type="button" class="close" data-dismiss="modal">×</button>
-		</div>
-		<!-- Modal body -->
-		<div class="modal-body">
-		</div>
-		<!-- Modal footer -->
-		<div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-		</div>
-		</div>
-	</div>
-</div>
 <script>
 ClassicEditor
 	.create( document.querySelector('#content'), {

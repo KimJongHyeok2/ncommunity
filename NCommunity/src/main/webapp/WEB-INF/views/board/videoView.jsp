@@ -44,7 +44,6 @@ $(document).ready(function() {
  		 $(this).append(anchor);
 	});
 	
-	$("figure").css("margin", "0");
 	/* 	document.querySelectorAll( 'oembed[url]' ).forEach( element => {
 
 	    const anchor = document.createElement( 'a' );
@@ -53,6 +52,9 @@ $(document).ready(function() {
 	    element.appendChild( anchor );
 	    
 	});	 */
+	
+	$("figure").css("margin", "0");
+	
 	commentList(0, 'new');
 	$(".popular-list").click(function() {
 		commentList(0, 'popular');
@@ -60,14 +62,25 @@ $(document).ready(function() {
 	$(".new-list").click(function() {
 		commentList(0, 'new');
 	});
+	$("*").mouseenter(function() {
+		overview();
+	});
+	$("*").mouseleave(function() {
+		overview();
+	});
 });
+function overview() {
+	$(".media").css("margin", "0");
+	$(".embedly-card-hug").css("max-width", "1200px");
+	$(".embedly-card iframe").attr("width", "100%");
+}
 function deleteConfirm() {
 	$("#myModal2 .modal-body").html("정말로 글을 삭제하시겠습니까?");
 	$("#delete-btn").attr("onclick", "$('#delete-form').submit();");
 	$("#myModal2").modal();
 }
-function list(type) {
- 	type = type.substr(-type.length, 4) + "Board-New";
+function list() {
+	var type = "videoBoard-New"
 	location.href = "${pageContext.request.contextPath}/board?type=" + type;
 }
 function recommend(num, mem_num, type) {
@@ -702,32 +715,36 @@ function mine(mem_num) {
 	border: 1px solid #D5D5D5;
 	border-radius: 5px;
 }
+.container-view.recommend {
+	text-align: center;
+	border: 1px solid transparent;
+}
 .container-view .view-subject {
-	display: flex;
 	padding: 10px;
 	border-bottom: 1px solid #D5D5D5;
 }
 .container-view .view-subject .subject {
-	flex-grow: 1;
+	font-size: 15pt;
 }
 .container-view .view-subject .other {
 	display: flex;
 	text-align: center;
 }
+.container-view .view-subject .other div {
+	margin-right: 5px;
+}
 .container-view .view-subject .other .username span {
 	color: gray;
 }
 .container-view .view-subject .other .viewcnt {
-	width: 50px;
 }
 .container-view .view-subject .other .regdate {
-	width: 50px;
 }
 .container-view .view-content {
 	padding: 10px;
 }
-.container-view .view-content .v-content {
-	min-height: 500px;
+.container-view .view-content .v-content p {
+	margin: 0;
 }
 .container-view .view-content .recommend {
 	text-align: center;
@@ -897,18 +914,18 @@ function mine(mem_num) {
 	margin-bottom: 5px;
 }
 @media (max-width:700px) {
-	.view-subject .subject {
+/* 	.view-subject .subject {
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;
-	}
+	} */
 	.container-function .view-function {
 		float: none;
 		text-align: center;
 	}
 }
 </style>
-<div class="container-view">
+<%-- <div class="container-view">
 	<div class="view-subject">
 		<div class="subject">
 			${dto.subject}
@@ -923,13 +940,35 @@ function mine(mem_num) {
 		<div class="v-content">
 			${dto.content}
 		</div>
-		<div class="recommend">
-			<button type="button" class="btn btn-primary" onclick="recommend(${dto.num}, ${sessionScope.num}, 1);">
-				좋아요 <span id="like-count" class="badge badge-light">${dto.like}</span>
-			</button>
-			<button type="button" class="btn btn-danger" onclick="recommend(${dto.num}, ${sessionScope.num}, 2);">
-				싫어요 <span id="hate-count" class="badge badge-light">${dto.hate}</span>
-			</button>
+	</div>
+</div> --%>
+<div class="container-view">
+	${dto.content}
+</div>
+<div class="container-view recommend">
+	<div class="recommend">
+		<button type="button" class="btn btn-primary" onclick="recommend(${dto.num}, ${sessionScope.num}, 1);">
+			좋아요 <span id="like-count" class="badge badge-light">${dto.like}</span>
+		</button>
+		<button type="button" class="btn btn-danger" onclick="recommend(${dto.num}, ${sessionScope.num}, 2);">
+			싫어요 <span id="hate-count" class="badge badge-light">${dto.hate}</span>
+		</button>
+	</div>
+</div>
+<div class="container-view">
+	<div class="view-subject">
+		<div class="subject">
+			${dto.subject}
+		</div>
+		<div class="other">
+			<div class="username">${dto.nickname}(<span>${dto.id}</span>)</div>
+			<div class="viewcnt"><span class="badge badge-pill badge-info">조회수 ${dto.viewcnt}회</span></div>
+			<div class="regdate" id="regdate">${dto.regdate}</div>
+		</div>
+	</div>
+	<div class="view-content">
+		<div class="v-content">
+			${dto.description}
 		</div>
 	</div>
 </div>
@@ -941,7 +980,7 @@ function mine(mem_num) {
 				<button type="button" class="btn btn-outline-danger" onclick="deleteConfirm();">삭제하기</button>
 			</c:when>
 		</c:choose>
-		<button type="button" class="btn btn-outline-secondary" onclick="list('${param.type}');">목록으로</button>
+		<button type="button" class="btn btn-outline-secondary" onclick="list();">목록으로</button>
 	</div>
 </div>
 <div class="container-comment-input">
@@ -956,6 +995,24 @@ function mine(mem_num) {
 	댓글 <span id="comment-count" class="badge badge-pill badge-primary">0</span> <span class="badge badge-light popular-list">공감순</span> <span class="badge badge-light new-list">최신순</span>
 </div>
 <div id="container-comment">
+</div>
+<div class="modal fade" id="myModal">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+		<!-- Modal Header -->
+		<div class="modal-header">
+		<h4 class="modal-title">안내</h4>
+			<button type="button" class="close" data-dismiss="modal">×</button>
+		</div>
+		<!-- Modal body -->
+		<div class="modal-body">
+		</div>
+		<!-- Modal footer -->
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+		</div>
+		</div>
+	</div>
 </div>
 <div class="modal fade" id="myModal2">
 	<div class="modal-dialog modal-dialog-centered">

@@ -39,8 +39,8 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	@Override
-	public int updateViewcnt(int num) throws Exception {
-		return sqlSession.update("board.updateViewcnt", num);
+	public int updateFreeBoardViewcnt(int num) throws Exception {
+		return sqlSession.update("board.updateFreeBoardViewcnt", num);
 	}
 
 	@Override
@@ -141,6 +141,31 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public List<BoardDTO> selectFreeBoardToday() throws Exception {
 		return sqlSession.selectList("board.selectFreeBoardToday");
+	}
+
+	@Override
+	public int insertVideoBoard(BoardDTO dto) throws Exception {
+		return sqlSession.insert("board.insertVideoBoard", dto);
+	}
+
+	@Override
+	public BoardDTO selectVideoView(int num) throws Exception {
+		return sqlSession.selectOne("board.selectVideoView", num);
+	}
+
+	@Override
+	public int updateVideoBoardViewcnt(int num) throws Exception {
+		return sqlSession.update("board.updateVideoBoardViewcnt", num);
+	}
+
+	@Override
+	public List<BoardDTO> selectVideoBoard(Map<String, Integer> page) throws Exception {
+		return sqlSession.selectList("board.selectVideoBoard", page);
+	}
+
+	@Override
+	public int selectVideoBoardCount() throws Exception {
+		return sqlSession.selectOne("board.selectVideoBoardCount");
 	}
 
 }

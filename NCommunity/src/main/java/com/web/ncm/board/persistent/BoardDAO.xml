@@ -20,7 +20,7 @@
 					b.free_viewcnt viewcnt,
 					b.free_regdate regdate,
 					((SELECT count(*) FROM freeboard_comments WHERE free_num = b.free_num AND fcomment_status = 1) + (SELECT count(*) FROM freeboard_recomments WHERE free_num = b.free_num AND f_recomment_status = 1)) commentsCount
-				FROM freeboard b WHERE b.free_status = 1 ORDER BY free_num DESC) f )
+				FROM freeboard b WHERE b.free_status = 1 ORDER BY b.free_num DESC) f )
 			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
 		]]>
 	</select>
@@ -43,7 +43,7 @@
 		FROM freeboard f
 		WHERE f.free_num = #{param1} AND free_status = 1
 	</select>
-	<update id="updateViewcnt">
+	<update id="updateFreeBoardViewcnt">
 		UPDATE freeboard SET free_viewcnt = free_viewcnt + 1 WHERE free_num = #{param1}
 	</update>
 	<update id="updateFreeBoard">
@@ -188,5 +188,55 @@
 				FROM freeboard b WHERE b.free_status = 1 AND ((b.free_like - b.free_hate) > 0) AND (TO_CHAR(b.free_regdate, 'yyyy-mm-dd') = TO_CHAR(SYSDATE, 'yyyy-mm-dd'))  ORDER BY (b.free_like - b.free_hate) DESC) f )
 			WHERE rnum >= 1 AND rnum < 11
 		]]>
+	</select>
+	<insert id="insertVideoBoard" parameterType="com.web.ncm.board.domain.BoardDTO" useGeneratedKeys="true" keyColumn="video_num" keyProperty="num">
+		INSERT INTO videoboard(video_num, mem_num, video_thumb, video_subject, video_content, video_description) VALUES(videoB_seq.nextval, #{mem_num}, #{thumb}, #{subject}, #{content}, #{description})
+	</insert>
+	<select id="selectVideoView" resultType="com.web.ncm.board.domain.BoardDTO">
+		SELECT
+			v.video_num num,
+			v.mem_num,
+			v.video_thumb thumb,
+			v.video_subject subject,
+			v.video_content content,
+			v.video_description description,
+			v.video_like "like",
+			v.video_hate hate,
+			v.video_status status,
+			v.video_viewcnt viewcnt,
+			v.video_regdate regdate,
+			(SELECT mem_id FROM members WHERE mem_num = v.mem_num) id,
+			(SELECT mem_nickname FROM members WHERE mem_num = v.mem_num) nickname
+		FROM videoboard v
+		WHERE v.video_num = #{param1} AND video_status = 1
+	</select>
+	<update id="updateVideoBoardViewcnt">
+		UPDATE videoboard SET video_viewcnt = video_viewcnt + 1 WHERE video_num = #{param1}
+	</update>
+	<select id="selectVideoBoard" resultType="com.web.ncm.board.domain.BoardDTO">
+		<![CDATA[
+			SELECT * FROM
+				(SELECT rownum rnum, b.* FROM
+				(SELECT
+					v.video_num num,
+					v.mem_num,
+					(SELECT mem_id FROM members WHERE mem_num = v.mem_num) id,
+					(SELECT mem_nickname FROM members WHERE mem_num = v.mem_num) nickname,
+					v.video_thumb thumb,
+					v.video_subject subject,
+					v.video_content content,
+					v.video_description description,
+					v.video_like "like",
+					v.video_hate hate,
+					v.video_status status,
+					v.video_viewcnt viewcnt,
+					v.video_regdate regdate,
+					((SELECT count(*) FROM videoboard_comments WHERE video_num = v.video_num AND vcomment_status = 1) + (SELECT count(*) FROM videoboard_recomments WHERE video_num = v.video_num AND v_recomment_status = 1)) commentsCount
+				FROM videoboard v WHERE v.video_status = 1 ORDER BY v.video_num DESC) b )
+			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
+		]]>
+	</select>
+	<select id="selectVideoBoardCount" resultType="Integer">
+		SELECT count(*) FROM videoboard WHERE video_status = 1
 	</select>
 </mapper>
