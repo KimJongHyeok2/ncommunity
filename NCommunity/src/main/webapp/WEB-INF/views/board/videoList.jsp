@@ -20,14 +20,13 @@ $(document).ready(function() {
 		rDate = (rDate.length + "")==1? ("0" + rDate):rDate;
 		
 		if((tYear + "-" + tMonth + "-" + tDate) == (rYear + "-" + rMonth + "-" + rDate)) {
-			$("#badge-new" + (i+1)).addClass("display", "on");
+			$("#badge-new" + (i+1)).removeClass("off");
 			var hour = regdate.getHours();
 			hour = (hour + "").length==1? ("0" + hour):hour;
 			var minute = regdate.getMinutes();
 			minute = (minute + "").length==1? ("0" + minute):minute;			
 			$("#regdate" + (i+1)).html(hour + ":" + minute);
 		} else {
-			$("#badge-new" + (i+1)).addClass("display", "off");
 			$("#regdate" + (i+1)).html(rMonth + "-" + rDate);
 		}
 	}
@@ -114,9 +113,6 @@ function page(select) {
 .video-content-wrapper .info .description-text p {
 	margin: 0;
 }
-.on {
-	display: block;
-}
 .off {
 	display: none;
 }
@@ -164,7 +160,7 @@ function page(select) {
 			<c:forEach var="i" varStatus="index" items="${dto}">
 			  <li class="list-group-item list-group-item-action" value="${i.num}" onclick="videoView(this);">
 			  	<div class="video-content-wrapper">
-			  		<span style="position: absolute;" class="badge badge-primary" id="badge-new${index.count}">NEW</span>
+			  		<span style="position: absolute;" class="badge badge-primary off" id="badge-new${index.count}">NEW</span>
 			  		<div class="thumbnail">
 			  			<img width="250px" src="https://img.youtube.com/vi/${i.thumb}/mqdefault.jpg"/>
 			  		</div>
