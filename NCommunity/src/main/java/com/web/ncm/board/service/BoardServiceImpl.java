@@ -247,5 +247,15 @@ public class BoardServiceImpl implements BoardService {
 	public int deleteVideoBoardReComments(int num) throws Exception {
 		return dao.deleteVideoBoardReComments(num);
 	}
+
+	@Override
+	public List<BoardDTO> selectVideoBoardToday() throws Exception {
+		return dao.selectVideoBoardToday();
+	}
+
+	@Override
+	public List<BoardDTO> selectVideoBoardWeek(Map<String, String> map) throws Exception {
+		return dao.selectVideoBoardWeek(map);
+	}
 	
 }

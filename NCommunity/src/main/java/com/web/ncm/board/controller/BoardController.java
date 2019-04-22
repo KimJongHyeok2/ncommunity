@@ -100,6 +100,27 @@ public class BoardController {
 				}
 				
 				pad = new PaginationDTO(pageBlock, pageCount, startPage, endPage);
+			} else if(type.equals("videoBoard-Today")) {
+				dto = boardService.selectVideoBoardToday();
+			} else if(type.equals("videoBoard-Week")) {
+				Map<String, String> map = new HashMap<String, String>();
+				
+				Calendar startday = Calendar.getInstance();
+				startday.add(Calendar.DATE, -startday.get(Calendar.DAY_OF_WEEK)+1);
+				
+				Calendar endday = Calendar.getInstance();
+				endday.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+				endday.add(Calendar.DATE, 7);
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				
+				String startday_sdf = sdf.format(startday.getTime());
+				String endday_sdf = sdf.format(endday.getTime());
+				
+				map.put("startday", startday_sdf);
+				map.put("endday", endday_sdf);
+				
+				dto = boardService.selectVideoBoardWeek(map);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

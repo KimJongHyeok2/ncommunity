@@ -42,7 +42,7 @@ function page(select) {
 	}
 	
 	if(select == "next") {
-		if(currPage == ${pad.pageCount} || ${fn:length(dto) == 0}) {
+		if(currPage == ${empty pad.pageCount? 1:pad.pageCount} || ${fn:length(dto) == 0}) {
 			$("#myModal .modal-body").html("마지막 페이지입니다.");
 			$("#myModal").modal();
 			return false;
@@ -72,7 +72,16 @@ function page(select) {
 	display: flex;
 }
 .video-content-wrapper .thumbnail {
+	position: relative;
 	width: 250px;
+}
+.video-content-wrapper .badge-box {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+}
+.video-content-wrapper .badge-box span {
+	vertical-align: top;
 }
 .video-content-wrapper .thumbnail .thumb {
 	width: 100%;
@@ -160,8 +169,13 @@ function page(select) {
 			<c:forEach var="i" varStatus="index" items="${dto}">
 			  <li class="list-group-item list-group-item-action" value="${i.num}" onclick="videoView(this);">
 			  	<div class="video-content-wrapper">
-			  		<span style="position: absolute;" class="badge badge-primary off" id="badge-new${index.count}">NEW</span>
 			  		<div class="thumbnail">
+			  			<div class="badge-box">
+				  			<c:if test="${param.type == 'videoBoard-Today' || param.type == 'videoBoard-Week'}">
+				  				<span class="badge badge-danger">${i.rnum}</span>
+				  			</c:if>
+				  			<span class="badge badge-primary off" id="badge-new${index.count}">NEW</span>
+			  			</div>
 			  			<img width="250px" src="https://img.youtube.com/vi/${i.thumb}/mqdefault.jpg"/>
 			  		</div>
 			  		<div class="info text-fluid">
@@ -190,9 +204,13 @@ function page(select) {
 	</c:choose>
 </ul>
 <div class="btn-write">
-	<button type="button" class="btn btn-outline-primary float-right" onclick="location.href='board/write?type=videoWrite'">작성하기</button>
+	<c:if test="${param.type == 'videoBoard-New'}">
+		<button type="button" class="btn btn-outline-primary float-right" onclick="location.href='board/write?type=videoWrite'">작성하기</button>
+	</c:if>
 </div>
-<ul class="pagination justify-content-center">
-    <li class="page-item"><a class="page-link text-primary" onclick="page('prev');">이전</a></li>
-    <li class="page-item"><a class="page-link text-primary" onclick="page('next');">다음</a></li>
-</ul>
+<c:if test="${not empty pad}">
+	<ul class="pagination justify-content-center">
+    	<li class="page-item"><a class="page-link text-primary" onclick="page('prev');">이전</a></li>
+    	<li class="page-item"><a class="page-link text-primary" onclick="page('next');">다음</a></li>
+	</ul>
+</c:if>

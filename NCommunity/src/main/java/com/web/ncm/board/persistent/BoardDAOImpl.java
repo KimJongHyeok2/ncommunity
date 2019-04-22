@@ -249,4 +249,14 @@ public class BoardDAOImpl implements BoardDAO {
 		return sqlSession.update("board.deleteVideoBoardReComments", num);
 	}
 
+	@Override
+	public List<BoardDTO> selectVideoBoardToday() throws Exception {
+		return sqlSession.selectList("board.selectVideoBoardToday");
+	}
+
+	@Override
+	public List<BoardDTO> selectVideoBoardWeek(Map<String, String> map) throws Exception {
+		return sqlSession.selectList("board.selectVideoBoardWeek", map);
+	}
+
 }

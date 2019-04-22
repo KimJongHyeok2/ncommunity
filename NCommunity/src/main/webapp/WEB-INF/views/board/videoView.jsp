@@ -84,6 +84,13 @@ function list() {
 	location.href = "${pageContext.request.contextPath}/board?type=" + type;
 }
 function recommend(num, mem_num, recommendtype) {
+	if(num == 0 || mem_num == 0) {
+		$("#myModal .modal-body").html("로그인이 필요합니다.");
+		$("#myModal .modal-footer").removeAttr("onclick");
+		$("#myModal").modal();
+		return false;
+	}
+
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var board_type = '${param.type}';
@@ -139,6 +146,13 @@ function recommend(num, mem_num, recommendtype) {
 	}
 }
 function commentRecommend(num, mem_num, recommendtype) {
+	if(num == 0 || mem_num == 0) {
+		$("#myModal .modal-body").html("로그인이 필요합니다.");
+		$("#myModal .modal-footer").removeAttr("onclick");
+		$("#myModal").modal();
+		return false;
+	}
+	
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var comment_type = '${param.type}';
@@ -218,6 +232,13 @@ function limitReComment(recomment, num) {
 	$("#recomment-limit-" + num).html(recommentVal.length);
 }
 function commentWrite() {
+	if(${empty sessionScope.num}) {
+		$("#myModal .modal-body").html("로그인이 필요합니다.");
+		$("#myModal .modal-footer").removeAttr("onclick");
+		$("#myModal").modal();
+		return false;
+	}
+	
 	var comment = $("#comment").val();
 	var type = '${param.type}';
 	type = type.substr(-type.length, 5) + "Comment";
@@ -241,7 +262,7 @@ function commentWrite() {
 			cache: false,
 			data: {
 				"board_num" : ${empty dto.num? 0:dto.num},
-				"mem_num" : ${sessionScope.num},
+				"mem_num" : ${empty sessionScope.num? 0:sessionScope.num},
 				"content" : comment,
 				"type" : type
 			},
@@ -262,6 +283,13 @@ function commentWrite() {
 	}
 }
 function recommentWrite(num) {
+	if(${empty sessionScope.num}) {
+		$("#myModal .modal-body").html("로그인이 필요합니다.");
+		$("#myModal .modal-footer").removeAttr("onclick");
+		$("#myModal").modal();
+		return false;
+	}
+	
 	var recomment = $("#recomment-" + num).val();
 	var type = '${param.type}';
 	type = type.substr(-type.length, 5) + "ReComment";
@@ -292,7 +320,7 @@ function recommentWrite(num) {
 			data: {
 				"comment_num" : num,
 				"board_num" : ${empty dto.num? 0:dto.num},
-				"mem_num" : ${sessionScope.num},
+				"mem_num" : ${empty sessionScope.num? 0:sessionScope.num},
 				"content" : recomment,
 				"type" : type
 			},
@@ -926,10 +954,10 @@ function mine(mem_num) {
 </div>
 <div class="container-view recommend">
 	<div class="recommend">
-		<button type="button" class="btn btn-primary" onclick="recommend(${dto.num}, ${sessionScope.num}, 5);">
+		<button type="button" class="btn btn-primary" onclick="recommend(${empty dto.num? 0:dto.num}, ${empty sessionScope.num? 0:sessionScope.num}, 5);">
 			좋아요 <span id="like-count" class="badge badge-light">${dto.like}</span>
 		</button>
-		<button type="button" class="btn btn-danger" onclick="recommend(${dto.num}, ${sessionScope.num}, 6);">
+		<button type="button" class="btn btn-danger" onclick="recommend(${empty dto.num? 0:dto.num}, ${empty sessionScope.num? 0:sessionScope.num}, 6);">
 			싫어요 <span id="hate-count" class="badge badge-light">${dto.hate}</span>
 		</button>
 	</div>

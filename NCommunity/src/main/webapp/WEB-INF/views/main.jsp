@@ -186,13 +186,13 @@ function dropdown(type) {
 				<a href="${pageContext.request.contextPath}/board?type=freeBoard-Week" class="w3-bar-item w3-button w3-hover-blue">주간 인기글</a>
 			</div>
 			<div class="w3-dropdown-click">
-				<div class="w3-bar-item w3-buttonw3-hover-blue ${param.type == 'videoBoard-New' || param.type == 'videoWrite' || param.type == 'videoUpdate' || param.type == 'videoView'? 'w3-green':''}" onclick="dropdown('video')">
+				<div class="w3-bar-item w3-buttonw3-hover-blue ${param.type == 'videoBoard-New' || param.type== 'videoBoard-Today' || param.type == 'videoBoard-Week' || param.type == 'videoWrite' || param.type == 'videoUpdate' || param.type == 'videoView'? 'w3-green':''}" onclick="dropdown('video')">
 				동영상 게시판 <i class="fa fa-caret-down"></i>
 				</div>
-				<div id="video-drop" class="w3-dropdown-content w3-white w3-card-4 ${param.type == 'videoBoard-New' || param.type == 'videoWrite' || param.type == 'videoUpdate' || param.type == 'videoView'? 'w3-show':''}">
+				<div id="video-drop" class="w3-dropdown-content w3-white w3-card-4 ${param.type == 'videoBoard-New' || param.type== 'videoBoard-Today' || param.type == 'videoBoard-Week' || param.type == 'videoWrite' || param.type == 'videoUpdate' || param.type == 'videoView'? 'w3-show':''}">
 					<a href="${pageContext.request.contextPath}/board?type=videoBoard-New" class="w3-bar-item w3-button w3-hover-blue">최신 동영상</a>
-					<a href="#" class="w3-bar-item w3-button w3-hover-blue">오늘의 인기 동영상</a>
-					<a href="#" class="w3-bar-item w3-button w3-hover-blue">주간 인기 동영상</a>
+					<a href="${pageContext.request.contextPath}/board?type=videoBoard-Today" class="w3-bar-item w3-button w3-hover-blue">오늘의 인기 동영상</a>
+					<a href="${pageContext.request.contextPath}/board?type=videoBoard-Week" class="w3-bar-item w3-button w3-hover-blue">주간 인기 동영상</a>
 				</div>
 			</div>
 		</div>
@@ -212,7 +212,7 @@ function dropdown(type) {
 				<c:when test="${param.type == 'freeUpdate'}">
 					<jsp:include page="board/update.jsp"/>
 				</c:when>
-				<c:when test="${param.type == 'videoBoard-New'}">
+				<c:when test="${param.type == 'videoBoard-New' || param.type == 'videoBoard-Today' || param.type == 'videoBoard-Week'}">
 					<jsp:include page="board/videoList.jsp"/>
 				</c:when>
 				<c:when test="${param.type == 'videoView'}">

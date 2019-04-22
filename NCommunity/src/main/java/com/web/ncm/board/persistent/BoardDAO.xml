@@ -282,7 +282,7 @@
 			v.video_num board_num,
 			v.mem_num,
 			(SELECT mem_id FROM members WHERE mem_num = v.mem_num) id,
-			(SELECT mem_nickname FROM members WHERE mem_num = v.mem_num) nickname,			
+			(SELECT mem_nickname FROM members WHERE mem_num = v.mem_num) nickname,
 			v.vcomment_content content,
 			v.vcomment_like "like",
 			v.vcomment_hate hate,
@@ -336,4 +336,50 @@
 	<update id="deleteVideoBoardReComments">
 		UPDATE videoboard_recomments SET v_recomment_status = 2 WHERE vcomment_num = #{param1}
 	</update>
+	<select id="selectVideoBoardToday" resultType="com.web.ncm.board.domain.BoardDTO">
+		<![CDATA[
+			SELECT * FROM
+				(SELECT rownum rnum, b.* FROM
+				(SELECT
+					v.video_num num,
+					v.mem_num,
+					(SELECT mem_id FROM members WHERE mem_num = v.mem_num) id,
+					(SELECT mem_nickname FROM members WHERE mem_num = v.mem_num) nickname,
+					v.video_thumb thumb,
+					v.video_subject subject,
+					v.video_content content,
+					v.video_description description,
+					v.video_like "like",
+					v.video_hate hate,
+					v.video_status status,
+					v.video_viewcnt viewcnt,
+					v.video_regdate regdate,
+					((SELECT count(*) FROM videoboard_comments WHERE video_num = v.video_num AND vcomment_status = 1) + (SELECT count(*) FROM videoboard_recomments WHERE video_num = v.video_num AND v_recomment_status = 1)) commentsCount
+				FROM videoboard v WHERE v.video_status = 1 AND ((v.video_like - v.video_hate) > 0) AND (TO_CHAR(v.video_regdate, 'yyyy-mm-dd') = TO_CHAR(SYSDATE, 'yyyy-mm-dd'))  ORDER BY (v.video_like - v.video_hate) DESC) b )
+			WHERE rnum >= 1 AND rnum < 11
+		]]>
+	</select>
+	<select id="selectVideoBoardWeek" resultType="com.web.ncm.board.domain.BoardDTO">
+		<![CDATA[
+			SELECT * FROM
+				(SELECT rownum rnum, b.* FROM
+				(SELECT
+					v.video_num num,
+					v.mem_num,
+					(SELECT mem_id FROM members WHERE mem_num = v.mem_num) id,
+					(SELECT mem_nickname FROM members WHERE mem_num = v.mem_num) nickname,
+					v.video_thumb thumb,
+					v.video_subject subject,
+					v.video_content content,
+					v.video_description description,
+					v.video_like "like",
+					v.video_hate hate,
+					v.video_status status,
+					v.video_viewcnt viewcnt,
+					v.video_regdate regdate,
+					((SELECT count(*) FROM videoboard_comments WHERE video_num = v.video_num AND vcomment_status = 1) + (SELECT count(*) FROM videoboard_recomments WHERE video_num = v.video_num AND v_recomment_status = 1)) commentsCount
+				FROM videoboard v WHERE v.video_status = 1 AND ((v.video_like - v.video_hate) > 0) AND v.video_regdate BETWEEN TO_DATE(#{startday}, 'yyyy-mm-dd') AND TO_DATE(#{endday}, 'yyyy-mm-dd') ORDER BY (v.video_like - v.video_hate) DESC) b )
+			WHERE rnum >= 1 AND rnum < 11
+		]]>
+	</select>
 </mapper>

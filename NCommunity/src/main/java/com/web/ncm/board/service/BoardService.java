@@ -54,4 +54,6 @@ public interface BoardService {
 	public int deleteVideoBoardComment(int num) throws Exception;
 	public int deleteVideoBoardReComment(int num) throws Exception;
 	public int deleteVideoBoardReComments(int num) throws Exception;
+	public List<BoardDTO> selectVideoBoardToday() throws Exception;
+	public List<BoardDTO> selectVideoBoardWeek(Map<String, String> map) throws Exception;
 }
