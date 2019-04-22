@@ -218,6 +218,9 @@ function dropdown(type) {
 				<c:when test="${param.type == 'videoView'}">
 					<jsp:include page="board/videoView.jsp"/>
 				</c:when>
+				<c:when test="${param.type == 'videoUpdate'}">
+					<jsp:include page="board/videoUpdate.jsp"/>
+				</c:when>
 				<c:otherwise>
 					메인화면 준비 중입니다.
 				</c:otherwise>

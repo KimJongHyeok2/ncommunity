@@ -53,17 +53,17 @@
 		UPDATE freeboard SET free_status = 2 WHERE free_num = #{param1}
 	</update>
 	<select id="selectHasRecommendHistory" resultType="String">
-		SELECT rh_type FROM recommendHistory WHERE mem_num = #{mem_num} AND rh_boardnum = #{num}
+		SELECT rh_recommendtype FROM recommendHistory WHERE mem_num = #{mem_num} AND rh_boardnum = #{num} AND rh_boardtype = #{boardtype}
 	</select>
 	<insert id="insertRecommendHistory">
-		INSERT INTO recommendHistory(rh_num, mem_num, rh_boardnum, rh_type) VALUES(rh_seq.nextval, #{mem_num}, #{num}, #{type})
+		INSERT INTO recommendHistory(rh_num, mem_num, rh_boardnum, rh_recommendtype, rh_boardtype) VALUES(rh_seq.nextval, #{mem_num}, #{num}, #{recommendtype}, #{boardtype})
 	</insert>
 	<update id="updateFreeBoardRecommend">
 		UPDATE freeBoard SET
-			<if test="type == 1">
+			<if test="recommendtype == 1">
 				free_like = free_like + 1
 			</if>
-			<if test="type == 2">
+			<if test="recommendtype == 2">
 				free_hate = free_hate + 1
 			</if>
 			WHERE free_num = #{num}
@@ -133,18 +133,21 @@
 	<update id="deleteFreeBoardReComment">
 		UPDATE freeboard_recomments SET f_recomment_status = 2 WHERE f_recomment_num = #{param1}
 	</update>
+	<update id="deleteFreeBoardReComments">
+		UPDATE freeboard_recomments SET f_recomment_status = 2 WHERE fcomment_num = #{param1}
+	</update>
 	<select id="selectHasCommentRecommendHistory" resultType="String">
-		SELECT rh_type FROM recommendHistory WHERE mem_num = #{mem_num} AND rh_commentnum = #{num}
+		SELECT rh_recommendtype FROM recommendHistory WHERE mem_num = #{mem_num} AND rh_commentnum = #{num} AND rh_boardtype = #{boardtype}
 	</select>
 	<insert id="insertCommentRecommendHistory">
-		INSERT INTO recommendHistory(rh_num, mem_num, rh_commentnum, rh_type) VALUES(rh_seq.nextval, #{mem_num}, #{num}, #{type})
+		INSERT INTO recommendHistory(rh_num, mem_num, rh_commentnum, rh_recommendtype, rh_boardtype) VALUES(rh_seq.nextval, #{mem_num}, #{num}, #{recommendtype}, #{boardtype})
 	</insert>
 	<update id="updateFreeBoardCommentRecommend">
 		UPDATE freeboard_comments SET
-			<if test="type == 3">
+			<if test="recommendtype == 3">
 				fcomment_like = fcomment_like + 1
 			</if>
-			<if test="type == 4">
+			<if test="recommendtype == 4">
 				fcomment_hate = fcomment_hate + 1
 			</if>
 			WHERE fcomment_num = #{num}
@@ -239,4 +242,98 @@
 	<select id="selectVideoBoardCount" resultType="Integer">
 		SELECT count(*) FROM videoboard WHERE video_status = 1
 	</select>
+	<update id="updateVideoBoard">
+		UPDATE videoboard SET video_thumb = #{thumb}, video_subject = #{subject}, video_content = #{content}, video_description = #{description} WHERE video_num = #{num}
+	</update>
+	<update id="deleteVideoBoard">
+		UPDATE videoboard SET video_status = 2 WHERE video_num = #{param1}
+	</update>
+	<update id="updateVideoBoardRecommend">
+		UPDATE videoBoard SET
+			<if test="recommendtype == 5">
+				video_like = video_like + 1
+			</if>
+			<if test="recommendtype == 6">
+				video_hate = video_hate + 1
+			</if>
+			WHERE video_num = #{num}
+	</update>
+	<insert id="insertVideoBoardComment" parameterType="com.web.ncm.board.domain.BoardDTO">
+		INSERT INTO videoboard_comments(vcomment_num, video_num, mem_num, vcomment_content) VALUES(vcomment_seq.nextval, #{board_num}, #{mem_num}, #{content})
+	</insert>
+	<select id="selectVideoBoardComments" resultType="com.web.ncm.board.domain.CommentDTO">
+		SELECT
+			v.vcomment_num num,
+			v.video_num board_num,
+			v.mem_num,
+			(SELECT mem_id FROM members WHERE mem_num = v.mem_num) id,
+			(SELECT mem_nickname FROM members WHERE mem_num = v.mem_num) nickname,			
+			v.vcomment_content content,
+			v.vcomment_like "like",
+			v.vcomment_hate hate,
+			v.vcomment_status status,
+			v.vcomment_regdate regdate
+		FROM videoboard_comments v WHERE v.video_num = #{param1}
+		ORDER BY v.vcomment_num DESC
+	</select>
+	<select id="selectVideoBoardComments_popular" resultType="com.web.ncm.board.domain.CommentDTO">
+		SELECT
+			v.vcomment_num num,
+			v.video_num board_num,
+			v.mem_num,
+			(SELECT mem_id FROM members WHERE mem_num = v.mem_num) id,
+			(SELECT mem_nickname FROM members WHERE mem_num = v.mem_num) nickname,			
+			v.vcomment_content content,
+			v.vcomment_like "like",
+			v.vcomment_hate hate,
+			v.vcomment_status status,
+			v.vcomment_regdate regdate
+		FROM videoboard_comments v WHERE v.video_num = #{param1} AND ((v.vcomment_like - v.vcomment_hate) > 0)
+		ORDER BY (v.vcomment_like - v.vcomment_hate) DESC
+	</select>
+	<insert id="insertVideoBoardReComment" parameterType="com.web.ncm.board.domain.ReCommentDTO">
+		INSERT INTO videoboard_recomments(v_recomment_num, vcomment_num, video_num, mem_num, v_recomment_content) VALUES(v_recomment_seq.nextval, #{comment_num}, #{board_num}, #{mem_num}, #{content})
+	</insert>
+	<select id="selectVideoBoardReComments" resultType="com.web.ncm.board.domain.ReCommentDTO">
+		SELECT
+			v.v_recomment_num num,
+			v.vcomment_num comment_num,
+			v.video_num board_num,
+			v.mem_num,
+			(SELECT mem_id FROM members WHERE mem_num = v.mem_num) id,
+			(SELECT mem_nickname FROM members WHERE mem_num = v.mem_num) nickname,
+			v.v_recomment_content content,
+			v.v_recomment_status status,
+			v.v_recomment_regdate regdate
+		FROM videoboard_recomments v WHERE v.video_num = #{param1}
+		ORDER BY v.v_recomment_num ASC
+	</select>
+	<select id="selectVideoBoardCommentsCount" resultType="com.web.ncm.board.domain.CommentDTO">
+		SELECT vcomment_num num FROM videoboard_comments WHERE video_num = #{param1}
+	</select>
+	<update id="updateVideoBoardCommentRecommend">
+		UPDATE videoboard_comments SET
+			<if test="recommendtype == 7">
+				vcomment_like = vcomment_like + 1
+			</if>
+			<if test="recommendtype == 8">
+				vcomment_hate = vcomment_hate + 1
+			</if>
+			WHERE vcomment_num = #{num}
+	</update>
+	<update id="updateVideoBoardComment">
+		UPDATE videoboard_comments SET vcomment_content = #{content} WHERE vcomment_num = #{num}
+	</update>
+	<update id="updateVideoBoardReComment">
+		UPDATE videoboard_recomments SET v_recomment_content = #{content} WHERE v_recomment_num = #{num}
+	</update>
+	<update id="deleteVideoBoardComment">
+		UPDATE videoboard_comments SET vcomment_status = 2 WHERE vcomment_num = #{param1}
+	</update>
+	<update id="deleteVideoBoardReComment">
+		UPDATE videoboard_recomments SET v_recomment_status = 2 WHERE v_recomment_num = #{param1}
+	</update>
+	<update id="deleteVideoBoardReComments">
+		UPDATE videoboard_recomments SET v_recomment_status = 2 WHERE vcomment_num = #{param1}
+	</update>
 </mapper>

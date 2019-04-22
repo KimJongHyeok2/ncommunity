@@ -110,7 +110,8 @@ CREATE TABLE recommendHistory
 	mem_num number NOT NULL,
 	rh_boardnum number DEFAULT 0,
 	rh_commentnum number DEFAULT 0,
-	rh_type number NOT NULL,
+	rh_recommendtype number NOT NULL,
+	rh_boardtype varchar2(10),
 	rh_regdate timestamp DEFAULT SYSDATE,
 	PRIMARY KEY (rh_num)
 );
@@ -252,6 +253,24 @@ ALTER TABLE videoboard_recomments
 	REFERENCES videoboard_comments (vcomment_num)
 ;
 
+/* Create Sequence */
 
+CREATE SEQUENCE mem_seq;
+CREATE SEQUENCE freeB_seq;
+CREATE SEQUENCE videoB_seq;
+CREATE SEQUENCE fcomment_seq;
+CREATE SEQUENCE f_recomment_seq;
+CREATE SEQUENCE v_recomment_seq;
+CREATE SEQUENCE rh_seq; 
+CREATE SEQUENCE ekey_seq; 
 
-DELETE FROM videoBoard WHERE video_num = 13;
+/* Drop Sequence */
+
+DROP SEQUENCE mem_seq;
+DROP SEQUENCE freeB_seq;
+DROP SEQUENCE videoB_seq;
+DROP SEQUENCE fcomment_seq;
+DROP SEQUENCE vcomment_seq;
+DROP SEQUENCE f_recomment_seq;
+DROP SEQUENCE v_recomment_seq;
+DROP SEQUENCE rh_seq;

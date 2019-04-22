@@ -54,17 +54,17 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public String selectHasRecommendHistory(Map<String, Integer> map) throws Exception {
+	public String selectHasRecommendHistory(Map<String, String> map) throws Exception {
 		return dao.selectHasRecommendHistory(map);
 	}
 
 	@Override
-	public int insertRecommendHistory(Map<String, Integer> map) throws Exception {
+	public int insertRecommendHistory(Map<String, String> map) throws Exception {
 		return dao.insertRecommendHistory(map);
 	}
 
 	@Override
-	public int updaetFreeBoardRecommend(Map<String, Integer> map) throws Exception {
+	public int updaetFreeBoardRecommend(Map<String, String> map) throws Exception {
 		return dao.updateFreeBoardRecommend(map);
 	}
 
@@ -119,17 +119,17 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public String selectHasCommentRecommendHistory(Map<String, Integer> map) throws Exception {
+	public String selectHasCommentRecommendHistory(Map<String, String> map) throws Exception {
 		return dao.selectHasCommentRecommendHistory(map);
 	}
 
 	@Override
-	public int insertCommentRecommendHistory(Map<String, Integer> map) throws Exception {
+	public int insertCommentRecommendHistory(Map<String, String> map) throws Exception {
 		return dao.insertCommentRecommendHistory(map);
 	}
 
 	@Override
-	public int updateFreeBoardCommentRecommend(Map<String, Integer> map) throws Exception {
+	public int updateFreeBoardCommentRecommend(Map<String, String> map) throws Exception {
 		return dao.updateFreeBoardCommentRecommend(map);
 	}
 
@@ -166,6 +166,86 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int selectVideoBoardCount() throws Exception {
 		return dao.selectVideoBoardCount();
+	}
+
+	@Override
+	public int updateVideoBoard(BoardDTO dto) throws Exception {
+		return dao.updateVideoBoard(dto);
+	}
+
+	@Override
+	public int deleteVideoBoard(int num) throws Exception {
+		return dao.deleteVideoBoard(num);
+	}
+
+	@Override
+	public int updateVideoBoardRecommend(Map<String, String> map) throws Exception {
+		return dao.updateVideoBoardRecommend(map);
+	}
+
+	@Override
+	public int insertVideoBoardComment(CommentDTO dto) throws Exception {
+		return dao.insertVideoBoardComment(dto);
+	}
+
+	@Override
+	public List<CommentDTO> selectVideoBoardComments(int num) throws Exception {
+		return dao.selectVideoBoardComments(num);
+	}
+
+	@Override
+	public List<CommentDTO> selectVideoBoardComments_popular(int num) throws Exception {
+		return dao.selectVideoBoardComments_popular(num);
+	}
+
+	@Override
+	public int insertVideoBoardReComment(ReCommentDTO dto) throws Exception {
+		return dao.insertVideoBoardReComment(dto);
+	}
+
+	@Override
+	public List<ReCommentDTO> selectVideoBoardReComments(int num) throws Exception {
+		return dao.selectVideoBoardReComments(num);
+	}
+
+	@Override
+	public List<CommentDTO> selectVideoBoardCommentsCount(int num) throws Exception {
+		return dao.selectVideoBoardCommentsCount(num);
+	}
+
+	@Override
+	public int updateVideoBoardCommentRecommend(Map<String, String> map) throws Exception {
+		return dao.updateVideoBoardCommentRecommend(map);
+	}
+
+	@Override
+	public int updateVideoBoardComment(CommentDTO dto) throws Exception {
+		return dao.updateVideoBoardComment(dto);
+	}
+
+	@Override
+	public int updateVideoBoardReComment(ReCommentDTO dto) throws Exception {
+		return dao.updateVideoBoardReComment(dto);
+	}
+
+	@Override
+	public int deleteVideoBoardComment(int num) throws Exception {
+		return dao.deleteVideoBoardComment(num);
+	}
+	
+	@Override
+	public int deleteVideoBoardReComment(int num) throws Exception {
+		return dao.deleteVideoBoardReComment(num);
+	}
+	
+	@Override
+	public int deleteFreeBoardReComments(int num) throws Exception {
+		return dao.deleteFreeBoardReComments(num);
+	}
+
+	@Override
+	public int deleteVideoBoardReComments(int num) throws Exception {
+		return dao.deleteVideoBoardReComments(num);
 	}
 	
 }

@@ -70,12 +70,12 @@ function list(type) {
  	type = type.substr(-type.length, 4) + "Board-New";
 	location.href = "${pageContext.request.contextPath}/board?type=" + type;
 }
-function recommend(num, mem_num, type) {
+function recommend(num, mem_num, recommendtype) {
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var board_type = '${param.type}';
 	board_type = board_type.substr(-board_type.length, 4) + "Board";
-	
+
 	if(${not empty sessionScope.num}) {
 		$.ajax({
 			url: "${pageContext.request.contextPath}/rBoard/recommend",
@@ -84,7 +84,7 @@ function recommend(num, mem_num, type) {
 			data: {
 				"num" : num,
 				"mem_num" : mem_num,
-				"type" : type,
+				"recommendtype" : recommendtype,
 				"board_type" : board_type
 			},
 			beforeSend: function(xhr) {
@@ -124,7 +124,7 @@ function recommend(num, mem_num, type) {
 		$("#myModal").modal();	
 	}
 }
-function commentRecommend(num, mem_num, type) {
+function commentRecommend(num, mem_num, recommendtype) {
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var comment_type = '${param.type}';
@@ -138,7 +138,7 @@ function commentRecommend(num, mem_num, type) {
 			data: {
 				"num" : num,
 				"mem_num" : mem_num,
-				"type" : type,
+				"recommendtype" : recommendtype,
 				"comment_type" : comment_type
 			},
 			beforeSend: function(xhr) {
@@ -353,7 +353,7 @@ function commentList(displayNumber, list_type) {
 											commentHTML += "<button type='button' class='btn btn-info' onclick='recommentToggle(" + data.list[i].num + ");'>답글(<span id='recomment-count-" + data.list[i].num + "'>0</span>)</button>";
 											commentHTML += "<button type='button' class='btn btn-info dropdown-toggle dropdown-toggle-split' onclick='recommentToggle(" + data.list[i].num + ");'>";
 												commentHTML += "<span class='caret'></span>";
-											commentHTML += "</button>"
+											commentHTML += "</button>";
 										commentHTML += "</div>";
 										commentHTML += "<button type='button' class='btn btn-primary comment-like' onclick='commentRecommend(" + data.list[i].num + ", ${sessionScope.num}, 3);'>";
 											commentHTML += "<span><img class='recommend-img' src='${pageContext.request.contextPath}/resources/img/board/like.png'/></span> <span id='comment-like-count-" + data.list[i].num + "' class='badge badge-light'>" + data.list[i].like + "</span>";

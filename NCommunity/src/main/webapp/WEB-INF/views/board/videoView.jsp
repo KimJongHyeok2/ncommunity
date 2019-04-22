@@ -83,11 +83,11 @@ function list() {
 	var type = "videoBoard-New"
 	location.href = "${pageContext.request.contextPath}/board?type=" + type;
 }
-function recommend(num, mem_num, type) {
+function recommend(num, mem_num, recommendtype) {
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var board_type = '${param.type}';
-	board_type = board_type.substr(-board_type.length, 4) + "Board";
+	board_type = board_type.substr(-board_type.length, 5) + "Board";
 	
 	if(${not empty sessionScope.num}) {
 		$.ajax({
@@ -97,7 +97,7 @@ function recommend(num, mem_num, type) {
 			data: {
 				"num" : num,
 				"mem_num" : mem_num,
-				"type" : type,
+				"recommendtype" : recommendtype,
 				"board_type" : board_type
 			},
 			beforeSend: function(xhr) {
@@ -105,12 +105,12 @@ function recommend(num, mem_num, type) {
 			},
 			success: function(data, status) {
 				if(status == "success") {
-					if(data == "1") {
+					if(data == "5") {
 						$("#like-count").html((parseInt($("#like-count").html()) + 1));
 						$("#myModal .modal-body").html("좋아요를 눌렀습니다.");
 						$("#myModal .modal-footer").removeAttr("onclick");
 						$("#myModal").modal();
-					} else if(data == "2") {
+					} else if(data == "6") {
 						$("#hate-count").html((parseInt($("#hate-count").html()) + 1));
 						$("#myModal .modal-body").html("싫어요를 눌렀습니다.");
 						$("#myModal .modal-footer").removeAttr("onclick");
@@ -124,6 +124,7 @@ function recommend(num, mem_num, type) {
 						$("#myModal .modal-footer").removeAttr("onclick");
 						$("#myModal").modal();
 					} else {
+						alert(data);
 						$("#myModal .modal-body").html("알 수 없는 오류입니다.");
 						$("#myModal .modal-footer").removeAttr("onclick");
 						$("#myModal").modal();
@@ -137,11 +138,11 @@ function recommend(num, mem_num, type) {
 		$("#myModal").modal();	
 	}
 }
-function commentRecommend(num, mem_num, type) {
+function commentRecommend(num, mem_num, recommendtype) {
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var comment_type = '${param.type}';
-	comment_type = comment_type.substr(-comment_type.length, 4) + "Comment";
+	comment_type = comment_type.substr(-comment_type.length, 5) + "Comment";
 	
 	if(${not empty sessionScope.num}) {
 		$.ajax({
@@ -151,7 +152,7 @@ function commentRecommend(num, mem_num, type) {
 			data: {
 				"num" : num,
 				"mem_num" : mem_num,
-				"type" : type,
+				"recommendtype" : recommendtype,
 				"comment_type" : comment_type
 			},
 			beforeSend: function(xhr) {
@@ -159,12 +160,12 @@ function commentRecommend(num, mem_num, type) {
 			},
 			success: function(data, status) {
 				if(status == "success") {
-					if(data == "3") {
+					if(data == "7") {
 						$("#comment-like-count-" + num).html((parseInt($("#comment-like-count-" + num).html()) + 1));
 						$("#myModal .modal-body").html("좋아요를 눌렀습니다.");
 						$("#myModal .modal-footer").removeAttr("onclick");
 						$("#myModal").modal();
-					} else if(data == "4") {
+					} else if(data == "8") {
 						$("#comment-hate-count-" + num).html((parseInt($("#comment-hate-count-" + num).html()) + 1));
 						$("#myModal .modal-body").html("싫어요를 눌렀습니다.");
 						$("#myModal .modal-footer").removeAttr("onclick");
@@ -219,7 +220,7 @@ function limitReComment(recomment, num) {
 function commentWrite() {
 	var comment = $("#comment").val();
 	var type = '${param.type}';
-	type = type.substr(-type.length, 4) + "Comment";
+	type = type.substr(-type.length, 5) + "Comment";
 	
 	if(comment.length < 10) {
 		$(".alert-info.comment").addClass("animated bounce");
@@ -263,7 +264,7 @@ function commentWrite() {
 function recommentWrite(num) {
 	var recomment = $("#recomment-" + num).val();
 	var type = '${param.type}';
-	type = type.substr(-type.length, 4) + "ReComment";
+	type = type.substr(-type.length, 5) + "ReComment";
 	
 	if(recomment.length < 10) {
 		$("#myModal .modal-body").html("답글은 10자 이상 300자 이하로 입력해주세요.");
@@ -319,7 +320,7 @@ function commentList(displayNumber, list_type) {
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var type = "${param.type}";
-	type = type.substr(-type.length, 4) + "Comments";
+	type = type.substr(-type.length, 5) + "Comments";
 	
 	$.ajax({
 		url: "${pageContext.request.contextPath}/rBoard/selectComments",
@@ -368,10 +369,10 @@ function commentList(displayNumber, list_type) {
 												commentHTML += "<span class='caret'></span>";
 											commentHTML += "</button>"
 										commentHTML += "</div>";
-										commentHTML += "<button type='button' class='btn btn-primary comment-like' onclick='commentRecommend(" + data.list[i].num + ", ${sessionScope.num}, 3);'>";
+										commentHTML += "<button type='button' class='btn btn-primary comment-like' onclick='commentRecommend(" + data.list[i].num + ", ${sessionScope.num}, 7);'>";
 											commentHTML += "<span><img class='recommend-img' src='${pageContext.request.contextPath}/resources/img/board/like.png'/></span> <span id='comment-like-count-" + data.list[i].num + "' class='badge badge-light'>" + data.list[i].like + "</span>";
 										commentHTML += "</button>";
-										commentHTML += "<button type='button' class='btn btn-danger comment-dislike' onclick='commentRecommend(" + data.list[i].num + ", ${sessionScope.num}, 4);'>";
+										commentHTML += "<button type='button' class='btn btn-danger comment-dislike' onclick='commentRecommend(" + data.list[i].num + ", ${sessionScope.num}, 8);'>";
 											commentHTML += "<span><img class='recommend-img' src='${pageContext.request.contextPath}/resources/img/board/dislike.png'/></span> <span id='comment-hate-count-" + data.list[i].num + "' class='badge badge-light'>" + data.list[i].hate + "</span>";
 										commentHTML += "</button>";
 										commentHTML += "<div class='btn-group float-right'>";
@@ -410,7 +411,7 @@ function recommentList(list_type) {
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var type_re = "${param.type}";
-	type_re = type_re.substr(-type_re.length, 4) + "ReComments";
+	type_re = type_re.substr(-type_re.length, 5) + "ReComments";
 	
 	
 	$.ajax({
@@ -497,7 +498,7 @@ function updateCommentOk(num) {
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var type = "${param.type}";
-	type = type.substr(-type.length, 4) + "Comment";
+	type = type.substr(-type.length, 5) + "Comment";
 	
 	if(comment.length < 10) {
 		$("#myModal .modal-body").html("댓글은 10자 이상 300자 이하로 입력해주세요.");
@@ -544,7 +545,7 @@ function deleteCommentOk(num) {
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var type = "${param.type}";
-	type = type.substr(-type.length, 4) + "Comment";
+	type = type.substr(-type.length, 5) + "Comment";
 	
 	$.ajax({
 		url: "${pageContext.request.contextPath}/rBoard/deleteComment",
@@ -591,7 +592,7 @@ function updateReCommentOk(num) {
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var type = "${param.type}";
-	type = type.substr(-type.length, 4) + "Comment";
+	type = type.substr(-type.length, 5) + "Comment";
 	
 	if(recomment.length < 10) {
 		$("#myModal .modal-body").html("답글은 10자 이상 300자 이하로 입력해주세요.");
@@ -645,7 +646,7 @@ function deleteReCommentOk(num) {
 	var header = $("#header").val();
 	var token = $("#token").val();
 	var type = "${param.type}";
-	type = type.substr(-type.length, 4) + "Comment";
+	type = type.substr(-type.length, 5) + "Comment";
 	
 	$.ajax({
 		url: "${pageContext.request.contextPath}/rBoard/deleteReComment",
@@ -914,43 +915,21 @@ function mine(mem_num) {
 	margin-bottom: 5px;
 }
 @media (max-width:700px) {
-/* 	.view-subject .subject {
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: nowrap;
-	} */
 	.container-function .view-function {
 		float: none;
 		text-align: center;
 	}
 }
 </style>
-<%-- <div class="container-view">
-	<div class="view-subject">
-		<div class="subject">
-			${dto.subject}
-		</div>
-		<div class="other">
-			<div class="username">${dto.nickname}(<span>${dto.id}</span>)</div>
-			<div class="viewcnt"><span class="badge badge-pill badge-info">${dto.viewcnt}</span></div>
-			<div class="regdate" id="regdate">${dto.regdate}</div>
-		</div>
-	</div>
-	<div class="view-content">
-		<div class="v-content">
-			${dto.content}
-		</div>
-	</div>
-</div> --%>
 <div class="container-view">
 	${dto.content}
 </div>
 <div class="container-view recommend">
 	<div class="recommend">
-		<button type="button" class="btn btn-primary" onclick="recommend(${dto.num}, ${sessionScope.num}, 1);">
+		<button type="button" class="btn btn-primary" onclick="recommend(${dto.num}, ${sessionScope.num}, 5);">
 			좋아요 <span id="like-count" class="badge badge-light">${dto.like}</span>
 		</button>
-		<button type="button" class="btn btn-danger" onclick="recommend(${dto.num}, ${sessionScope.num}, 2);">
+		<button type="button" class="btn btn-danger" onclick="recommend(${dto.num}, ${sessionScope.num}, 6);">
 			싫어요 <span id="hate-count" class="badge badge-light">${dto.hate}</span>
 		</button>
 	</div>
@@ -976,7 +955,7 @@ function mine(mem_num) {
 	<div class="view-function">
 		<c:choose>
 			<c:when test="${sessionScope.num == dto.mem_num}">
-				<button type="button" class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/board/update?type=freeUpdate&num=${dto.num}'">수정하기</button>
+				<button type="button" class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/board/update?type=videoUpdate&num=${dto.num}'">수정하기</button>
 				<button type="button" class="btn btn-outline-danger" onclick="deleteConfirm();">삭제하기</button>
 			</c:when>
 		</c:choose>
@@ -1028,7 +1007,7 @@ function mine(mem_num) {
 		<!-- Modal footer -->
 		<div class="modal-footer">
 			<form action="${pageContext.request.contextPath}/board/deleteOk" id="delete-form" method="post">
-				<input type="hidden" name="type" value="freeDelete"/>
+				<input type="hidden" name="type" value="videoDelete"/>
 				<input type="hidden" name="num" value="${dto.num}"/>
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			</form>

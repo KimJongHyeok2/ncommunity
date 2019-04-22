@@ -211,7 +211,11 @@ public class BoardController {
 		BoardDTO dto = null;
 		
 		try {
-			dto = boardService.selectWriteView(num);
+			if(type.equals("freeUpdate")) {				
+				dto = boardService.selectWriteView(num);
+			} else if(type.equals("videoUpdate")) {
+				dto = boardService.selectVideoView(num);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -231,16 +235,22 @@ public class BoardController {
 			return "redirect:/";
 		}
 		
-		if(dto.getType().equals("freeUpdate")) {
-			try {
+		try {
+			if(dto.getType().equals("freeUpdate")) {
 				int count = boardService.updateFreeBoard(dto);
 				
 				if(count == 1) {
 					return "redirect:/board/view?type=freeView&num=" + dto.getNum();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			} else if(dto.getType().equals("videoUpdate")) {
+				int count = boardService.updateVideoBoard(dto);
+				
+				if(count == 1) {
+					return "redirect:/board/view?type=videoView&num=" + dto.getNum();
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return "main";
@@ -253,16 +263,22 @@ public class BoardController {
 		if(type == null || type.length() == 0 || num == 0) {
 			return "redirect:/";
 		} else {
-			if(type.equals("freeDelete")) {
-				try {
+			try {
+				if(type.equals("freeDelete")) {
 					int count = boardService.deleteFreeBoard(num);
-					
+						
 					if(count == 1) {
 						return "redirect:/board?type=freeBoard-New";
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
+				} else if(type.equals("videoDelete")) {
+					int count = boardService.deleteVideoBoard(num);
+					
+					if(count == 1) {
+						return "redirect:/board?type=videoBoard-New";
+					}
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		

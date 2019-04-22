@@ -43,7 +43,7 @@ function page(select) {
 	}
 	
 	if(select == "next") {
-		if(currPage == ${pad.pageCount}) {
+		if(currPage == ${pad.pageCount} || ${fn:length(dto) == 0}) {
 			$("#myModal .modal-body").html("마지막 페이지입니다.");
 			$("#myModal").modal();
 			return false;
@@ -84,13 +84,13 @@ function page(select) {
 	overflow: hidden;
 }
 .video-content-wrapper .info .title {
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
 	font-size: 17pt;
 	color: black;
 }
 .video-content-wrapper .info .data-block {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 	font-size: 10pt;
 	border-right: 1px solid #D5D5D5;
 	margin-right: 3px;
@@ -105,6 +105,8 @@ function page(select) {
 	white-space: normal;
 	text-align: left;
 	word-wrap: break-word;
+	height: 1.0em;
+	line-height: 2.0;
 	display: -webkit-box;
 	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical;
@@ -134,6 +136,13 @@ function page(select) {
 }
 .page-item {
 	cursor: pointer;
+}
+@media (max-width:1000px) {
+	.video-content-wrapper .info .title {
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
 }
 </style>
 <div class="jumbotron" style="margin-top: 15px; padding: 10px;">
@@ -170,10 +179,7 @@ function page(select) {
 			  				<span class="data-block">좋아요 ${i.like}</span><span class="data-block">싫어요 ${i.hate}</span><span class="data-block last">댓글 ${i.commentsCount}</span>
 			  			</div>
 			  			<div class="description-text">
-			  			<jsp:scriptlet>
-							pageContext.setAttribute("EnterLine", "\n");
-						</jsp:scriptlet>
-			  				${fn:replace(i.description, EnterLine, '<br>')}
+			  				${i.description}
 			  			</div>
 			  		</div>
 			  	</div>

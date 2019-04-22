@@ -54,17 +54,17 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	@Override
-	public String selectHasRecommendHistory(Map<String, Integer> map) throws Exception {
+	public String selectHasRecommendHistory(Map<String, String> map) throws Exception {
 		return sqlSession.selectOne("board.selectHasRecommendHistory", map);
 	}
 
 	@Override
-	public int insertRecommendHistory(Map<String, Integer> map) throws Exception {
+	public int insertRecommendHistory(Map<String, String> map) throws Exception {
 		return sqlSession.insert("board.insertRecommendHistory", map);
 	}
 
 	@Override
-	public int updateFreeBoardRecommend(Map<String, Integer> map) throws Exception {
+	public int updateFreeBoardRecommend(Map<String, String> map) throws Exception {
 		return sqlSession.update("board.updateFreeBoardRecommend", map);
 	}
 
@@ -117,19 +117,24 @@ public class BoardDAOImpl implements BoardDAO {
 	public int deleteFreeBoardReComment(int num) throws Exception {
 		return sqlSession.update("board.deleteFreeBoardReComment", num);
 	}
+	
+	@Override
+	public int deleteFreeBoardReComments(int num) throws Exception {
+		return sqlSession.update("board.deleteFreeBoardReComments", num);
+	}
 
 	@Override
-	public String selectHasCommentRecommendHistory(Map<String, Integer> map) throws Exception {
+	public String selectHasCommentRecommendHistory(Map<String, String> map) throws Exception {
 		return sqlSession.selectOne("board.selectHasCommentRecommendHistory", map);
 	}
 
 	@Override
-	public int insertCommentRecommendHistory(Map<String, Integer> map) throws Exception {
+	public int insertCommentRecommendHistory(Map<String, String> map) throws Exception {
 		return sqlSession.insert("board.insertCommentRecommendHistory", map);
 	}
 
 	@Override
-	public int updateFreeBoardCommentRecommend(Map<String, Integer> map) throws Exception {
+	public int updateFreeBoardCommentRecommend(Map<String, String> map) throws Exception {
 		return sqlSession.update("board.updateFreeBoardCommentRecommend", map);
 	}
 
@@ -166,6 +171,82 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public int selectVideoBoardCount() throws Exception {
 		return sqlSession.selectOne("board.selectVideoBoardCount");
+	}
+
+	@Override
+	public int updateVideoBoard(BoardDTO dto) throws Exception {
+		return sqlSession.update("board.updateVideoBoard", dto);
+	}
+
+	@Override
+	public int deleteVideoBoard(int num) throws Exception {
+		return sqlSession.update("board.deleteVideoBoard", num);
+	}
+
+	@Override
+	public int updateVideoBoardRecommend(Map<String, String> map) throws Exception {
+		return sqlSession.update("board.updateVideoBoardRecommend", map);
+	}
+
+	@Override
+	public int insertVideoBoardComment(CommentDTO dto) throws Exception {
+		return sqlSession.insert("board.insertVideoBoardComment", dto);
+	}
+
+	@Override
+	public List<CommentDTO> selectVideoBoardComments(int num) throws Exception {
+		return sqlSession.selectList("board.selectVideoBoardComments", num);
+	}
+
+	@Override
+	public List<CommentDTO> selectVideoBoardComments_popular(int num) throws Exception {
+		return sqlSession.selectList("board.selectVideoBoardComments_popular", num);
+	}
+
+	@Override
+	public int insertVideoBoardReComment(ReCommentDTO dto) throws Exception {
+		return sqlSession.insert("board.insertVideoBoardReComment", dto);
+	}
+
+	@Override
+	public List<ReCommentDTO> selectVideoBoardReComments(int num) throws Exception {
+		return sqlSession.selectList("board.selectVideoBoardReComments", num);
+				
+	}
+
+	@Override
+	public List<CommentDTO> selectVideoBoardCommentsCount(int num) throws Exception {
+		return sqlSession.selectList("board.selectVideoBoardCommentsCount", num);
+	}
+
+	@Override
+	public int updateVideoBoardCommentRecommend(Map<String, String> map) throws Exception {
+		return sqlSession.update("board.updateVideoBoardCommentRecommend", map);
+	}
+
+	@Override
+	public int updateVideoBoardComment(CommentDTO dto) throws Exception {
+		return sqlSession.update("board.updateVideoBoardComment", dto);
+	}
+
+	@Override
+	public int updateVideoBoardReComment(ReCommentDTO dto) throws Exception {
+		return sqlSession.update("board.updateVideoBoardReComment", dto);
+	}
+
+	@Override
+	public int deleteVideoBoardComment(int num) throws Exception {
+		return sqlSession.update("board.deleteVideoBoardComment", num);
+	}
+
+	@Override
+	public int deleteVideoBoardReComment(int num) throws Exception {
+		return sqlSession.update("board.deleteVideoBoardReComment", num);
+	}
+
+	@Override
+	public int deleteVideoBoardReComments(int num) throws Exception {
+		return sqlSession.update("board.deleteVideoBoardReComments", num);
 	}
 
 }

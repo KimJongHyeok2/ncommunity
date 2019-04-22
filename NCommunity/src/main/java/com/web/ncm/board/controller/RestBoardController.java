@@ -34,37 +34,42 @@ public class RestBoardController {
 	@Transactional
 	public String recommend(@RequestParam(value = "num", defaultValue = "0") int num,
 					   @RequestParam(value = "mem_num", defaultValue = "0") int mem_num,
-					   @RequestParam(value = "type", defaultValue = "0") int type,
+					   @RequestParam(value = "recommendtype", defaultValue = "0") int recommendtype,
 					   String board_type) {
-		if(num == 0 || mem_num == 0 || type == 0 || board_type == null || board_type.length() == 0) {
+		if(num == 0 || mem_num == 0 || recommendtype == 0 || board_type == null || board_type.length() == 0) {
 			return "Fail";
 		} else {
-			Map<String, Integer> map = new HashMap<String, Integer>();
-			map.put("num", num);
-			map.put("mem_num", mem_num);
-			map.put("type", type);
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("num", String.valueOf(num));
+			map.put("mem_num", String.valueOf(mem_num));
+			map.put("recommendtype", String.valueOf(recommendtype));
+			map.put("boardtype", board_type);
 			try {
+				// 해당 게시물이 추천을 누른 기록이 있는지 확인
 				String checkType = boardService.selectHasRecommendHistory(map);
 				if(checkType == null) {
 					int count = 0;
-					if(board_type.equals("freeBoard")) {						
-						count = boardService.insertRecommendHistory(map);
-					}
+					count = boardService.insertRecommendHistory(map);
+
 					if(count == 1) {
 						int count2 = 0;
 						if(board_type.equals("freeBoard")) {							
 							count2 = boardService.updaetFreeBoardRecommend(map);
+						} else if(board_type.equals("videoBoard")) {
+							count2 = boardService.updateVideoBoardRecommend(map);
 						}
+						
 						if(count2 == 1) {
-							return String.valueOf(map.get("type"));
+							return String.valueOf(map.get("recommendtype"));
 						} else {
 							return "Fail";
 						}
 					}
-				} else {
-					if(checkType.equals("1")) {
+				} else { // 이미 눌렀다면
+					// 좋아요를 눌렀는지 싫어요를 눌렀는지 반환 
+					if(checkType.equals("1") || checkType.equals("5")) { 
 						return "Already-Like";
-					} else if(checkType.equals("2")) {
+					} else if(checkType.equals("2") || checkType.equals("6")) {
 						return "Already-Hate";
 					}
 				}
@@ -80,37 +85,40 @@ public class RestBoardController {
 	@Transactional
 	public String commentRecommend(@RequestParam(value = "num", defaultValue = "0") int num,
 			@RequestParam(value = "mem_num", defaultValue = "0") int mem_num,
-			@RequestParam(value = "type", defaultValue = "0") int type,
+			@RequestParam(value = "recommendtype", defaultValue = "0") int recommendtype,
 			String comment_type) {
-		if(num == 0 || mem_num == 0 || type == 0 || comment_type == null || comment_type.length() == 0) {
+		if(num == 0 || mem_num == 0 || recommendtype == 0 || comment_type == null || comment_type.length() == 0) {
 			return "Fail";
 		} else {
-			Map<String, Integer> map = new HashMap<String, Integer>();
-			map.put("num", num);
-			map.put("mem_num", mem_num);
-			map.put("type", type);
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("num", String.valueOf(num));
+			map.put("mem_num", String.valueOf(mem_num));
+			map.put("recommendtype", String.valueOf(recommendtype));
+			map.put("boardtype", comment_type);
 			try {
 				String checkType = boardService.selectHasCommentRecommendHistory(map);
 				if(checkType == null) {
 					int count = 0;
-					if(comment_type.equals("freeComment")) {						
-						count = boardService.insertCommentRecommendHistory(map);
-					}
+					count = boardService.insertCommentRecommendHistory(map);
+					
 					if(count == 1) {
 						int count2 = 0;
 						if(comment_type.equals("freeComment")) {							
 							count2 = boardService.updateFreeBoardCommentRecommend(map);
+						} else if(comment_type.equals("videoComment")) {
+							count2 = boardService.updateVideoBoardCommentRecommend(map);
 						}
+						
 						if(count2 == 1) {
-							return String.valueOf(map.get("type"));
+							return String.valueOf(map.get("recommendtype"));
 						} else {
 							return "Fail";
 						}
 					}
 				} else {
-					if(checkType.equals("3")) {
+					if(checkType.equals("3") || checkType.equals("7")) {
 						return "Already-Like";
-					} else if(checkType.equals("4")) {
+					} else if(checkType.equals("4") || checkType.equals("8")) {
 						return "Already-Hate";
 					}
 				}
@@ -135,6 +143,13 @@ public class RestBoardController {
 		try {
 			if(dto.getType().equals("freeComment")) {				
 				int count = boardService.insertFreeBoardComment(dto);
+				
+				if(count == 1) {
+					return "Ok";
+				}
+			} else if(dto.getType().equals("videoComment")) {
+				int count = boardService.insertVideoBoardComment(dto);
+				
 				if(count == 1) {
 					return "Ok";
 				}
@@ -166,6 +181,12 @@ public class RestBoardController {
 				} else {
 					dto.setList(boardService.selectFreeBoardComments(num));
 				}
+			} else if(type.equals("videoComments")) {
+				if(list_type.equals("popular")) {
+					dto.setList(boardService.selectVideoBoardComments_popular(num));
+				} else {
+					dto.setList(boardService.selectVideoBoardComments(num));
+				}
 			} else {
 				return null;
 			}
@@ -196,6 +217,13 @@ public class RestBoardController {
 		try {
 			if(dto.getType().equals("freeReComment")) {				
 				int count = boardService.insertFreeBoardReComment(dto);
+				
+				if(count == 1) {
+					return "Ok";
+				}
+			} else if(dto.getType().equals("videoReComment")) {
+				int count = boardService.insertVideoBoardReComment(dto);
+				
 				if(count == 1) {
 					return "Ok";
 				}
@@ -219,8 +247,10 @@ public class RestBoardController {
 		}
 		
 		try {
-			if(type.equals("freeReComments")) {				
+			if(type.equals("freeReComments")) {
 				dto.setList(boardService.selectFreeBoardReComments(num));
+			} else if(type.equals("videoReComments")) {
+				dto.setList(boardService.selectVideoBoardReComments(num));
 			} else {
 				return null;
 			}
@@ -230,7 +260,11 @@ public class RestBoardController {
 				dto.setStatus("Ok");
 		
 				CommentCountDTO c_dto = new CommentCountDTO();
-				c_dto.setList(boardService.selectFreeBoardCommentsCount(num));
+				if(type.equals("freeReComments")) {
+					c_dto.setList(boardService.selectFreeBoardCommentsCount(num));
+				} else if(type.equals("videoReComments")) {
+					c_dto.setList(boardService.selectVideoBoardCommentsCount(num));	
+				}
 				c_dto.setCommentsCount(c_dto.getList().size());
 				dto.setCommentCount(c_dto);
 			} else {
@@ -255,9 +289,16 @@ public class RestBoardController {
 			try {
 				if(dto.getType().equals("freeComment")) {					
 					int count = boardService.updateFreeBoardComment(dto);
+					
 					if(count == 1) {
 						return dto.getContent();
 					}
+				} else if(dto.getType().equals("videoComment")) {
+					int count = boardService.updateVideoBoardComment(dto);
+					
+					if(count == 1) {
+						return dto.getContent();
+					}					
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -276,9 +317,21 @@ public class RestBoardController {
 			try {
 				if(type.equals("freeComment")) {					
 					int count = boardService.deleteFreeBoardComment(num);
+					
 					if(count == 1) {
-						int count2 = boardService.deleteFreeBoardReComment(num);
-						if(count2 == 1) {							
+						int count2 = boardService.deleteFreeBoardReComments(num);
+						
+						if(count2 >= 1) {							
+							return "Ok";
+						}
+					}
+				} else if(type.equals("videoComment")) {
+					int count = boardService.deleteVideoBoardComment(num);
+					
+					if(count == 1) {
+						int count2 = boardService.deleteVideoBoardReComments(num);
+						
+						if(count2 >= 1) {							
 							return "Ok";
 						}
 					}
@@ -303,6 +356,13 @@ public class RestBoardController {
 			try {
 				if(dto.getType().equals("freeComment")) {					
 					int count = boardService.updateFreeBoardReComment(dto);
+					
+					if(count == 1) {
+						return dto.getContent();
+					}
+				} else if(dto.getType().equals("videoComment")) {
+					int count = boardService.updateVideoBoardReComment(dto);
+					
 					if(count == 1) {
 						return dto.getContent();
 					}
@@ -324,6 +384,13 @@ public class RestBoardController {
 			try {
 				if(type.equals("freeComment")) {					
 					int count = boardService.deleteFreeBoardReComment(num);
+					
+					if(count == 1) {
+						return "Ok";
+					}
+				} else if(type.equals("videoComment")) {
+					int count = boardService.deleteVideoBoardReComment(num);
+					
 					if(count == 1) {
 						return "Ok";
 					}
