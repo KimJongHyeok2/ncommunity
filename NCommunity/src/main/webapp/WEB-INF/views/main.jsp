@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -118,6 +119,9 @@ function dropdown(type) {
 		}
 	}
 }
+function freeBoardView(obj) {
+	location.href = "${pageContext.request.contextPath}/board/view?type=freeView&num=" + obj.value;
+}
 </script>
 <style type="text/css">
 .content {
@@ -135,6 +139,31 @@ function dropdown(type) {
 .content .rightContent {
 	flex-grow: 1;
 	overflow: auto;
+}
+.content .rightContent .margin {
+	margin-bottom: 15px;
+}
+.content .rightContent .board-subject {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.content .rightContent .list-type {
+	list-style-type: none;
+}
+.content .rightContent .empty-list {
+	text-align: center;
+	border: 1px solid #D5D5D5;
+	border-radius: 5px;
+	padding: 30px; 
+}
+.content .rightContent .card {
+  	transition-property: box-shadow;
+  	transition-duration: 0.5s;
+	cursor: pointer;
+}
+.content .rightContent .card:hover {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .footer {
 	padding: 10px 0;
@@ -169,9 +198,13 @@ function dropdown(type) {
 		position: absolute;
 	}
 }
+@media (max-width:575px) {
+	
+}
 </style>
 <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/animate.css"/>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"/>
 </head>
 <body>
 <jsp:include page="/resources/include/header/header.jsp"/>
@@ -222,7 +255,75 @@ function dropdown(type) {
 					<jsp:include page="board/videoUpdate.jsp"/>
 				</c:when>
 				<c:otherwise>
-					메인화면 준비 중입니다.
+					<div class="row margin">
+						<div class="col-sm-6">
+							<h3>자유게시판 최신글</h3>
+							<ul class="list-group list-type">
+							<c:choose>
+									<c:when test="${not empty board_new && fn:length(board_new) != 0}">
+										<c:forEach var="i" items="${board_new}">
+											  <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" value="${i.num}" onclick="freeBoardView(this);">
+											  	<div class="board-subject"><span class="text-info">${i.nickname}</span> ${i.subject}</div>
+											    <span class="badge badge-primary badge-pill">${i.commentsCount}</span>
+											  </li>
+										</c:forEach>
+									</c:when>
+									<c:otherwise>
+										<li class="empty-list">
+											작성된 글이 없습니다.
+										</li>
+									</c:otherwise>
+							</c:choose>
+							</ul>
+						</div>
+						<div class="col-sm-6">
+							<h3>자유게시판 인기글</h3>
+							<ul class="list-group list-type">
+							<c:choose>
+									<c:when test="${not empty board_today && fn:length(board_today) != 0}">
+										<c:forEach var="i" items="${board_today}">
+											  <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" value="${i.num}" onclick="freeBoardView(this);">
+											  	<div class="board-subject"><span class="text-info">${i.nickname}</span> <span class="badge badge-danger">${i.rnum}</span> ${i.subject}</div>
+											    <span class="badge badge-primary badge-pill">${i.commentsCount}</span>
+											  </li>
+										</c:forEach>
+									</c:when>
+									<c:otherwise>
+										<li class="empty-list">
+											작성된 글이 없습니다.
+										</li>
+									</c:otherwise>
+							</c:choose>
+							</ul>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<h3>오늘의 인기 동영상</h3>
+						</div>
+					</div>
+					<div class="row margin">
+						<c:choose>
+							<c:when test="${not empty board_video_today && fn:length(board_video_today) != 0}">
+								<c:forEach var="i" items="${board_video_today}">
+									<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3">
+										<div class="card">
+											<img class="card-img-top" src="https://img.youtube.com/vi/${i.thumb}/mqdefault.jpg" alt="Card image">
+											<div class="card-body board-subject">${i.subject}</div>
+											<div><span class="badge badge-danger">${i.rnum}</span> <span class="text-info">${i.nickname}</span></div>
+										</div>
+									</div>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+							<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div class="empty-list">
+									등록된 인기 동영상이 없습니다.
+								</div>
+							</div>
+							</c:otherwise>
+						</c:choose>
+					</div>
 				</c:otherwise>
 			</c:choose>
 		</div>
