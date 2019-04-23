@@ -15,6 +15,8 @@ function pageMove(type) {
 		location.href = "${pageContext.request.contextPath}/login";
 	} else if(type == "logout") {
 		$("#logoutForm").submit();
+	} else if(type == "memberCog") {
+		location.href = "${pageContext.request.contextPath}/member/modify?type=memberInfoModify";
 	}
 }
 </script>
@@ -40,14 +42,18 @@ function pageMove(type) {
 }
 .header .info {
 	display: flex;
+	align-items: center;
 	float: right;
-	line-height: 55px;
+	height: 57px;
 }
 .header .info #left-open-div {
 	display: none;
 }
 .header .info .dropdown .dropdown-menu {
 	width: 100%;
+}
+.header .info .dropdown .dropdown-menu h5 {
+	margin: 0;
 }
 @media (max-width:700px) {
 	.header .logo {
@@ -83,12 +89,14 @@ function pageMove(type) {
 			<form id="logoutForm" action="${logout}" method="post">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			</form>
-			<div class="dropdown">
-			  <button type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown">
-			    ${sessionScope.nickname}(<s:authentication property="name"/>)님
+			<div class="dropdown dropleft">
+ 			  <button type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown">
+			    <i class="fas fa-user"></i>
 			  </button>
 			  <div class="dropdown-menu">
-			    <a class="dropdown-item" onclick="pageMove('logout');">로그아웃</a>
+			   	<h5 class="dropdown-header">${sessionScope.nickname}(${sessionScope.id})</h5>
+			    <a class="dropdown-item" onclick="pageMove('logout');"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+			    <a class="dropdown-item" onclick="pageMove('memberCog');"><i class="fas fa-user-cog"></i> 정보수정</a>
 			  </div>
 			</div>
 		</s:authorize>

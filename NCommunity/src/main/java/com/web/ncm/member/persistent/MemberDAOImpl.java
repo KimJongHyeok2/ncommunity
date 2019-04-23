@@ -1,5 +1,7 @@
 package com.web.ncm.member.persistent;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.apache.ibatis.session.SqlSession;
@@ -16,6 +18,21 @@ public class MemberDAOImpl implements MemberDAO {
 	@Override
 	public MemberDTO selectMember(MemberDTO dto) throws Exception {
 		return sqlSession.selectOne("member.selectMember", dto);
+	}
+
+	@Override
+	public int updateMemberProfile(Map<String, String> map) throws Exception {
+		return sqlSession.update("member.updateMemberProfile", map);
+	}
+
+	@Override
+	public MemberDTO selectMemberInfo(int num) throws Exception {
+		return sqlSession.selectOne("member.selectMemberInfo", num);
+	}
+
+	@Override
+	public int updateMemberNickname(Map<String, String> map) throws Exception {
+		return sqlSession.update("member.updateMemberNickname", map);
 	}
 
 }

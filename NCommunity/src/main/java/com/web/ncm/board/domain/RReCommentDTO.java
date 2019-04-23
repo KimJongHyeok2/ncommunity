@@ -12,7 +12,6 @@ public class RReCommentDTO {
 	public RReCommentDTO() { }
 
 	public RReCommentDTO(List<ReCommentDTO> list, int count, String status, CommentCountDTO commentCount) {
-		super();
 		this.list = list;
 		this.count = count;
 		this.status = status;

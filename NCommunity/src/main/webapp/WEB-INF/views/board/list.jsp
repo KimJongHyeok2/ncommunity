@@ -57,6 +57,12 @@ function view(num) {
 .table tbody td:not(.subject) {
 	text-align: center;
 }
+.table tbody td .profile {
+	width: 25px;
+	height: 25px;
+	border: 1px solid #D5D5D5;
+	border-radius: 50px;
+}
 .table tbody .empty-list {
 	padding: 30px;
 }
@@ -119,7 +125,14 @@ function view(num) {
 								</c:otherwise>
 							</c:choose>
 						</td>
-						<td id="subject${index.count}" class="subject" onclick="view(${i.num});">${i.subject}<span class="text-primary">(${i.commentsCount})</span></td><td>${i.nickname}</td><td>${i.viewcnt}</td>
+						<td id="subject${index.count}" class="subject" onclick="view(${i.num});">${i.subject}<span class="text-primary">(${i.commentsCount})</span></td>
+						<c:if test="${not empty i.profile}">
+						<td><img class="profile" src="${pageContext.request.contextPath}/resources/profile/${i.profile}"/> ${i.nickname}</td>
+						</c:if>
+						<c:if test="${empty i.profile}">						
+						<td>${i.nickname}</td>
+						</c:if>
+						<td>${i.viewcnt}</td>
 						<td id="regdate${index.count}">${i.regdate}</td>
 					</tr>
 				</c:forEach>

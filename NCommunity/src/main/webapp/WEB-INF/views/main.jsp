@@ -101,21 +101,21 @@ function dropdown(type) {
 		var x = document.getElementById("free-drop");
 		if (x.className.indexOf("w3-show") == -1) {
 			x.className += " w3-show";
-			x.previousElementSibling.className += " w3-green";
+			x.previousElementSibling.className += " bg-primary text-white";
 		} else {
 		   	x.className = x.className.replace(" w3-show", "");
 		    x.previousElementSibling.className = 
-		    x.previousElementSibling.className.replace(" w3-green", "");
+		    x.previousElementSibling.className.replace(" bg-primary text-white", "");
 		}	
 	} else if(type == "video") {
 		var x = document.getElementById("video-drop");
 		if (x.className.indexOf("w3-show") == -1) {
 			x.className += " w3-show";
-			x.previousElementSibling.className += " w3-green";
+			x.previousElementSibling.className += " w3-red";
 		} else { 
 			x.className = x.className.replace(" w3-show", "");
 			x.previousElementSibling.className = 
-			x.previousElementSibling.className.replace(" w3-green", "");
+			x.previousElementSibling.className.replace(" w3-red", "");
 		}
 	}
 }
@@ -202,7 +202,9 @@ function videoBoardView(num) {
 	}
 }
 @media (max-width:575px) {
-	
+	.video-card {
+		margin-bottom: 15px;
+	}
 }
 </style>
 <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
@@ -214,21 +216,21 @@ function videoBoardView(num) {
 <div class="content">
 	<div id="sidebar" class="leftMenu">
 		<div class="w3-sidebar w3-bar-block w3-animate-left" style="min-width: 250px; border-right: 1px solid #D5D5D5;">
-			<div class="w3-bar-item w3-button w3-hover-blue ${param.type == 'freeBoard-New' || param.type == 'freeBoard-Today' || param.type == 'freeBoard-Week' || param.type == 'freeWrite' || param.type == 'freeView' || param.type == 'freeUpdate'? 'w3-green':''}" onclick="dropdown('free')">
-			자유게시판 <i class="fa fa-caret-down"></i></div>
+			<div id="free-menu" class="w3-bar-item w3-button w3-hover-teal ${param.type == 'freeBoard-New' || param.type == 'freeBoard-Today' || param.type == 'freeBoard-Week' || param.type == 'freeWrite' || param.type == 'freeView' || param.type == 'freeUpdate'? 'bg-primary text-white':''}" onclick="dropdown('free')">
+			<i class="fas fa-pen"></i> 자유게시판 <i class="fa fa-caret-down"></i></div>
 			<div id="free-drop" class="w3-hide w3-white w3-card-4 ${param.type == 'freeBoard-New' || param.type == 'freeBoard-Today' || param.type == 'freeBoard-Week' || param.type == 'freeWrite' || param.type == 'freeView' || param.type == 'freeUpdate'? 'w3-show':''}">
-				<a href="${pageContext.request.contextPath}/board?type=freeBoard-New&currPage=1" class="w3-bar-item w3-button w3-hover-blue">최신글</a>
-				<a href="${pageContext.request.contextPath}/board?type=freeBoard-Today" class="w3-bar-item w3-button w3-hover-blue">오늘의 인기글</a>
-				<a href="${pageContext.request.contextPath}/board?type=freeBoard-Week" class="w3-bar-item w3-button w3-hover-blue">주간 인기글</a>
+				<a href="${pageContext.request.contextPath}/board?type=freeBoard-New&currPage=1" class="w3-bar-item w3-button w3-hover-blue-gray">최신글</a>
+				<a href="${pageContext.request.contextPath}/board?type=freeBoard-Today" class="w3-bar-item w3-button w3-hover-blue-gray">오늘의 인기글</a>
+				<a href="${pageContext.request.contextPath}/board?type=freeBoard-Week" class="w3-bar-item w3-button w3-hover-blue-gray">주간 인기글</a>
 			</div>
 			<div class="w3-dropdown-click">
-				<div class="w3-bar-item w3-buttonw3-hover-blue ${param.type == 'videoBoard-New' || param.type== 'videoBoard-Today' || param.type == 'videoBoard-Week' || param.type == 'videoWrite' || param.type == 'videoUpdate' || param.type == 'videoView'? 'w3-green':''}" onclick="dropdown('video')">
-				동영상 게시판 <i class="fa fa-caret-down"></i>
+				<div class="w3-bar-item w3-button w3-hover-teal ${param.type == 'videoBoard-New' || param.type== 'videoBoard-Today' || param.type == 'videoBoard-Week' || param.type == 'videoWrite' || param.type == 'videoUpdate' || param.type == 'videoView'? 'w3-red':''}" onclick="dropdown('video')">
+				<i class="fab fa-youtube"></i> 동영상 게시판 <i class="fa fa-caret-down"></i>
 				</div>
 				<div id="video-drop" class="w3-dropdown-content w3-white w3-card-4 ${param.type == 'videoBoard-New' || param.type== 'videoBoard-Today' || param.type == 'videoBoard-Week' || param.type == 'videoWrite' || param.type == 'videoUpdate' || param.type == 'videoView'? 'w3-show':''}">
-					<a href="${pageContext.request.contextPath}/board?type=videoBoard-New" class="w3-bar-item w3-button w3-hover-blue">최신 동영상</a>
-					<a href="${pageContext.request.contextPath}/board?type=videoBoard-Today" class="w3-bar-item w3-button w3-hover-blue">오늘의 인기 동영상</a>
-					<a href="${pageContext.request.contextPath}/board?type=videoBoard-Week" class="w3-bar-item w3-button w3-hover-blue">주간 인기 동영상</a>
+					<a href="${pageContext.request.contextPath}/board?type=videoBoard-New" class="w3-bar-item w3-button w3-hover-blue-gray">최신 동영상</a>
+					<a href="${pageContext.request.contextPath}/board?type=videoBoard-Today" class="w3-bar-item w3-button w3-hover-blue-gray">오늘의 인기 동영상</a>
+					<a href="${pageContext.request.contextPath}/board?type=videoBoard-Week" class="w3-bar-item w3-button w3-hover-blue-gray">주간 인기 동영상</a>
 				</div>
 			</div>
 		</div>
@@ -256,6 +258,9 @@ function videoBoardView(num) {
 				</c:when>
 				<c:when test="${param.type == 'videoUpdate'}">
 					<jsp:include page="board/videoUpdate.jsp"/>
+				</c:when>
+				<c:when test="${param.type == 'memberInfoModify'}">					
+					<jsp:include page="member/modify.jsp"/>
 				</c:when>
 				<c:otherwise>
 					<div class="row margin">
@@ -308,14 +313,25 @@ function videoBoardView(num) {
 					<div class="row margin">
 						<c:choose>
 							<c:when test="${not empty board_video_today && fn:length(board_video_today) != 0}">
-								<c:forEach var="i" items="${board_video_today}">
-									<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3">
-										<div class="card" onclick="videoBoardView(${i.num});">
-											<img class="card-img-top" src="https://img.youtube.com/vi/${i.thumb}/mqdefault.jpg" alt="Card image">
-											<div class="card-body board-subject">${i.subject}</div>
-											<div><span class="badge badge-danger">${i.rnum}</span> <span class="text-info">${i.nickname}</span></div>
+								<c:forEach var="i" varStatus="index" items="${board_video_today}">
+									<c:if test="${!index.last}">
+										<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 video-card">
+											<div class="card" onclick="videoBoardView(${i.num});">
+												<img class="card-img-top" src="https://img.youtube.com/vi/${i.thumb}/mqdefault.jpg" alt="Card image">
+												<div class="card-body board-subject">${i.subject}</div>
+												<div><span class="badge badge-danger">${i.rnum}</span> <span class="text-info">${i.nickname}</span></div>
+											</div>
 										</div>
-									</div>
+									</c:if>
+									<c:if test="${index.last}">
+										<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3">
+											<div class="card" onclick="videoBoardView(${i.num});">
+												<img class="card-img-top" src="https://img.youtube.com/vi/${i.thumb}/mqdefault.jpg" alt="Card image">
+												<div class="card-body board-subject">${i.subject}</div>
+												<div><span class="badge badge-danger">${i.rnum}</span> <span class="text-info">${i.nickname}</span></div>
+											</div>
+										</div>
+									</c:if>
 								</c:forEach>
 							</c:when>
 							<c:otherwise>

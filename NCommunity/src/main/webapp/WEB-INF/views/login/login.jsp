@@ -75,6 +75,13 @@ function loginValid(form) {
 	cursor: pointer;
 	border-right: 1px solid #D5D5D5;
 }
+.loginWrapper .loginInner .container-fluid.form .form-group span a {
+	text-decoration: none;
+}
+.loginWrapper .loginInner .container-fluid.form .form-group span a:hover {
+	text-decoration: underline;
+	color: gray;
+}
 .loginWrapper .loginInner .container-fluid.form .form-group span.last {
 	border-right: none;
 }
@@ -105,7 +112,7 @@ function loginValid(form) {
 			</form>
 			<hr>
 			<div class="form-group">
-				<span>아이디 찾기</span><span>비밀번호 찾기</span><span class="last">회원가입</span>
+				<!-- <span>아이디 찾기</span><span>비밀번호 찾기</span> --><span class="last"><a href="${pageContext.request.contextPath}/join">회원가입</a></span>
 			</div>
 			<div class="modal fade" id="myModal">
 		    <div class="modal-dialog modal-dialog-centered">

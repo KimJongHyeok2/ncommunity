@@ -274,3 +274,7 @@ DROP SEQUENCE vcomment_seq;
 DROP SEQUENCE f_recomment_seq;
 DROP SEQUENCE v_recomment_seq;
 DROP SEQUENCE rh_seq;
+
+SELECT * FROM members;
+
+UPDATE members SET mem_nickname = '1235' WHERE mem_num = '1';

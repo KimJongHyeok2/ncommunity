@@ -16,7 +16,7 @@ import com.web.ncm.board.domain.ImageUploadDTO;
 
 @RestController
 @RequestMapping("/upload")
-public class RestUploadController {
+public class RestBoardUploadController {
 
 	@PostMapping("/img")
 	public ImageUploadDTO img(HttpServletRequest request) {

@@ -62,6 +62,12 @@ function page(select) {
 }
 </script>
 <style>
+.profile {
+	width: 25px;
+	height: 25px;
+	border: 1px solid #D5D5D5;
+	border-radius: 50px;
+}
 .margin {
 	list-style-type: none;
 	margin: 0;
@@ -183,7 +189,12 @@ function page(select) {
 			  				${i.subject}
 			  			</div>
 			  			<div class="metadata">
-			  				<span class="data-block">${i.nickname}(${i.id})</span><span class="data-block">조회수 ${i.viewcnt}회</span><span id="regdate${index.count}" class="data-block last">${i.regdate}</span>
+			  				<c:if test="${not empty i.profile}">
+			  					<span class="data-block"><img class="profile" src="${pageContext.request.contextPath}/resources/profile/${i.profile}"/> ${i.nickname}(${i.id})</span><span class="data-block">조회수 ${i.viewcnt}회</span><span id="regdate${index.count}" class="data-block last">${i.regdate}</span>
+			  				</c:if>
+			  				<c:if test="${empty i.profile}">
+			  					<span class="data-block">${i.nickname}(${i.id})</span><span class="data-block">조회수 ${i.viewcnt}회</span><span id="regdate${index.count}" class="data-block last">${i.regdate}</span>
+			  				</c:if>
 			  			</div>
 			  			<div class="recommend">
 			  				<span class="data-block">좋아요 ${i.like}</span><span class="data-block">싫어요 ${i.hate}</span><span class="data-block last">댓글 ${i.commentsCount}</span>

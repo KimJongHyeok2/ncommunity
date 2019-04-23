@@ -17,13 +17,15 @@ public class CommentDTO {
 	private String id;
 	// 작성자 닉네임
 	private String nickname;
+	// 작성자 닉네임
+	private String profile;
 	// 댓글 타입
 	private String type;
 	
 	public CommentDTO() { }
 
 	public CommentDTO(int num, int board_num, int mem_num, String content, int like, int hate, int status,
-			Timestamp regdate, String id, String nickname, String type) {
+			Timestamp regdate, String id, String nickname, String profile, String type) {
 		this.num = num;
 		this.board_num = board_num;
 		this.mem_num = mem_num;
@@ -34,6 +36,7 @@ public class CommentDTO {
 		this.regdate = regdate;
 		this.id = id;
 		this.nickname = nickname;
+		this.profile = profile;
 		this.type = type;
 	}
 
@@ -115,6 +118,14 @@ public class CommentDTO {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 
 	public String getType() {

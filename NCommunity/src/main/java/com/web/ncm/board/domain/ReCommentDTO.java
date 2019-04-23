@@ -16,13 +16,15 @@ public class ReCommentDTO {
 	private String id;
 	// 작성자 닉네임
 	private String nickname;
+	// 작성자 프로필 사진
+	private String profile;
 	// 답글 타입
 	private String type;
 	
 	public ReCommentDTO() { }
 
 	public ReCommentDTO(int num, int comment_num, int board_num, int mem_num, String content, int status,
-			Timestamp regdate, String id, String nickname, String type) {
+			Timestamp regdate, String id, String nickname, String profile, String type) {
 		this.num = num;
 		this.comment_num = comment_num;
 		this.board_num = board_num;
@@ -32,6 +34,7 @@ public class ReCommentDTO {
 		this.regdate = regdate;
 		this.id = id;
 		this.nickname = nickname;
+		this.profile = profile;
 		this.type = type;
 	}
 
@@ -105,6 +108,14 @@ public class ReCommentDTO {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 
 	public String getType() {

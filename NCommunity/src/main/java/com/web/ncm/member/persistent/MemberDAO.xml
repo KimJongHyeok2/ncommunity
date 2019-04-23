@@ -4,4 +4,13 @@
 	<select id="selectMember" resultType="com.web.ncm.member.domain.MemberDTO">
 		SELECT * FROM members WHERE mem_id = #{mem_id} AND mem_pw = #{mem_pw}
 	</select>
+	<update id="updateMemberProfile">
+		UPDATE members SET mem_profile = #{profile} WHERE mem_num = #{mem_num}
+	</update>
+	<select id="selectMemberInfo" resultType="com.web.ncm.member.domain.MemberDTO">
+		SELECT * FROM members WHERE mem_num = #{param1}
+	</select>
+	<update id="updateMemberNickname">
+		UPDATE members SET mem_nickname = #{nickname} WHERE mem_num = #{mem_num}
+	</update>
 </mapper>

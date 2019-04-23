@@ -375,7 +375,11 @@ function commentList(displayNumber, list_type) {
 									commentHTML += "<li>";
 									commentHTML += "<div class='comment-subject'>";
 										commentHTML += "<div class='subject'>";
-											commentHTML += data.list[i].nickname + "(<span>" + data.list[i].id + "</span>)";
+											if(data.list[i].profile != null) {
+												commentHTML += "<img class='profile' src='${pageContext.request.contextPath}/resources/profile/" + data.list[i].profile + "'/> " + data.list[i].nickname + "(<span>" + data.list[i].id + "</span>)";
+											} else {
+												commentHTML += data.list[i].nickname + "(<span>" + data.list[i].id + "</span>)";												
+											}
 										commentHTML += "</div>";
 										commentHTML += "<div class='regdate'>";
 											commentHTML += formatRegDate(data.list[i].regdate);
@@ -477,7 +481,11 @@ function recommentList(list_type) {
 												recommentHTML += "<div class='rc-content'>";
 													recommentHTML += "<div class='rc-subject'>";
 														recommentHTML += "<div class='subject'>";
-															recommentHTML += data.list[j].nickname + "(<span>" + data.list[j].id + "</span>)";
+															if(data.list[j].profile != null) {
+																recommentHTML += "<img class='profile' src='${pageContext.request.contextPath}/resources/profile/" + data.list[j].profile + "'/> " + data.list[j].nickname + "(<span>" + data.list[j].id + "</span>)";
+																} else {
+																recommentHTML += data.list[j].nickname + "(<span>" + data.list[j].id + "</span>)";																
+															}
 														recommentHTML += "</div>";
 														recommentHTML += "<div class='regdate'>";
 															recommentHTML += formatRegDate(data.list[j].regdate);
@@ -739,6 +747,12 @@ function mine(mem_num) {
 }
 </script>
 <style>
+.profile {
+	width: 25px;
+	height: 25px;
+	border: 1px solid #D5D5D5;
+	border-radius: 50px;
+}
 .container-view {
 	margin-top: 15px;
 	border: 1px solid #D5D5D5;
@@ -968,7 +982,12 @@ function mine(mem_num) {
 			${dto.subject}
 		</div>
 		<div class="other">
-			<div class="username">${dto.nickname}(<span>${dto.id}</span>)</div>
+			<c:if test="${not empty dto.profile}">
+				<div class="username"><img class="profile" src="${pageContext.request.contextPath}/resources/profile/${dto.profile}"/> ${dto.nickname}(<span>${dto.id}</span>)</div>
+			</c:if>
+			<c:if test="${empty dto.profile}">
+				<div class="username">${dto.nickname}(<span>${dto.id}</span>)</div>
+			</c:if>
 			<div class="viewcnt"><span class="badge badge-pill badge-info">조회수 ${dto.viewcnt}회</span></div>
 			<div class="regdate" id="regdate">${dto.regdate}</div>
 		</div>
