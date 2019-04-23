@@ -127,6 +127,12 @@ function videoBoardView(num) {
 }
 </script>
 <style type="text/css">
+.profile {
+	width: 25px;
+	height: 25px;
+	border: 1px solid #D5D5D5;
+	border-radius: 50px;
+}
 .content {
 	display: flex;
 }
@@ -192,6 +198,11 @@ function videoBoardView(num) {
 .browser.on {
 	display: block;
 }
+@media (max-width:1199px) {
+	.video-card {
+		margin-bottom: 15px;
+	}
+}
 @media (max-width:700px) {
 	.content {
 		flex-direction: row;
@@ -199,11 +210,6 @@ function videoBoardView(num) {
 	.content .leftMenu {
 		display: none;
 		position: absolute;
-	}
-}
-@media (max-width:575px) {
-	.video-card {
-		margin-bottom: 15px;
 	}
 }
 </style>

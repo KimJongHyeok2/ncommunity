@@ -55,6 +55,12 @@ function pageMove(type) {
 .header .info .dropdown .dropdown-menu h5 {
 	margin: 0;
 }
+.box-border {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	box-sizing: border-box;
+}
 @media (max-width:700px) {
 	.header .logo {
 		float: none;
@@ -94,7 +100,7 @@ function pageMove(type) {
 			    <i class="fas fa-user"></i>
 			  </button>
 			  <div class="dropdown-menu">
-			   	<h5 class="dropdown-header">${sessionScope.nickname}(${sessionScope.id})</h5>
+			   	<h5 class="dropdown-header box-border">${sessionScope.nickname}<br>(${sessionScope.id})</h5>
 			    <a class="dropdown-item" onclick="pageMove('logout');"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
 			    <a class="dropdown-item" onclick="pageMove('memberCog');"><i class="fas fa-user-cog"></i> 정보수정</a>
 			  </div>
