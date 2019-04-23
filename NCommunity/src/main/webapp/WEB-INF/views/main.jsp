@@ -122,6 +122,9 @@ function dropdown(type) {
 function freeBoardView(obj) {
 	location.href = "${pageContext.request.contextPath}/board/view?type=freeView&num=" + obj.value;
 }
+function videoBoardView(num) {
+	location.href = "${pageContext.request.contextPath}/board/view?type=videoView&num=" + num;
+}
 </script>
 <style type="text/css">
 .content {
@@ -307,7 +310,7 @@ function freeBoardView(obj) {
 							<c:when test="${not empty board_video_today && fn:length(board_video_today) != 0}">
 								<c:forEach var="i" items="${board_video_today}">
 									<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3">
-										<div class="card">
+										<div class="card" onclick="videoBoardView(${i.num});">
 											<img class="card-img-top" src="https://img.youtube.com/vi/${i.thumb}/mqdefault.jpg" alt="Card image">
 											<div class="card-body board-subject">${i.subject}</div>
 											<div><span class="badge badge-danger">${i.rnum}</span> <span class="text-info">${i.nickname}</span></div>
