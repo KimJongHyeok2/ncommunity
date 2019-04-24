@@ -125,7 +125,7 @@ function nickname() {
 	align-items: center;
 }
 @media (max-width:991px) {
-	#nickname {
+	#nickname, #nickname-btn {
 		margin-top: 5px;
 	}
 }
@@ -139,7 +139,7 @@ function nickname() {
 			<div class="profile-box">
 				<div class="profile-img">
 					<c:choose>
-						<c:when test="${not empty dto}">
+						<c:when test="${not empty dto.mem_profile}">
 							<img class="profile" src="${pageContext.request.contextPath}/resources/profile/${dto.mem_profile}"/>
 						</c:when>
 						<c:otherwise>
@@ -155,9 +155,9 @@ function nickname() {
 		<div class="col-sm-12 col-lg-9">
 		<div class="info-box">
 			<div class="input-group mb-3">
-    			<input type="text" class="form-control" id="nickname" value="${empty dto.mem_nickname? '':dto.mem_nickname}" placeholder="닉네임을 입력하세요.">
-    			<div class="input-group-append"> 
-      				<button class="btn btn-primary" type="button" onclick="nickname();">OK</button>  
+    			<input type="text" class="form-control" id="nickname" value="${dto.mem_nickname=='NONE'? '':dto.mem_nickname}" placeholder="닉네임을 입력하세요.">
+    			<div class="input-group-append">
+      				<button class="btn btn-primary" id="nickname-btn" type="button" onclick="nickname();">OK</button>  
      			</div>
   			</div>
 			</div>

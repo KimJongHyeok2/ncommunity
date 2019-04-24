@@ -62,6 +62,7 @@
 		<interceptor>
 			<mapping path="/board/write**"/>
 			<mapping path="/board/update**"/>
+			<mapping path="/member**"/>
 			<beans:ref bean="boardInterceptor"/>			
 		</interceptor>
 	</interceptors>

@@ -81,7 +81,7 @@ public class RestMemberController {
 	}
 	
 	@PostMapping(value = "/nickname", produces = "application/text; charset=utf-8")
-	public String nickname(@RequestParam(value = "mem_num", defaultValue = "0") int mem_num, String nickname) {
+	public String nickname(@RequestParam(value = "mem_num", defaultValue = "0") int mem_num, String nickname, HttpServletRequest request) {
 		
 		if(mem_num == 0 || nickname == null || nickname == "" || nickname.length() == 0) {
 			return "Fail";
@@ -94,6 +94,7 @@ public class RestMemberController {
 				int count = memberService.updateMemberNickname(map);
 				
 				if(count == 1) {
+					request.getSession().setAttribute("nickname", nickname);
 					return nickname;
 				}
 			} catch (Exception e) {

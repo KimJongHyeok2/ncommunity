@@ -10,7 +10,7 @@
 	<context:annotation-config/>
 
 	<security:http auto-config="true" use-expressions="true">
-		<security:intercept-url pattern="/" requires-channel="https" access="permitAll"/>
+		<!-- <security:intercept-url pattern="/" requires-channel="https" access="permitAll"/> -->
 		<security:form-login login-page="/login"
 		default-target-url="/"
 		login-processing-url="/loginAuth"
