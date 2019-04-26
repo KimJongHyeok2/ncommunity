@@ -39,58 +39,7 @@ function view(num) {
 	}
 }
 </script>
-<style>
-.table {
-	margin-top: 15px;
-    border-collapse: separate !important;
-    border-spacing: 0;
-	border: 1px solid #D5D5D5;
-	border-radius: 5px;
-}
-.table thead .bg-primary {
-	color: white;
-}
-.table thead td {
-	text-align: center;
-	border-top: none;
-}
-.table tbody td:not(.subject) {
-	text-align: center;
-}
-.table tbody td .profile {
-	width: 25px;
-	height: 25px;
-	border: 1px solid #D5D5D5;
-	border-radius: 50px;
-}
-.table tbody .empty-list {
-	padding: 30px;
-}
-.table tbody .empty-list:hover {
-	background-color: white;
-}
-.table td {
-	max-width: 120px;
-}
-.table .subject {
-	max-width: 120px;
-}
-.table tbody .subject {
-	cursor: pointer;
-}
-.btn-write:after {
-	content: "";
-	display: block;
-	clear: both;
-}
-@media (max-width:500px) {
-	.table td {
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: nowrap;
-	}
-}
-</style>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/list.css"/>
 <div class="jumbotron" style="margin-top: 15px; padding: 10px;">
 	<c:choose>
 		<c:when test="${param.type == 'freeBoard-New'}">
@@ -107,7 +56,7 @@ function view(num) {
 <table class="table table-hover">
 	<thead>
 		<tr class="bg-primary">
-			<td>구분</td><td class="subject">제목</td><td>작성자</td><td>조회수</td><td>일시</td>
+			<td>구분</td><td class="subject">제목</td><td>작성자</td><td class="td-sm-1">조회수</td><td class="td-sm-1">일시</td>
 		</tr>
 	</thead>
 	<tbody>
@@ -132,8 +81,8 @@ function view(num) {
 						<c:if test="${empty i.profile}">						
 						<td>${i.nickname}</td>
 						</c:if>
-						<td>${i.viewcnt}</td>
-						<td id="regdate${index.count}">${i.regdate}</td>
+						<td class="td-sm-1">${i.viewcnt}</td>
+						<td id="regdate${index.count}" class="td-sm-1">${i.regdate}</td>
 					</tr>
 				</c:forEach>
 			</c:when>

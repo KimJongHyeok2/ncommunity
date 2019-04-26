@@ -1,0 +1,7 @@
+@charset "UTF-8";
+.form-group.margin {
+	margin-top: 15px;
+}
+.ck-editor__editable[role="textbox"] {
+	height: 500px;
+}

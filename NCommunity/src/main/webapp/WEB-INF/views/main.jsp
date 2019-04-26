@@ -126,93 +126,7 @@ function videoBoardView(num) {
 	location.href = "${pageContext.request.contextPath}/board/view?type=videoView&num=" + num;
 }
 </script>
-<style type="text/css">
-.profile {
-	width: 25px;
-	height: 25px;
-	border: 1px solid #D5D5D5;
-	border-radius: 50px;
-}
-.content {
-	display: flex;
-}
-.content .leftMenu {
-	display: block;
-	position: static;
-	min-width: 250px;
-	z-index: 2;
-}
-.content .leftMenu div {
-	z-index: 2;
-}
-.content .rightContent {
-	flex-grow: 1;
-	overflow: auto;
-}
-.content .rightContent .margin {
-	margin-bottom: 15px;
-}
-.content .rightContent .board-subject {
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
-}
-.content .rightContent .list-type {
-	list-style-type: none;
-}
-.content .rightContent .empty-list {
-	text-align: center;
-	border: 1px solid #D5D5D5;
-	border-radius: 5px;
-	padding: 30px; 
-}
-.content .rightContent .card {
-  	transition-property: box-shadow;
-  	transition-duration: 0.5s;
-	cursor: pointer;
-}
-.content .rightContent .card:hover {
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-.footer {
-	padding: 10px 0;
-	font-size: 10pt;
-	color: gray;
-	text-align: center;
-	border-top: 1px solid #D5D5D5;
-	border-bottom: 1px solid #D5D5D5;
-	background-color: rgba(246, 246, 246, 0.4);
-}
-.footer div span {
-	color: black;
-}
-.browser {
-	display: none;
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	z-index: 5;
-	margin-left: 15px;
-	margin-right: 15px;
-}
-.browser.on {
-	display: block;
-}
-@media (max-width:1199px) {
-	.video-card {
-		margin-bottom: 15px;
-	}
-}
-@media (max-width:700px) {
-	.content {
-		flex-direction: row;
-	}
-	.content .leftMenu {
-		display: none;
-		position: absolute;
-	}
-}
-</style>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/main2.css"/>
 <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/animate.css"/>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"/>
@@ -283,7 +197,7 @@ function videoBoardView(num) {
 										</c:forEach>
 									</c:when>
 									<c:otherwise>
-										<li class="empty-list">
+										<li class="empty-list-main">
 											작성된 글이 없습니다.
 										</li>
 									</c:otherwise>
@@ -303,7 +217,7 @@ function videoBoardView(num) {
 										</c:forEach>
 									</c:when>
 									<c:otherwise>
-										<li class="empty-list">
+										<li class="empty-list-main">
 											작성된 글이 없습니다.
 										</li>
 									</c:otherwise>
@@ -342,8 +256,8 @@ function videoBoardView(num) {
 							</c:when>
 							<c:otherwise>
 							<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-								<div class="empty-list">
-									등록된 인기 동영상이 없습니다.
+								<div class="empty-list-main">
+									등록된 동영상이 없습니다.
 								</div>
 							</div>
 							</c:otherwise>

@@ -52,8 +52,8 @@ function uploadProfile(file) {
 function nickname() {
 	var nickname = $("#nickname").val();
 	
-	if(nickname == null || nickname == "" || nickname.length < 3 || nickname.length > 12) {
-		$("#myModal .modal-body").html("닉네임은 3자 이상 12자 이하로 입력해주세요.");
+	if(nickname == null || nickname == "" || nickname.length < 2 || nickname.length > 6) {
+		$("#myModal .modal-body").html("닉네임은 2자 이상 5자 이하로 입력해주세요.");
 		$("#myModal .modal-footer").removeAttr("onclick");
 		$("#myModal").modal();
 		return false;
@@ -90,46 +90,7 @@ function nickname() {
 	});
 }
 </script>
-<style>
-.off {
-	display: none;
-}
-.margin {
-	padding: 10px;
-	border: 1px solid #D5D5D5;
-	border-radius: 5px;
-}
-.profile-box .profile-img {
-	width: 100px;
-	height: 100px;
-	margin: auto;
-	margin-bottom: 5px;
-	border: 1px solid #D5D5D5;
-	border-radius: 50px; 
-}
-.profile-box .profile-img img {
-	width: 100%;
-	height: 100%;
-	border-radius: 50px;
-}
-.cursor {
-	margin-bottom: 0;
-	cursor: pointer;
-}
-.profile-box .profile-btn {
-	text-align: center;
-}
-.info-box {
-	display: flex;
-	height: 100%;
-	align-items: center;
-}
-@media (max-width:991px) {
-	#nickname, #nickname-btn {
-		margin-top: 5px;
-	}
-}
-</style>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/modify.css"/>
 <div class="jumbotron" style="margin-top: 15px; padding: 10px;">
 	<h3>회원정보 수정</h3>
 </div>

@@ -4,13 +4,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"> 
 <title>회원가입</title>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/animate.css"/>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<jsp:include page="/resources/include/combine/combine.jsp"/>
 <script type="text/javascript">
 var idFlag = false;
 var pwFlag = false;
@@ -306,57 +301,7 @@ function joinSubmit() {
 	}
 }
 </script>
-<style type="text/css">
-html, body { height: 100%; }
-.joinWrapper {
-	height: 100%;
-	background-color: rgba(246, 246, 246, 0.4);
-}
-.joinWrapper .joinInner {
-	max-width: 550px;
-	margin: auto;
-	border: 1px solid #D5D5D5;
-	background-color: white;
-}
-.joinWrapper .joinInner .on {
-	display: block
-}
-.joinWrapper .joinInner .logo {
-	padding: 20px 0;
-	text-align: center;
-}
-.joinWrapper .joinInner .logo img {
-	display: inline-block;
-}
-.joinWrapper .joinInner .dropdown-height {
-	height: 200px;
-	overflow: auto;
-}
-.Access-group {
-	display: flex;
-}
-.Access-group .dropdown {
-	flex-grow: 1;
-	margin-right: 5px;
-}
-.Access-group .dropdown.last {
-	margin-right: 0;
-}
-.Access-group .dropdown * {
-	width: 100%;
-}
-.Access-group .dropdown button {
-	background-color: white;
-	color: black;
-}
-.Access-group #access_btn {
-	width: 80px;
-	margin-left: 5px;
-}
-.form-group.off {
-	display: none;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/join.css"/>
 </head>
 <body>
 <div class="joinWrapper">

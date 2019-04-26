@@ -61,101 +61,7 @@ function page(select) {
 	}
 }
 </script>
-<style>
-.profile {
-	width: 25px;
-	height: 25px;
-	border: 1px solid #D5D5D5;
-	border-radius: 50px;
-}
-.margin {
-	list-style-type: none;
-	margin: 0;
-	margin-bottom: 15px;
-	padding: 0;
-}
-.video-content-wrapper {
-	display: flex;
-}
-.video-content-wrapper .thumbnail {
-	position: relative;
-	width: 250px;
-}
-.video-content-wrapper .badge-box {
-	position: absolute;
-	margin: 0;
-	padding: 0;
-}
-.video-content-wrapper .badge-box span {
-	vertical-align: top;
-}
-.video-content-wrapper .thumbnail .thumb {
-	width: 100%;
-}
-.video-content-wrapper .info {
-	margin-left: 5px;
-	max-width: 800px;
-	overflow: hidden;
-}
-.video-content-wrapper .info .title {
-	font-size: 17pt;
-	color: black;
-}
-.video-content-wrapper .info .data-block {
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	font-size: 10pt;
-	border-right: 1px solid #D5D5D5;
-	margin-right: 3px;
-	padding-right: 3px;
-}
-.video-content-wrapper .info .data-block.last {
-	margin-right: 0;
-	padding-right: 0;
-	border-right: none;
-}
-.video-content-wrapper .info .description-text {
-	white-space: normal;
-	text-align: left;
-	word-wrap: break-word;
-	height: 1.0em;
-	line-height: 2.0;
-	display: -webkit-box;
-	-webkit-line-clamp: 3;
-	-webkit-box-orient: vertical;
-}
-.video-content-wrapper .info .description-text p {
-	margin: 0;
-}
-.off {
-	display: none;
-}
-.empty-list {
-	text-align: center;
-	padding: 30px;
-	border: 1px solid #D5D5D5;
-	border-radius: 5px;
-}
-.btn-write {
-	margin-bottom: 15px;
-}
-.btn-write:after {
-	content: "";
-	display: block;
-	clear: both;
-}
-.page-item {
-	cursor: pointer;
-}
-@media (max-width:1000px) {
-	.video-content-wrapper .info .title {
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
-	}
-}
-</style>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/videoList.css"/>
 <div class="jumbotron" style="margin-top: 15px; padding: 10px;">
 	<c:choose>
 		<c:when test="${param.type == 'videoBoard-New'}">
@@ -182,7 +88,7 @@ function page(select) {
 				  			</c:if>
 				  			<span class="badge badge-primary off" id="badge-new${index.count}">NEW</span>
 			  			</div>
-			  			<img width="250px" src="https://img.youtube.com/vi/${i.thumb}/mqdefault.jpg"/>
+			  			<img class="thumb" src="https://img.youtube.com/vi/${i.thumb}/mqdefault.jpg"/>
 			  		</div>
 			  		<div class="info text-fluid">
 			  			<div class="title">

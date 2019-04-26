@@ -1,0 +1,51 @@
+@charset "UTF-8";
+.loginWrapper {
+	background-color: rgba(246, 246, 246, 0.4);
+	height: 100%;
+}
+.loginWrapper .loginInner {
+	max-width: 550px;
+	margin: auto;
+	border: 1px solid #D5D5D5;
+	background-color: white;
+}
+.loginWrapper .loginInner .on {
+	display: block;
+}
+.loginWrapper .loginInner .logo {
+	padding: 20px 0;
+}
+.loginWrapper .loginInner .logo div {
+	width: 300px;
+	height: 57px;
+	margin: auto;
+	background-image: url("/ncm/resources/img/main/mainLogo2.png");
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.loginWrapper .loginInner .container-fluid.form {
+	max-width: 300px;
+}
+.loginWrapper .loginInner .container-fluid.form .form-group {
+	text-align: center;
+}
+.loginWrapper .loginInner .container-fluid.form .form-group .invalid-feedback {
+	text-align: left;
+}
+.loginWrapper .loginInner .container-fluid.form .form-group span {
+	padding: 0 5px;
+	font-size: 8pt;
+	color: gray;
+	cursor: pointer;
+	border-right: 1px solid #D5D5D5;
+}
+.loginWrapper .loginInner .container-fluid.form .form-group span a {
+	text-decoration: none;
+}
+.loginWrapper .loginInner .container-fluid.form .form-group span a:hover {
+	text-decoration: underline;
+	color: gray;
+}
+.loginWrapper .loginInner .container-fluid.form .form-group span.last {
+	border-right: none;
+}

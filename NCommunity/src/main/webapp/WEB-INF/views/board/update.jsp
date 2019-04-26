@@ -80,14 +80,7 @@ function writeSubmit(form) {
 	}
 }
 </script>
-<style>
-.form-group.margin {
-	margin-top: 15px;
-}
-.ck-editor__editable[role="textbox"] {
-	height: 500px;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/update.css"/>
 <form action="${pageContext.request.contextPath}/board/updateOk" id="writeForm" onsubmit="return writeSubmit(this);" method="post">
 	<div class="form-group margin subject">
 		<input type="text" class="form-control" id="subject" placeholder="제목은 10자 이상 100자 이하로 입력해주세요." name="subject" value="${dto.subject}"/>
