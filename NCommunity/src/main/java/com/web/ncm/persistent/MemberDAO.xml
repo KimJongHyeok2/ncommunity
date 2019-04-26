@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<select id="selectMember" resultType="com.web.ncm.domain.MemberDTO">
+		SELECT * FROM members WHERE mem_id = #{mem_id} AND mem_pw = #{mem_pw}
+	</select>
+	<update id="updateMemberProfile">
+		UPDATE members SET mem_profile = #{profile} WHERE mem_num = #{mem_num}
+	</update>
+	<select id="selectMemberInfo" resultType="com.web.ncm.domain.MemberDTO">
+		SELECT * FROM members WHERE mem_num = #{param1}
+	</select>
+	<update id="updateMemberNickname">
+		UPDATE members SET mem_nickname = #{nickname} WHERE mem_num = #{mem_num}
+	</update>
+</mapper>

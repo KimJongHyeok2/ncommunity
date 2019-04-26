@@ -32,7 +32,7 @@
 		</security:authentication-provider>
 	</security:authentication-manager>
 
-	<bean name="customAuthenticationSuccessHandler" class="com.web.ncm.member.util.AuthenticationSuccessHandlerImpl"/>
+	<bean name="customAuthenticationSuccessHandler" class="com.web.ncm.util.AuthenticationSuccessHandlerImpl"/>
 
 	<bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>

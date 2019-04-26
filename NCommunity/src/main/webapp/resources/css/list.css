@@ -32,6 +32,9 @@
 	max-width: 120px;
 }
 .table .subject {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 	max-width: 120px;
 }
 .table tbody .subject {
