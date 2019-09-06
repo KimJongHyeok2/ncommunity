@@ -12,6 +12,11 @@
   <li>MyBatis</li>
   <li>Oracle 11g Express Edition</li>
 </ul>
+<h3>사용기술 / API</h3>
+<ul>
+  <li>Spring Security</li>
+  <li>CKEditor 5</li>
+</ul>
 <h3>동영상(Youtube) / Demo</h3>
 <a href="https://youtu.be/3b80aUhm8Uw">동영상 바로가기</a><br>
 <a href="https://iamiportfolio.com/NCM/">Demo 바로가기</a>
