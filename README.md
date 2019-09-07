@@ -6,8 +6,9 @@
   <li>Eclipse IDE</li>
   <li>Tomcat 8.5.41</li>
   <li>HTML/CSS3, JavaScript, JQuery</li>
+  <li>JSP</li>
   <li>Bootstrap4</li>
-  <li>Java 1.6</li>
+  <li>JDK 1.6</li>
   <li>Spring 4.3.22</li>
   <li>MyBatis</li>
   <li>Oracle 11g Express Edition</li>
